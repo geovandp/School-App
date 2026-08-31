@@ -1,0 +1,9 @@
+import { View, Text } from "react-native";
+
+export default function DummyScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Halaman sedang dibangun</Text>
+    </View>
+  );
+}

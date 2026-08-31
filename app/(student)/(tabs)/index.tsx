@@ -27,9 +27,9 @@ export default function StudentHomeScreen() {
         {/* 3. Grid Fitur Aplikasi */}
         <FeatureGrid />
 
-        {/* 4. Tel-U Event Banner (Bisa dipisah juga jika mau) */}
+        {/* 4. Event Banner (Bisa dipisah juga jika mau) */}
         <View style={styles.bannerSection}>
-          <Text style={styles.sectionTitle}>Tel-U Event</Text>
+          <Text style={styles.sectionTitle}>School Event</Text>
           <TouchableOpacity activeOpacity={0.8} style={styles.bannerContainer}>
             <View style={styles.bannerPlaceholder}>
               <Text style={styles.bannerText}>PROGRAM MBG</Text>
