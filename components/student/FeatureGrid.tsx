@@ -14,8 +14,7 @@ import { Colors } from "../../constants/Colors";
 
 const { width } = Dimensions.get("window");
 
-// 1. DATA SEMUA FITUR (Masukkan fitur tambahan Anda di sini)
-// Catatan: Hapus "Fitur Lainnya" dari array ini, karena itu hanya tombol trigger
+//DATA SEMUA FITUR
 const ALL_FEATURES = [
   {
     id: 1,
@@ -32,8 +31,8 @@ const ALL_FEATURES = [
   },
   {
     id: 4,
-    title: "Poin & Prestasi",
-    icon: "trophy-award",
+    title: "Nilai\nSiswa",
+    icon: "card-bulleted-outline",
     color: Colors.primary,
   },
   {
@@ -50,11 +49,10 @@ const ALL_FEATURES = [
   },
   {
     id: 7,
-    title: "Nilai\nSiswa",
-    icon: "card-bulleted-outline",
+    title: "Tanya\nAnise",
+    icon: "robot-outline",
     color: Colors.primary,
   },
-  // --- Tambahkan fitur baru di bawah ini ---
   {
     id: 8,
     title: "Pengumuman\nSekolah",
@@ -75,19 +73,13 @@ const ALL_FEATURES = [
   },
   {
     id: 11,
-    title: "Pembayaran\nSPP",
-    icon: "wallet-outline",
-    color: Colors.primary,
-  },
-  {
-    id: 12,
-    title: "Tanya\nAnise",
-    icon: "robot-outline",
+    title: "Poin & Prestasi",
+    icon: "trophy-award",
     color: Colors.primary,
   },
 ];
 
-// 2. DATA FITUR UTAMA (Hanya ambil 7 fitur pertama untuk beranda)
+//DATA FITUR UTAMA (Hanya ambil 7 fitur pertama untuk beranda)
 const MAIN_FEATURES = ALL_FEATURES.slice(0, 7);
 
 export default function FeatureGrid() {
@@ -104,14 +96,12 @@ export default function FeatureGrid() {
           <TouchableOpacity
             key={item.id}
             style={styles.item}
-            activeOpacity={0.7}
-          >
+            activeOpacity={0.7}>
             <View style={styles.iconBox}>
               <MaterialCommunityIcons
                 name={item.icon as any}
                 size={30}
-                color={item.color}
-              />
+                color={item.color}/>
             </View>
             <Text style={styles.itemText} numberOfLines={2}>
               {item.title}
@@ -143,16 +133,14 @@ export default function FeatureGrid() {
         animationType="slide"
         transparent={false}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)} // Menangani tombol back di Android
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <SafeAreaView style={styles.modalContainer}>
           {/* Header Modal */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Semua Fitur</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
+              onPress={() => setModalVisible(false)}>
               <MaterialCommunityIcons
                 name="close"
                 size={28}

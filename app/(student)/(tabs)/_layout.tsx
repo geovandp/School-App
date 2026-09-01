@@ -3,25 +3,38 @@ import { View, StyleSheet, Platform } from "react-native";
 import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
+// 1. Import library Safe Area
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function StudentTabsLayout() {
+  // 2. Panggil hook insets untuk mendapatkan ukuran akurat poni/garis bawah layar
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary, // Warna saat menu aktif
-        tabBarInactiveTintColor: "#8E8E93", // Warna saat tidak aktif
-        tabBarStyle: styles.tabBar,
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: "#8E8E93",
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            // 3. Buat height dan padding dinamis mengikuti insets perangkat
+            height: 60 + (insets.bottom > 0 ? insets.bottom : 10),
+            paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          },
+        ],
         tabBarLabelStyle: styles.tabBarLabel,
       }}
     >
+      {/* ... (Bagian Tabs.Screen tidak ada yang berubah, biarkan persis seperti kode Anda) ... */}
+
       {/* 1. Beranda */}
       <Tabs.Screen
         name="index"
         options={{
           title: "Beranda",
           tabBarIcon: ({ color, focused }) => (
-            // Gunakan ikon terisi (solid) saat aktif, dan outline saat tidak aktif
             <MaterialCommunityIcons
               name={focused ? "home" : "home-outline"}
               size={28}
@@ -51,7 +64,6 @@ export default function StudentTabsLayout() {
         name="scan"
         options={{
           title: "Scan",
-          // Teks "Scan" tetap dibiarkan muncul sesuai gambar
           tabBarIcon: () => (
             <View style={styles.floatingButtonContainer}>
               <View style={styles.floatingButton}>
@@ -102,8 +114,6 @@ export default function StudentTabsLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: "#FFFFFF",
-    height: Platform.OS === "ios" ? 85 : 70,
-    paddingBottom: Platform.OS === "ios" ? 25 : 10,
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: "#F0F0F0",
@@ -112,6 +122,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
+    // CATATAN: Untuk tablet/laptop, Anda bisa memberi batasan max-width agar tidak merenggang konyol.
+    // Opsional: uncomment kode di bawah ini jika ingin membatasi lebar di Web/Tablet
+    // alignSelf: 'center',
+    // width: '100%',
+    // maxWidth: 600,
   },
   tabBarLabel: {
     fontSize: 11,
@@ -120,7 +135,7 @@ const styles = StyleSheet.create({
   },
   floatingButtonContainer: {
     position: "absolute",
-    top: -30, // Mengangkat tombol ke atas (keluar dari kotak navigasi)
+    top: -30,
     justifyContent: "center",
     alignItems: "center",
   },
