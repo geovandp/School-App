@@ -47,6 +47,52 @@ export default function TeacherHomeScreen() {
               </View>
             </TouchableOpacity>
           </View>
+          <View style={styles.bannerSection}>
+            <Text style={styles.sectionTitle}>School Event</Text>
+            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
+              <View style={styles.bannerPlaceholder}>
+                <Text style={styles.bannerText}>PROGRAM MBG</Text>
+                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bannerSection}>
+            <Text style={styles.sectionTitle}>School Event</Text>
+            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
+              <View style={styles.bannerPlaceholder}>
+                <Text style={styles.bannerText}>PROGRAM MBG</Text>
+                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bannerSection}>
+            <Text style={styles.sectionTitle}>School Event</Text>
+            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
+              <View style={styles.bannerPlaceholder}>
+                <Text style={styles.bannerText}>PROGRAM MBG</Text>
+                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bannerSection}>
+            <Text style={styles.sectionTitle}>School Event</Text>
+            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
+              <View style={styles.bannerPlaceholder}>
+                <Text style={styles.bannerText}>PROGRAM MBG</Text>
+                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bannerSection}>
+            <Text style={styles.sectionTitle}>School Event</Text>
+            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
+              <View style={styles.bannerPlaceholder}>
+                <Text style={styles.bannerText}>PROGRAM MBG</Text>
+                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -59,12 +105,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FDFBF7",
   },
   contentBody: {
-    marginTop: 10, // Jarak setelah kartu sticky
+    marginTop: 10,
   },
   bannerSection: {
     paddingHorizontal: 20,
     marginTop: 5,
-    paddingBottom: 40,
+    paddingBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,

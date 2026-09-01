@@ -56,10 +56,10 @@ export default function TeacherTabsLayout() {
                   focused ? styles.activeButton : styles.inactiveButton,
                 ]}
               >
-                <MaterialCommunityIcons name="text-box" size={24} color="#000" />
+                <MaterialCommunityIcons name="note" size={24} color="#000" />
               </View>
               <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
-                Timeline
+                Notes
               </Text>
             </View>
           ),
@@ -100,10 +100,10 @@ export default function TeacherTabsLayout() {
                   focused ? styles.activeButton : styles.inactiveButton,
                 ]}
               >
-                <MaterialCommunityIcons name="bell" size={24} color="#000" />
+                <MaterialCommunityIcons name="alert-box" size={24} color="#000" />
               </View>
               <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
-                Notifikasi
+                Tugas
               </Text>
             </View>
           ),
@@ -122,10 +122,10 @@ export default function TeacherTabsLayout() {
                   focused ? styles.activeButton : styles.inactiveButton,
                 ]}
               >
-                <MaterialCommunityIcons name="account-circle" size={24} color="#000" />
+                <MaterialCommunityIcons name="assistant" size={24} color="#000" />
               </View>
               <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
-                Akun
+                Anise
               </Text>
             </View>
           ),

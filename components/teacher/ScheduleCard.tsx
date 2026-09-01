@@ -1,25 +1,77 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+const scheduleData = [
+  {
+    id: "1",
+    time: "08:00 - 09:30",
+    subject: "Matematika Lanjutan",
+    classInfo: "Kelas XII IPA 1 • Ruang 302",
+    bgColor: "#E4D4FF", // Ungu pastel
+    status: "Berlangsung", // Ungu pastel
+  },
+  {
+    id: "2",
+    time: "10:00 - 11:30",
+    subject: "Fisika Dasar",
+    classInfo: "Kelas XII IPA 2 • Lab Fisika",
+    bgColor: "#FDFFB6", // Kuning pastel
+    status: "Akan Datang",
+  },
+  {
+    id: "3",
+    time: "10:00 - 11:30",
+    subject: "Fisika Dasar",
+    classInfo: "Kelas XII IPA 2 • Lab Fisika",
+    bgColor: "#FDFFB6", // Kuning pastel
+    status: "Akan Datang",
+  },
+];
 
 export default function TeacherScheduleCard() {
   return (
-    <View style={styles.cardContainer}>
-      <View style={styles.cardHeader}>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>JADWAL HARI INI</Text>
-        </View>
-        <Text style={styles.timeText}>08:00 - 09:30</Text>
-      </View>
-      <Text style={styles.subjectTitle}>Matematika Lanjutan</Text>
-      <Text style={styles.classInfo}>Kelas XII IPA 1 • Ruang 302</Text>
+    <View style={styles.outerWrapper}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
+        {scheduleData.map((item) => (
+          <View
+            key={item.id}
+            style={[styles.cardContainer, { backgroundColor: item.bgColor }]}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{item.status}</Text>
+              </View>
+              <Text style={styles.timeText}>{item.time}</Text>
+            </View>
+
+            <Text style={styles.subjectTitle}>{item.subject}</Text>
+            <Text style={styles.classInfo}>{item.classInfo}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerWrapper: {
+    width: "100%",
+    backgroundColor: "#FFF",
+    paddingTop: 10,
+    paddingBottom: 20,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  scrollContainer: {
+    paddingHorizontal: 20,
+    gap: 14, // Jarak antar card
+  },
   cardContainer: {
-    marginHorizontal: 20,
-    backgroundColor: "#E4D4FF", // Ungu pastel
+    width: 295, // Ukuran lebar card agar muat & memberi clue bisa di-scroll
     borderRadius: 16,
     padding: 20,
     borderWidth: 3,
@@ -29,7 +81,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 0,
     elevation: 6,
-    marginBottom: 20,
   },
   cardHeader: {
     flexDirection: "row",
