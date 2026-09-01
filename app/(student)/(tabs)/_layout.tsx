@@ -3,11 +3,9 @@ import { View, StyleSheet, Platform } from "react-native";
 import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-// 1. Import library Safe Area
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function StudentTabsLayout() {
-  // 2. Panggil hook insets untuk mendapatkan ukuran akurat poni/garis bawah layar
   const insets = useSafeAreaInsets();
 
   return (
@@ -27,7 +25,6 @@ export default function StudentTabsLayout() {
         tabBarLabelStyle: styles.tabBarLabel,
       }}
     >
-      {/* ... (Bagian Tabs.Screen tidak ada yang berubah, biarkan persis seperti kode Anda) ... */}
 
       {/* 1. Beranda */}
       <Tabs.Screen
@@ -46,13 +43,13 @@ export default function StudentTabsLayout() {
 
       {/* 2. Timeline */}
       <Tabs.Screen
-        name="timeline"
+        name="announce"
         options={{
-          title: "Timeline",
+          title: "Berita",
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
-              name={focused ? "text-box" : "text-box-outline"}
-              size={26}
+              name={focused ? "bullhorn" : "bullhorn-outline"}
+              size={28}
               color={color}
             />
           ),
@@ -86,7 +83,7 @@ export default function StudentTabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? "bell" : "bell-outline"}
-              size={26}
+              size={28}
               color={color}
             />
           ),
@@ -122,11 +119,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
-    // CATATAN: Untuk tablet/laptop, Anda bisa memberi batasan max-width agar tidak merenggang konyol.
-    // Opsional: uncomment kode di bawah ini jika ingin membatasi lebar di Web/Tablet
-    // alignSelf: 'center',
-    // width: '100%',
-    // maxWidth: 600,
   },
   tabBarLabel: {
     fontSize: 11,

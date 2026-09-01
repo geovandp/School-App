@@ -1,20 +1,19 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Dimensions,
   Modal,
-  SafeAreaView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 
 const { width } = Dimensions.get("window");
-
-//DATA SEMUA FITUR
 const ALL_FEATURES = [
   {
     id: 1,
@@ -25,7 +24,7 @@ const ALL_FEATURES = [
   { id: 2, title: "Tugas", icon: "list-box", color: Colors.primary },
   {
     id: 3,
-    title: "Pembiasaan",
+    title: "7 Pembiasaan",
     icon: "clipboard-text-clock-outline",
     color: Colors.primary,
   },
@@ -43,8 +42,8 @@ const ALL_FEATURES = [
   },
   {
     id: 6,
-    title: "Presensi\nSiswa",
-    icon: "qrcode-scan",
+    title: "Absensi\nSiswa",
+    icon: "percent-outline",
     color: Colors.primary,
   },
   {
@@ -55,36 +54,40 @@ const ALL_FEATURES = [
   },
   {
     id: 8,
-    title: "Pengumuman\nSekolah",
-    icon: "bullhorn-outline",
-    color: Colors.primary,
-  },
-  {
-    id: 9,
     title: "Kalender\nAkademik",
     icon: "calendar-month-outline",
     color: Colors.primary,
   },
   {
-    id: 10,
+    id: 9,
     title: "Ekstrakurikuler",
     icon: "account-group-outline",
     color: Colors.primary,
   },
   {
-    id: 11,
+    id: 10,
     title: "Poin & Prestasi",
     icon: "trophy-award",
     color: Colors.primary,
   },
 ];
 
-//DATA FITUR UTAMA (Hanya ambil 7 fitur pertama untuk beranda)
 const MAIN_FEATURES = ALL_FEATURES.slice(0, 7);
 
 export default function FeatureGrid() {
-  // 3. STATE UNTUK MENGONTROL MODAL
   const [modalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
+
+  // 2. INISIALISASI INSETS
+  const insets = useSafeAreaInsets();
+
+  const handleFeatureClick = (featureTitle: string) => {
+    if (featureTitle === "Jadwal\nPelajaran") {
+      router.push("/jadwal");
+    } else {
+      console.log(`Halaman untuk fitur ${featureTitle} belum dibuat.`);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -96,12 +99,15 @@ export default function FeatureGrid() {
           <TouchableOpacity
             key={item.id}
             style={styles.item}
-            activeOpacity={0.7}>
+            activeOpacity={0.7}
+            onPress={() => handleFeatureClick(item.title)}
+          >
             <View style={styles.iconBox}>
               <MaterialCommunityIcons
                 name={item.icon as any}
                 size={30}
-                color={item.color}/>
+                color={item.color}
+              />
             </View>
             <Text style={styles.itemText} numberOfLines={2}>
               {item.title}
@@ -109,11 +115,11 @@ export default function FeatureGrid() {
           </TouchableOpacity>
         ))}
 
-        {/* 4. TOMBOL "LAINNYA" (Hardcoded sebagai item ke-8) */}
+        {/* TOMBOL "LAINNYA" */}
         <TouchableOpacity
           style={styles.item}
           activeOpacity={0.7}
-          onPress={() => setModalVisible(true)} // Aksi membuka modal
+          onPress={() => setModalVisible(true)}
         >
           <View style={styles.iconBox}>
             <MaterialCommunityIcons
@@ -133,14 +139,22 @@ export default function FeatureGrid() {
         animationType="slide"
         transparent={false}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <SafeAreaView style={styles.modalContainer}>
+        onRequestClose={() => setModalVisible(false)}
+      >
+        {/* 3. GANTI SafeAreaView MENJADI View DENGAN PADDING DINAMIS */}
+        <View
+          style={[
+            styles.modalContainer,
+            { paddingTop: insets.top, paddingBottom: insets.bottom },
+          ]}
+        >
           {/* Header Modal */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Semua Fitur</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)}>
+              onPress={() => setModalVisible(false)}
+            >
               <MaterialCommunityIcons
                 name="close"
                 size={28}
@@ -159,7 +173,7 @@ export default function FeatureGrid() {
                   activeOpacity={0.7}
                   onPress={() => {
                     setModalVisible(false);
-                    // Tambahkan aksi navigasi Anda di sini nantinya
+                    handleFeatureClick(item.title);
                   }}
                 >
                   <View style={styles.iconBox}>
@@ -176,7 +190,7 @@ export default function FeatureGrid() {
               ))}
             </View>
           </ScrollView>
-        </SafeAreaView>
+        </View>
       </Modal>
     </View>
   );
@@ -196,7 +210,6 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    
   },
   item: {
     width: "25%",
@@ -225,11 +238,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "500",
   },
-
-  // 5. TAMBAHAN STYLE UNTUK MODAL
   modalContainer: {
     flex: 1,
-    backgroundColor: "#FAFAFA", // Bisa diganti Colors.background
+    backgroundColor: "#FAFAFA",
   },
   modalHeader: {
     flexDirection: "row",
