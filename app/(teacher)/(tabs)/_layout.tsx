@@ -1,32 +1,45 @@
-import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
-import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+import { Tabs } from "expo-router";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function StudentTabsLayout() {
+export default function TeacherTabsLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary, // Warna saat menu aktif
-        tabBarInactiveTintColor: "#8E8E93", // Warna saat tidak aktif
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarShowLabel: false, // Matikan label bawaan agar tidak berantakan
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            // Tambah sedikit tinggi tab bar agar muat untuk tombol + teks
+            height: 75 + (insets.bottom > 0 ? insets.bottom : 10),
+            paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          },
+        ],
       }}
     >
       {/* 1. Beranda */}
       <Tabs.Screen
         name="index"
         options={{
-          title: "Beranda",
-          tabBarIcon: ({ color, focused }) => (
-            // Gunakan ikon terisi (solid) saat aktif, dan outline saat tidak aktif
-            <MaterialCommunityIcons
-              name={focused ? "home" : "home-outline"}
-              size={28}
-              color={color}
-            />
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.menuContainer}>
+              <View
+                style={[
+                  styles.floatingButton,
+                  focused ? styles.activeButton : styles.inactiveButton,
+                ]}
+              >
+                <MaterialCommunityIcons name="home" size={24} color="#000" />
+              </View>
+              <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
+                Beranda
+              </Text>
+            </View>
           ),
         }}
       />
@@ -35,32 +48,41 @@ export default function StudentTabsLayout() {
       <Tabs.Screen
         name="timeline"
         options={{
-          title: "Timeline",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "text-box" : "text-box-outline"}
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.menuContainer}>
+              <View
+                style={[
+                  styles.floatingButton,
+                  focused ? styles.activeButton : styles.inactiveButton,
+                ]}
+              >
+                <MaterialCommunityIcons name="text-box" size={24} color="#000" />
+              </View>
+              <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
+                Timeline
+              </Text>
+            </View>
           ),
         }}
       />
 
-      {/* 3. Scan (Tombol Melayang Tengah) */}
+      {/* 3. Scan (Lebih besar, ditarik lebih ke atas) */}
       <Tabs.Screen
         name="scan"
         options={{
-          title: "Scan",
-          // Teks "Scan" tetap dibiarkan muncul sesuai gambar
-          tabBarIcon: () => (
-            <View style={styles.floatingButtonContainer}>
-              <View style={styles.floatingButton}>
-                <MaterialCommunityIcons
-                  name="qrcode-scan"
-                  size={26}
-                  color="#FFFFFF"
-                />
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.scanContainer}>
+              <View
+                style={[
+                  styles.floatingScanButton,
+                  focused ? styles.activeButtonScan : styles.inactiveButtonScan,
+                ]}
+              >
+                <MaterialCommunityIcons name="qrcode-scan" size={32} color="#000" />
               </View>
+              <Text style={[styles.menuLabel, focused && styles.menuLabelActive, { marginTop: 8 }]}>
+                Scan
+              </Text>
             </View>
           ),
         }}
@@ -70,28 +92,42 @@ export default function StudentTabsLayout() {
       <Tabs.Screen
         name="notification"
         options={{
-          title: "Notifikasi",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "bell" : "bell-outline"}
-              size={26}
-              color={color}
-            />
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.menuContainer}>
+              <View
+                style={[
+                  styles.floatingButton,
+                  focused ? styles.activeButton : styles.inactiveButton,
+                ]}
+              >
+                <MaterialCommunityIcons name="bell" size={24} color="#000" />
+              </View>
+              <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
+                Notifikasi
+              </Text>
+            </View>
           ),
         }}
       />
 
-      {/* 5. Akun */}
+      {/* 5. Profil */}
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Akun",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "account-circle" : "account-circle-outline"}
-              size={28}
-              color={color}
-            />
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.menuContainer}>
+              <View
+                style={[
+                  styles.floatingButton,
+                  focused ? styles.activeButton : styles.inactiveButton,
+                ]}
+              >
+                <MaterialCommunityIcons name="account-circle" size={24} color="#000" />
+              </View>
+              <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
+                Akun
+              </Text>
+            </View>
           ),
         }}
       />
@@ -102,39 +138,81 @@ export default function StudentTabsLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: "#FFFFFF",
-    height: Platform.OS === "ios" ? 85 : 70,
-    paddingBottom: Platform.OS === "ios" ? 25 : 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
-    elevation: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
+    borderTopWidth: 3,
+    borderTopColor: "#000",
+    elevation: 0,
+    shadowColor: "transparent",
   },
-  tabBarLabel: {
-    fontSize: 11,
-    fontWeight: "500",
-    marginTop: 2,
-  },
-  floatingButtonContainer: {
-    position: "absolute",
-    top: -30, // Mengangkat tombol ke atas (keluar dari kotak navigasi)
-    justifyContent: "center",
+  
+  // Container untuk masing-masing menu (Icon + Teks)
+  menuContainer: {
     alignItems: "center",
+    justifyContent: "center",
+    width: 65, // Memberi ruang agar teks tidak terpotong
   },
+  scanContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -30, // Tombol scan ditarik lebih ke atas
+    width: 70,
+  },
+
+  // Teks Label
+  menuLabel: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#8E8E93",
+    marginTop: 6, // Jarak teks dengan kotak
+  },
+  menuLabelActive: {
+    color: "#000",
+    fontWeight: "900", // Teks menjadi sangat tebal (Brutalism) saat aktif
+  },
+
+  // Tombol Normal (4 Menu Samping)
   floatingButton: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: Colors.primary,
+    width: 48,
+    height: 48,
+    borderRadius: 12, // Kotak melengkung
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
+    borderWidth: 2.5,
+    borderColor: "#000",
+    
+    // Solid Shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
     elevation: 6,
+  },
+  activeButton: {
+    backgroundColor: "#FFE156", // Kuning saat aktif
+  },
+  inactiveButton: {
+    backgroundColor: "#FFFFFF", // Putih saat mati
+  },
+
+  // Tombol Scan (Tengah)
+  floatingScanButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#000",
+    
+    shadowColor: "#000",
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 8,
+  },
+  activeButtonScan: {
+    backgroundColor: "#A0E8AF", // Tetap hijau saat ditekan
+  },
+  inactiveButtonScan: {
+    backgroundColor: "#A0E8AF", // Hijau pastel
   },
 });

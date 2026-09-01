@@ -15,6 +15,7 @@
     "@react-navigation/bottom-tabs": "^7.18.18",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.3.18",
+    "@vscode/codicons": "^0.0.46-24",
     "expo": "~54.0.36",
     "expo-camera": "~17.0.10",
     "expo-constants": "~18.0.13",

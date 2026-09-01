@@ -25,7 +25,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "3",
       subject: "Biologi Umum",
-      time: "17:00 - 20:00",
+      time: "07:00 - 20:00",
       room: "Lab IPA 2",
       teacher: "Bpk. Anwar",
     },
