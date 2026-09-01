@@ -38,7 +38,7 @@ const ALL_FEATURES = [
   },
   {
     id: 4,
-    title: "Nilai\nSiswa",
+    title: "Nilai\nSemester",
     icon: "card-bulleted-outline",
     color: Colors.primary,
     route: null,
@@ -52,7 +52,7 @@ const ALL_FEATURES = [
   },
   {
     id: 6,
-    title: "Absensi\nSiswa",
+    title: "Absensi",
     icon: "percent-outline",
     color: Colors.primary,
     route: null,
