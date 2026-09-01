@@ -20,55 +20,70 @@ const ALL_FEATURES = [
     title: "Jadwal\nPelajaran",
     icon: "calendar",
     color: Colors.primary,
+    route: "/jadwal",
   },
-  { id: 2, title: "Tugas", icon: "list-box", color: Colors.primary },
+  {
+    id: 2,
+    title: "Tugas",
+    icon: "list-box",
+    color: Colors.primary,
+    route: "/tugas",
+  },
   {
     id: 3,
     title: "7 Pembiasaan",
     icon: "clipboard-text-clock-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 4,
     title: "Nilai\nSiswa",
     icon: "card-bulleted-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 5,
     title: "Pelaporan\nKode Etik",
     icon: "shield-alert-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 6,
     title: "Absensi\nSiswa",
     icon: "percent-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 7,
     title: "Tanya\nAnise",
     icon: "robot-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 8,
     title: "Kalender\nAkademik",
     icon: "calendar-month-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 9,
     title: "Ekstrakurikuler",
     icon: "account-group-outline",
     color: Colors.primary,
+    route: null,
   },
   {
     id: 10,
     title: "Poin & Prestasi",
     icon: "trophy-award",
     color: Colors.primary,
+    route: null,
   },
 ];
 
@@ -77,17 +92,7 @@ const MAIN_FEATURES = ALL_FEATURES.slice(0, 7);
 export default function FeatureGrid() {
   const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
-
-  // 2. INISIALISASI INSETS
   const insets = useSafeAreaInsets();
-
-  const handleFeatureClick = (featureTitle: string) => {
-    if (featureTitle === "Jadwal\nPelajaran") {
-      router.push("/jadwal");
-    } else {
-      console.log(`Halaman untuk fitur ${featureTitle} belum dibuat.`);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -100,7 +105,13 @@ export default function FeatureGrid() {
             key={item.id}
             style={styles.item}
             activeOpacity={0.7}
-            onPress={() => handleFeatureClick(item.title)}
+            onPress={() => {
+              if (item.route) {
+                router.push(item.route as any);
+              } else {
+                console.log(`Halaman untuk fitur ${item.title} belum dibuat.`);
+              }
+            }}
           >
             <View style={styles.iconBox}>
               <MaterialCommunityIcons
@@ -141,7 +152,6 @@ export default function FeatureGrid() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        {/* 3. GANTI SafeAreaView MENJADI View DENGAN PADDING DINAMIS */}
         <View
           style={[
             styles.modalContainer,
@@ -172,8 +182,15 @@ export default function FeatureGrid() {
                   style={styles.item}
                   activeOpacity={0.7}
                   onPress={() => {
-                    setModalVisible(false);
-                    handleFeatureClick(item.title);
+                    setModalVisible(false); // Tutup modal dulu
+                    // 3. TERAPKAN LOGIKA YANG SAMA DI DALAM MODAL
+                    if (item.route) {
+                      router.push(item.route as any);
+                    } else {
+                      console.log(
+                        `Halaman untuk fitur ${item.title} belum dibuat.`,
+                      );
+                    }
                   }}
                 >
                   <View style={styles.iconBox}>
