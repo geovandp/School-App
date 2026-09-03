@@ -63,7 +63,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "8",
       subject: "Olahraga (PJOK)",
-      time: "08:30 - 10:00",
+      time: "06:30 - 18:00",
       room: "Lapangan",
       teacher: "Bpk. Doni",
     },
@@ -79,7 +79,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "10",
       subject: "Seni Budaya",
-      time: "08:30 - 10:00",
+      time: "14:30 - 17:00",
       room: "Ruang Kesenian",
       teacher: "Ibu Diana",
     },

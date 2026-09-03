@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
-import { useRouter } from "expo-router"; // Untuk navigasi saat kartu diklik
+import { useRouter } from "expo-router";
 
 const SCHEDULE_DATA: Record<string, any[]> = {
   Senin: [
@@ -43,7 +43,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "5",
       subject: "Bahasa Inggris",
-      time: "07:00 - 08:30",
+      time: "16:00 - 18:30",
       room: "Lab Bahasa",
       teacher: "Mr. John",
     },
@@ -79,11 +79,6 @@ export default function ScheduleCard() {
     minute: "2-digit",
     hour12: false,
   });
-
-  // Simulasi testing jika ingin dipaksa tampil:
-  // const currentDayName = "Selasa";
-  // const currentTimeString = "08:30";
-
   const todaySchedules = SCHEDULE_DATA[currentDayName] || [];
   const currentActiveSchedule = todaySchedules.find((item) => {
     const [startTime, endTime] = item.time.split(" - ");

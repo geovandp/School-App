@@ -34,35 +34,35 @@ const ALL_FEATURES = [
     title: "7 Pembiasaan",
     icon: "clipboard-text-clock-outline",
     color: Colors.primary,
-    route: null,
+    route: "/pembiasaan",
   },
   {
     id: 4,
     title: "Nilai\nSemester",
     icon: "card-bulleted-outline",
     color: Colors.primary,
-    route: null,
+    route: "/nilai-semester",
   },
   {
     id: 5,
     title: "Pelaporan\nKode Etik",
     icon: "shield-alert-outline",
     color: Colors.primary,
-    route: null,
+    route: "/pelaporan",
   },
   {
     id: 6,
     title: "Absensi",
     icon: "percent-outline",
     color: Colors.primary,
-    route: null,
+    route: "/absensi",
   },
   {
     id: 7,
     title: "Tanya\nAnise",
     icon: "robot-outline",
     color: Colors.primary,
-    route: null,
+    route: "ai-assistant",
   },
   {
     id: 8,
@@ -82,6 +82,13 @@ const ALL_FEATURES = [
     id: 10,
     title: "Poin & Prestasi",
     icon: "trophy-award",
+    color: Colors.primary,
+    route: null,
+  },
+  {
+    id: 11,
+    title: "KPI",
+    icon: "chart-line",
     color: Colors.primary,
     route: null,
   },
@@ -182,7 +189,7 @@ export default function FeatureGrid() {
                   style={styles.item}
                   activeOpacity={0.7}
                   onPress={() => {
-                    setModalVisible(false); // Tutup modal dulu
+                    setModalVisible(false);
                     // 3. TERAPKAN LOGIKA YANG SAMA DI DALAM MODAL
                     if (item.route) {
                       router.push(item.route as any);

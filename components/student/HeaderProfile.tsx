@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
-// 1. TAMBAHKAN IMPORT INI
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function HeaderProfile() {
@@ -17,7 +16,7 @@ export default function HeaderProfile() {
     >
       {/* 3. TAMBAHKAN GAMBAR LOGO BAYANGAN (WATERMARK) DI SINI */}
       <Image
-        source={require("../../assets/images/favicon.png")}
+        source={require("../../assets/images/example_logo.png")}
         style={styles.watermarkLogo}
         resizeMode="contain"
       />
