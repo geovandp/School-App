@@ -41,7 +41,7 @@ export default function StudentTabsLayout() {
         }}
       />
 
-      {/* 2. Timeline */}
+      {/* 2. Berita */}
       <Tabs.Screen
         name="announce"
         options={{
