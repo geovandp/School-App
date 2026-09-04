@@ -43,7 +43,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "5",
       subject: "Bahasa Inggris",
-      time: "16:00 - 18:30",
+      time: "19:00 - 20:30",
       room: "Lab Bahasa",
       teacher: "Mr. John",
     },
@@ -52,7 +52,7 @@ const SCHEDULE_DATA: Record<string, any[]> = {
     {
       id: "6",
       subject: "Prakarya",
-      time: "07:30 - 09:00",
+      time: "14:30 - 19:00",
       room: "Ruang 102",
       teacher: "Bpk. Eko",
     },
@@ -89,7 +89,7 @@ export default function ScheduleCard() {
     <TouchableOpacity
       style={styles.card}
       activeOpacity={0.9}
-      onPress={() => router.push("/jadwal")} // Mengarahkan ke halaman jadwal lengkap saat diklik
+      onPress={() => router.push("/jadwal")}
     >
       {currentActiveSchedule ? (
         // === TAMPILAN KETIKA ADA PELAJARAN BERLANGSUNG ===
