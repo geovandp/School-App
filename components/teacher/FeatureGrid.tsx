@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   Alert,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -25,19 +26,19 @@ const mainFeatures: FeatureItem[] = [
     title: "Jadwal\nMengajar",
     icon: "calendar",
     color: "#9BF6FF",
-    route: "/page/jadwal_mengajar", // Path ke (teacher)/page/jadwal_mengajar.tsx
+    route: "/page/jadwal_mengajar",
   },
-  { 
-    id: 2, 
-    title: "Penugasan", 
-    icon: "clipboard-list-outline", 
+  {
+    id: 2,
+    title: "Penugasan",
+    icon: "clipboard-list-outline",
     color: "#FDFFB6",
     route: "/page/penugasan",
   },
   {
     id: 3,
     title: "Nilai",
-    icon: "card-bulleted-outline", 
+    icon: "card-bulleted-outline",
     color: "#FFADAD",
     route: "/page/nilai",
   },
@@ -64,7 +65,7 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 7,
-    title: "Info",
+    title: "Info\nSekolah",
     icon: "bullhorn-outline",
     color: "#E4D4FF",
     route: "/page/info",
@@ -77,10 +78,61 @@ const mainFeatures: FeatureItem[] = [
   },
 ];
 
+const otherFeatures: FeatureItem[] = [
+  {
+    id: 101,
+    title: "Arsip Dokumen",
+    icon: "folder-multiple-outline",
+    color: "#FFC6FF",
+    route: "/page/arsip",
+  },
+  {
+    id: 102,
+    title: "Catatan Konseling",
+    icon: "account-voice",
+    color: "#9BF6FF",
+    route: "/page/konseling",
+  },
+  {
+    id: 103,
+    title: "Materi Pelajaran",
+    icon: "book-open-page-variant-outline",
+    color: "#FFD166",
+    route: "/page/materi_pelajaran",
+  },
+  {
+    id: 104,
+    title: "Ekstrakulikuler",
+    icon: "basketball", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
+    color: "#FDFFB6",
+    route: "/page/ekstrakurikuler",
+  },
+  {
+    id: 105,
+    title: "Poin & Prestasi",
+    icon: "trophy-outline", // Ikon piala untuk prestasi
+    color: "#FFADAD",
+    route: "/page/prestasi",
+  },
+  {
+    id: 106,
+    title: "KPI",
+    icon: "chart-box-outline", // Ikon grafik/kinerja untuk KPI
+    color: "#E4D4FF",
+    route: "/page/kpi",
+  },
+  {
+    id: 107,
+    title: "Tanya Anise",
+    icon: "headset", // Ikon bantuan / asisten tanya jawab
+    color: "#A0E8AF",
+    route: "/page/tanya_anise",
+  },
+];
+
 export default function TeacherFeatureGrid() {
   const [modalVisible, setModalVisible] = useState(false);
 
-  // 2. Fungsi Eksekusi Navigasi
   const handleFeaturePress = (item: FeatureItem) => {
     if (item.id === 8) {
       setModalVisible(true);
@@ -92,7 +144,6 @@ export default function TeacherFeatureGrid() {
     }
 
     if (item.route) {
-      // Pindah halaman menggunakan Expo Router
       router.push(item.route as any);
     } else {
       Alert.alert("Info", `Halaman "${item.title.replace("\n", " ")}" belum tersedia.`);
@@ -102,11 +153,11 @@ export default function TeacherFeatureGrid() {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Menu Utama</Text>
-      
+
       <View style={styles.grid}>
         {mainFeatures.map((item) => (
-          <TouchableOpacity 
-            key={item.id} 
+          <TouchableOpacity
+            key={item.id}
             style={[styles.featureCard, { backgroundColor: item.color }]}
             activeOpacity={0.7}
             onPress={() => handleFeaturePress(item)}
@@ -121,9 +172,9 @@ export default function TeacherFeatureGrid() {
         ))}
       </View>
 
-      {/* Modal */}
+      {/* Modal Muncul dari Bawah */}
       <Modal
-        animationType="fade"
+        animationType="slide" // Diubah dari "fade" menjadi "slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
@@ -132,14 +183,31 @@ export default function TeacherFeatureGrid() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Menu Lainnya</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
               >
                 <MaterialCommunityIcons name="close" size={20} color="#000" />
               </TouchableOpacity>
             </View>
-            {/* Isi modal disesuaikan kebutuhan */}
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.modalGrid}>
+                {otherFeatures.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[styles.modalItemCard, { backgroundColor: item.color }]}
+                    activeOpacity={0.7}
+                    onPress={() => handleFeaturePress(item)}
+                  >
+                    <View style={styles.iconBox}>
+                      <MaterialCommunityIcons name={item.icon as any} size={22} color="#000" />
+                    </View>
+                    <Text style={styles.modalItemTitle}>{item.title}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -169,9 +237,44 @@ const styles = StyleSheet.create({
   },
   iconBox: { backgroundColor: "#FFF", padding: 7, borderRadius: 10, borderWidth: 1.5, borderColor: "#000" },
   featureTitle: { fontSize: 10, fontWeight: "800", color: "#000", textAlign: "center", lineHeight: 12 },
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", justifyContent: "center", alignItems: "center", padding: 20 },
-  modalContent: { width: "100%", maxHeight: "70%", backgroundColor: "#FDFBF7", borderRadius: 20, borderWidth: 3, borderColor: "#000", padding: 20 },
+
+  // Modal Styling yang diubah agar menempel di bawah
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end", // Posisi menempel ke bawah layar
+    alignItems: "center"
+  },
+  modalContent: {
+    width: "100%",
+    maxHeight: "75%",
+    backgroundColor: "#FDFBF7",
+    borderTopLeftRadius: 24, // Membuat sudut atas melengkung
+    borderTopRightRadius: 24,
+    borderWidth: 3,
+    borderBottomWidth: 0,
+    borderColor: "#000",
+    padding: 20
+  },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16, borderBottomWidth: 2, borderBottomColor: "#000", paddingBottom: 10 },
   modalTitle: { fontSize: 18, fontWeight: "900", color: "#000" },
   closeButton: { backgroundColor: "#FFADAD", width: 32, height: 32, borderRadius: 8, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center" },
+
+  modalGrid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingBottom: 20 },
+  modalItemCard: {
+    width: "48%",
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: "#000",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 2,
+  },
+  modalItemTitle: { fontSize: 13, fontWeight: "800", color: "#000", flex: 1 },
 });

@@ -1,10 +1,11 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
-    Alert,
     FlatList,
+    Image,
+    Modal,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -12,112 +13,103 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type ScheduleItem = {
+type SchoolInfoItem = {
     id: string;
-    time: string;
-    subject: string;
-    className: string;
-    room: string;
-    status: "Selesai" | "Sedang Berjalan" | "Belum Mulai";
-    statusColor: string;
+    title: string;
+    date: string;
+    image: string;
+    description: string;
+    fullDetail: string;
+    category: "Pengumuman" | "Kegiatan" | "Prestasi";
 };
 
-const scheduleData: ScheduleItem[] = [
+// Data Dummy Info Sekolah
+const schoolInfoData: SchoolInfoItem[] = [
     {
         id: "1",
-        time: "07:30 - 09:00",
-        subject: "Bahasa Indonesia",
-        className: "Kelas X IPA 1",
-        room: "Ruang 101",
-        status: "Selesai",
-        statusColor: "#FFF",
+        title: "Penerimaan Beasiswa Prestasi Siswa Semester Ganjil 2026",
+        date: "03 September 2026",
+        image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop",
+        description: "Pendaftaran program beasiswa prestasi akademik dan non-akademik telah dibuka untuk seluruh siswa kelas X hingga XII.",
+        fullDetail: "Program beasiswa prestasi tahun ajaran 2026/2027 resmi dibuka mulai tanggal 3 hingga 20 September 2026. Syarat pendaftaran meliputi nilai rapor rata-rata minimal 85, melampirkan sertifikat kejuaraan (jika ada), serta surat rekomendasi dari wali kelas. Formulir dapat diambil di ruang tata usaha atau diunduh melalui portal sekolah.",
+        category: "Pengumuman",
     },
     {
         id: "2",
-        time: "09:30 - 11:00",
-        subject: "Bahasa Indonesia",
-        className: "Kelas X IPS 2",
-        room: "Ruang 204",
-        status: "Sedang Berjalan",
-        statusColor: "#CAFFBF",
+        title: "Kegiatan Studi Banding & Peluncuran Projek P5",
+        date: "01 September 2026",
+        image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop",
+        description: "Siswa kelas XI mengikuti rangkaian kegiatan studi banding dan pameran hasil karya Projek Penguatan Profil Pelajar Pancasila.",
+        fullDetail: "Sebagai bagian dari kurikulum merdeka, kegiatan Projek Penguatan Profil Pelajar Pancasila (P5) mengangkat tema 'Kewirausahaan dan Kearifan Lokal'. Acara ini diisi dengan pameran produk daur ulang kreatif serta pementasan seni tradisional oleh perwakilan kelompok siswa di aula utama sekolah.",
+        category: "Kegiatan",
     },
     {
         id: "3",
-        time: "11:30 - 13:00",
-        subject: "Bahasa Indonesia",
-        className: "Kelas XI IPA 3",
-        room: "Ruang 302",
-        status: "Belum Mulai",
-        statusColor: "#FDFFB6",
+        title: "Tim Olimpiade Sains Sekolah Raih Medali Emas Nasional",
+        date: "28 Agustus 2026",
+        image: "https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?q=80&w=600&auto=format&fit=crop",
+        description: "Kebanggaan datang kembali setelah perwakilan siswa berhasil menyabet juara pertama dalam ajang Olimpiade Sains tingkat nasional.",
+        fullDetail: "Prestasi membanggakan kembali ditorehkan oleh tim olimpiade sains sekolah. Medali emas berhasil diraih pada bidang Matematika dan Fisika dalam kompetisi sains nasional yang diselenggarakan di Jakarta. Kepala sekolah menyampaikan apresiasi tinggi kepada para siswa dan guru pembimbing.",
+        category: "Prestasi",
     },
 ];
 
-export default function TeachingSchedulePage() {
+export default function InfoSekolahPage() {
     const insets = useSafeAreaInsets();
-    const navigation = useNavigation<any>();
+    const [selectedInfo, setSelectedInfo] = useState<SchoolInfoItem | null>(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const handleActionButton = (item: ScheduleItem) => {
-        if (item.status === "Selesai") {
-            Alert.alert("Lihat Jurnal", `Menampilkan jurnal mengajar kelas ${item.className}`);
-        } else if (item.status === "Sedang Berjalan") {
-            Alert.alert("Kelas Aktif", `Masuk ke sesi mengajar ${item.className}`);
-        } else {
-            Alert.alert("Mulai Kelas", `Apakah Anda ingin memulai kelas ${item.className}?`, [
-                { text: "Batal", style: "cancel" },
-                { text: "Mulai", onPress: () => console.log("Kelas Dimulai") },
-            ]);
-        }
+    const handleOpenDetail = (item: SchoolInfoItem) => {
+        setSelectedInfo(item);
+        setModalVisible(true);
     };
 
-    const renderItem = ({ item }: { item: ScheduleItem }) => (
+    const handleCloseModal = () => {
+        setModalVisible(false);
+        setSelectedInfo(null);
+    };
+
+    const renderCardItem = ({ item }: { item: SchoolInfoItem }) => (
         <View style={styles.card}>
-            <View style={styles.cardHeader}>
-                <View style={styles.timeBox}>
-                    <MaterialCommunityIcons name="clock-outline" size={16} color="#000" />
-                    <Text style={styles.timeText}>{item.time}</Text>
-                </View>
-                <View style={[styles.statusBadge, { backgroundColor: item.statusColor }]}>
-                    <Text style={styles.statusText}>{item.status}</Text>
+            {/* Foto / Banner Info */}
+            <View style={styles.imageContainer}>
+                <Image source={{ uri: item.image }} style={styles.cardImage} />
+                <View style={styles.categoryBadge}>
+                    <Text style={styles.categoryText}>{item.category}</Text>
                 </View>
             </View>
 
-            <View style={styles.infoSection}>
-                <Text style={styles.subjectText}>{item.subject}</Text>
-                <View style={styles.roomInfoRow}>
-                    <MaterialCommunityIcons name="google-classroom" size={18} color="#000" />
-                    <Text style={styles.classText}>{item.className}</Text>
-                    <Text style={styles.dotSeparator}>•</Text>
-                    <MaterialCommunityIcons name="door-open" size={18} color="#000" />
-                    <Text style={styles.roomText}>{item.room}</Text>
+            {/* Konten Card */}
+            <View style={styles.cardContent}>
+                <View style={styles.dateRow}>
+                    <MaterialCommunityIcons name="calendar-outline" size={14} color="#666" />
+                    <Text style={styles.dateText}>{item.date}</Text>
                 </View>
-            </View>
 
-            <TouchableOpacity
-                style={styles.actionButton}
-                activeOpacity={0.8}
-                onPress={() => handleActionButton(item)}
-            >
-                <Text style={styles.actionButtonText}>
-                    {item.status === "Selesai" ? "Lihat Jurnal" : "Mulai Kelas"}
-                </Text>
-                <MaterialCommunityIcons
-                    name={item.status === "Selesai" ? "text-box-search-outline" : "arrow-right-bold"}
-                    size={18}
-                    color="#FFF"
-                />
-            </TouchableOpacity>
+                <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+                <Text style={styles.cardDesc} numberOfLines={2}>{item.description}</Text>
+
+                {/* Tombol Detail */}
+                <TouchableOpacity
+                    style={styles.detailButton}
+                    activeOpacity={0.8}
+                    onPress={() => handleOpenDetail(item)}
+                >
+                    <Text style={styles.detailButtonText}>Baca Selengkapnya</Text>
+                    <MaterialCommunityIcons name="arrow-right" size={16} color="#FFF" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
     return (
-        /* PERBAIKAN DILAKUKAN DI SINI: Tambahkan paddingBottom: insets.bottom */
-        <View 
+        <View
             style={[
-                styles.container, 
-                { 
-                    paddingTop: insets.top, 
-                    paddingBottom: Math.max(insets.bottom, 16) 
-                }
+                styles.container,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: Math.max(insets.bottom, 16),
+                },
             ]}
         >
             {/* Header Halaman */}
@@ -129,22 +121,68 @@ export default function TeachingSchedulePage() {
                 >
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.pageTitle}>info</Text>
+                <Text style={styles.pageTitle}>Info Sekolah</Text>
                 <View style={{ width: 40 }} />
             </View>
 
-            <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>Selasa, 1 September 2026</Text>
-                <Text style={styles.subtitleText}>Anda memiliki 3 jadwal hari ini.</Text>
+            {/* Subtitle */}
+            <View style={styles.subHeaderContainer}>
+                <Text style={styles.subHeaderTitle}>Pengumuman & Berita Terbaru</Text>
             </View>
 
+            {/* List Data Card */}
             <FlatList
-                data={scheduleData}
+                data={schoolInfoData}
                 keyExtractor={(item) => item.id}
-                renderItem={renderItem}
+                renderItem={renderCardItem}
                 contentContainerStyle={styles.listContainer}
                 showsVerticalScrollIndicator={false}
             />
+
+            {/* MODAL INFO / DETAIL */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        {/* Header Modal */}
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalHeaderTitle}>Detail Informasi</Text>
+                            <TouchableOpacity
+                                style={styles.closeButton}
+                                onPress={handleCloseModal}
+                            >
+                                <MaterialCommunityIcons name="close" size={20} color="#000" />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Konten Detail di dalam Modal */}
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {selectedInfo && (
+                                <View>
+                                    <Image source={{ uri: selectedInfo.image }} style={styles.modalImage} />
+                                    
+                                    <View style={styles.modalMetaRow}>
+                                        <View style={styles.modalCategoryBadge}>
+                                            <Text style={styles.categoryText}>{selectedInfo.category}</Text>
+                                        </View>
+                                        <View style={styles.dateRow}>
+                                            <MaterialCommunityIcons name="calendar-outline" size={14} color="#666" />
+                                            <Text style={styles.dateText}>{selectedInfo.date}</Text>
+                                        </View>
+                                    </View>
+
+                                    <Text style={styles.modalTitle}>{selectedInfo.title}</Text>
+                                    <Text style={styles.modalFullDetail}>{selectedInfo.fullDetail}</Text>
+                                </View>
+                            )}
+                        </ScrollView>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -180,126 +218,185 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     pageTitle: {
-        fontSize: 20,
+        fontSize: 18,
+        fontWeight: "900",
+        color: "#000",
+        textAlign: "center",
+        flex: 1,
+    },
+    subHeaderContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+    },
+    subHeaderTitle: {
+        fontSize: 16,
         fontWeight: "900",
         color: "#000",
     },
-    dateContainer: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-    },
-    dateText: {
-        fontSize: 18,
-        fontWeight: "800",
-        color: "#000",
-    },
-    subtitleText: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#555",
-        marginTop: 4,
-    },
     listContainer: {
         paddingHorizontal: 20,
-        paddingBottom: 24, // Padding tambahan ruang scroll bagian bawah
+        paddingBottom: 24,
         gap: 16,
     },
+    // Styling Card
     card: {
-        backgroundColor: "#9BF6FF",
+        backgroundColor: "#FFF",
         borderRadius: 16,
-        padding: 16,
         borderWidth: 3,
         borderColor: "#000",
+        overflow: "hidden",
         shadowColor: "#000",
         shadowOffset: { width: 4, height: 4 },
         shadowOpacity: 1,
         shadowRadius: 0,
         elevation: 6,
     },
-    cardHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 12,
+    imageContainer: {
+        height: 160,
+        width: "100%",
+        borderBottomWidth: 3,
+        borderBottomColor: "#000",
+        backgroundColor: "#EEE",
     },
-    timeBox: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFF",
+    cardImage: {
+        width: "100%",
+        height: "100%",
+    },
+    categoryBadge: {
+        position: "absolute",
+        top: 12,
+        right: 12,
+        backgroundColor: "#FFD166",
         paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
-        gap: 6,
-    },
-    timeText: {
-        fontSize: 13,
-        fontWeight: "800",
-        color: "#000",
-    },
-    statusBadge: {
-        paddingHorizontal: 10,
-        paddingVertical: 6,
+        paddingVertical: 4,
         borderRadius: 8,
         borderWidth: 2,
         borderColor: "#000",
     },
-    statusText: {
-        fontSize: 11,
+    categoryText: {
+        fontSize: 10,
         fontWeight: "900",
         color: "#000",
         textTransform: "uppercase",
     },
-    infoSection: {
-        marginBottom: 16,
-        backgroundColor: "#FFF",
-        padding: 12,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: "#000",
+    cardContent: {
+        padding: 16,
     },
-    subjectText: {
-        fontSize: 22,
+    dateRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        marginBottom: 6,
+    },
+    dateText: {
+        fontSize: 12,
+        fontWeight: "700",
+        color: "#555",
+    },
+    cardTitle: {
+        fontSize: 16,
         fontWeight: "900",
         color: "#000",
         marginBottom: 6,
     },
-    roomInfoRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6,
+    cardDesc: {
+        fontSize: 13,
+        fontWeight: "600",
+        color: "#444",
+        marginBottom: 14,
+        lineHeight: 18,
     },
-    classText: {
-        fontSize: 14,
-        fontWeight: "700",
-        color: "#000",
-    },
-    dotSeparator: {
-        fontSize: 14,
-        fontWeight: "900",
-        color: "#000",
-        marginHorizontal: 4,
-    },
-    roomText: {
-        fontSize: 14,
-        fontWeight: "700",
-        color: "#000",
-    },
-    actionButton: {
+    detailButton: {
         backgroundColor: "#000",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        paddingVertical: 12,
+        paddingVertical: 10,
         borderRadius: 10,
         borderWidth: 2,
         borderColor: "#000",
-        gap: 8,
+        gap: 6,
     },
-    actionButtonText: {
+    detailButtonText: {
         color: "#FFF",
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: "800",
+    },
+    // Styling Modal
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "flex-end",
+    },
+    modalContent: {
+        width: "100%",
+        maxHeight: "85%",
+        backgroundColor: "#FDFBF7",
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        borderWidth: 3,
+        borderBottomWidth: 0,
+        borderColor: "#000",
+        padding: 20,
+    },
+    modalHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 16,
+        borderBottomWidth: 2,
+        borderBottomColor: "#000",
+        paddingBottom: 10,
+    },
+    modalHeaderTitle: {
+        fontSize: 18,
+        fontWeight: "900",
+        color: "#000",
+    },
+    closeButton: {
+        backgroundColor: "#FFADAD",
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: "#000",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalImage: {
+        width: "100%",
+        height: 200,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: "#000",
+        marginBottom: 14,
+    },
+    modalMetaRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    modalCategoryBadge: {
+        backgroundColor: "#FFD166",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: "#000",
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "900",
+        color: "#000",
+        marginBottom: 10,
+        lineHeight: 24,
+    },
+    modalFullDetail: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#333",
+        lineHeight: 22,
+        paddingBottom: 20,
     },
 });

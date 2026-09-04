@@ -100,10 +100,10 @@ export default function TeacherTabsLayout() {
                   focused ? styles.activeButton : styles.inactiveButton,
                 ]}
               >
-                <MaterialCommunityIcons name="alert-box" size={24} color="#000" />
+                <MaterialCommunityIcons name="book-open-page-variant-outline" size={24} color="#000" />
               </View>
               <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
-                Tugas
+                Materi
               </Text>
             </View>
           ),
