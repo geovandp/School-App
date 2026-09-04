@@ -8,7 +8,7 @@ const scheduleData = [
     subject: "Matematika Lanjutan",
     classInfo: "Kelas XII IPA 1 • Ruang 302",
     bgColor: "#E4D4FF", // Ungu pastel
-    status: "Berlangsung", // Ungu pastel
+    status: "Berlangsung",
   },
   {
     id: "2",
@@ -28,6 +28,9 @@ const scheduleData = [
   },
 ];
 
+const CARD_WIDTH = 295; // Lebar card
+const CARD_GAP = 14;   // Jarak antar card (sesuai style gap di scrollContainer)
+
 export default function TeacherScheduleCard() {
   return (
     <View style={styles.outerWrapper}>
@@ -35,6 +38,10 @@ export default function TeacherScheduleCard() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
+        // PROPERTI SNAP DITAMBAHKAN DI SINI:
+        snapToInterval={CARD_WIDTH + CARD_GAP} // Menentukan jarak snap per kartu + gap-nya
+        decelerationRate="fast"              // Membuat animasi berhenti dengan cepat & pas
+        snapToAlignment="start"
       >
         {scheduleData.map((item) => (
           <View
@@ -68,10 +75,10 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    gap: 14, // Jarak antar card
+    gap: CARD_GAP, // Jarak antar card
   },
   cardContainer: {
-    width: 295, // Ukuran lebar card agar muat & memberi clue bisa di-scroll
+    width: CARD_WIDTH, // Ukuran lebar card
     borderRadius: 16,
     padding: 20,
     borderWidth: 3,

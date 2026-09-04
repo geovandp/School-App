@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from 'expo-router';
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -10,10 +11,10 @@ export default function TeacherHeader() {
         <Text style={styles.nameText}>Bapak Budi, S.Pd</Text>
       </View>
       <View style={styles.headerNavContainer}>
-        <TouchableOpacity style={styles.notificationButton}>
+        <TouchableOpacity style={styles.notificationButton} onPress={() => router.push('/(teacher)/page/profile')}>
           <MaterialCommunityIcons name="bell-outline" size={24} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.accountButton}>
+        <TouchableOpacity style={styles.accountButton} onPress={() => router.push('/(teacher)/page/profile')}>
           <MaterialCommunityIcons name="account-outline" size={24} color="#000" />
         </TouchableOpacity>
       </View>
