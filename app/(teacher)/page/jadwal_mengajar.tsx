@@ -1,7 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { router } from "expo-router";
-import React from "react";
+// import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import {
     Alert,
     FlatList,
@@ -63,7 +62,8 @@ const scheduleData: ScheduleItem[] = [
 
 export default function TeachingSchedulePage() {
     const insets = useSafeAreaInsets();
-    const navigation = useNavigation<any>();
+    // const navigation = useNavigation<any>();
+    const router = useRouter();
 
     const handleActionButton = (item: ScheduleItem) => {
         if (item.status === "Selesai") {

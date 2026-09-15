@@ -1,14 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
 import {
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import SchoolEventCarousel from "@/components/teacher/event";
 import TeacherFeatureGrid from "../../../components/teacher/FeatureGrid";
 import TeacherHeader from "../../../components/teacher/HeaderProfile";
 import TeacherScheduleCard from "../../../components/teacher/ScheduleCard";
@@ -37,8 +35,9 @@ export default function TeacherHomeScreen() {
         {/* Indeks 2 dst: Konten di bawahnya */}
         <View style={styles.contentBody}>
           <TeacherFeatureGrid />
+          <SchoolEventCarousel />
 
-          <View style={styles.bannerSection}>
+          {/* <View style={styles.bannerSection}>
             <Text style={styles.sectionTitle}>School Event</Text>
             <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
               <View style={styles.bannerPlaceholder}>
@@ -46,52 +45,7 @@ export default function TeacherHomeScreen() {
                 <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.bannerSection}>
-            <Text style={styles.sectionTitle}>School Event</Text>
-            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
-              <View style={styles.bannerPlaceholder}>
-                <Text style={styles.bannerText}>PROGRAM MBG</Text>
-                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bannerSection}>
-            <Text style={styles.sectionTitle}>School Event</Text>
-            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
-              <View style={styles.bannerPlaceholder}>
-                <Text style={styles.bannerText}>PROGRAM MBG</Text>
-                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bannerSection}>
-            <Text style={styles.sectionTitle}>School Event</Text>
-            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
-              <View style={styles.bannerPlaceholder}>
-                <Text style={styles.bannerText}>PROGRAM MBG</Text>
-                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bannerSection}>
-            <Text style={styles.sectionTitle}>School Event</Text>
-            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
-              <View style={styles.bannerPlaceholder}>
-                <Text style={styles.bannerText}>PROGRAM MBG</Text>
-                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.bannerSection}>
-            <Text style={styles.sectionTitle}>School Event</Text>
-            <TouchableOpacity activeOpacity={0.9} style={styles.bannerContainer}>
-              <View style={styles.bannerPlaceholder}>
-                <Text style={styles.bannerText}>PROGRAM MBG</Text>
-                <Text style={styles.bannerSubText}>Makan Bergizi Gratis 2026</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          </View> */}
 
         </View>
       </ScrollView>

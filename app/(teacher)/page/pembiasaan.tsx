@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     FlatList,
     StyleSheet,
@@ -84,6 +84,8 @@ export default function PembiasaanPage() {
         }
     };
 
+    const progressPercentage = (checkedHabits.length / habitsData.length) * 100;
+
     const renderItem = ({ item }: { item: HabitItem }) => {
         const isChecked = checkedHabits.includes(item.id);
 
@@ -136,12 +138,32 @@ export default function PembiasaanPage() {
                 <View style={{ width: 40 }} />
             </View>
 
-            {/* Subtitle / Progress Info */}
-            <View style={styles.subHeaderContainer}>
-                <Text style={styles.dateText}>Jum'at, 4 September 2026</Text>
-                <Text style={styles.progressText}>
-                    Selesai: {checkedHabits.length} dari 7 pembiasaan
-                </Text>
+            {/* Hero Section: Progress Hari Ini */}
+            <View style={styles.heroCard}>
+                <View style={styles.heroTopRow}>
+                    <View>
+                        <Text style={styles.heroTitle}>Progres Hari Ini</Text>
+                        <Text style={styles.heroDate}>Rabu, 16 September 2026</Text>
+                    </View>
+                    <View style={styles.scoreBadge}>
+                        <Text style={styles.scoreText}>
+                            {checkedHabits.length}/{habitsData.length}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Progress Bar Visual */}
+                <View style={styles.progressBarContainer}>
+                    <View 
+                        style={[
+                            styles.progressBarFill, 
+                            { width: `${progressPercentage}%` }
+                        ]} 
+                    />
+                </View>
+                {checkedHabits.length === habitsData.length && (
+                    <Text style={styles.heroMotivation}>Luar biasa! Semua target hari ini tercapai. 🎉</Text>
+                )}
             </View>
 
             {/* List 7 Pembiasaan */}
@@ -193,21 +215,77 @@ const styles = StyleSheet.create({
         textAlign: "center",
         flex: 1,
     },
-    subHeaderContainer: {
-        paddingHorizontal: 20,
-        paddingVertical: 16,
+    // --- Styles untuk Hero Section ---
+    heroCard: {
+        backgroundColor: "#FDFFB6", // Warna cerah yang serasi dengan card list
+        marginHorizontal: 20,
+        marginVertical: 20,
+        padding: 20,
+        borderRadius: 16,
+        borderWidth: 3,
+        borderColor: "#000",
+        shadowColor: "#000",
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 0,
+        elevation: 6,
     },
-    dateText: {
-        fontSize: 16,
+    heroTopRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 16,
+    },
+    heroTitle: {
+        fontSize: 20,
         fontWeight: "900",
         color: "#000",
     },
-    progressText: {
-        fontSize: 13,
+    heroDate: {
+        fontSize: 14,
         fontWeight: "700",
         color: "#555",
-        marginTop: 2,
+        marginTop: 4,
     },
+    scoreBadge: {
+        backgroundColor: "#FFF",
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: "#000",
+        shadowColor: "#000",
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 0,
+    },
+    scoreText: {
+        fontSize: 20,
+        fontWeight: "900",
+        color: "#000",
+    },
+    progressBarContainer: {
+        height: 16,
+        backgroundColor: "#FFF",
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: "#000",
+        overflow: "hidden",
+    },
+    progressBarFill: {
+        height: "100%",
+        backgroundColor: "#A0E8AF", // Warna hijau untuk bar progress
+        borderRightWidth: 2,
+        borderColor: "#000",
+    },
+    heroMotivation: {
+        marginTop: 12,
+        fontSize: 13,
+        fontWeight: "800",
+        color: "#000",
+        textAlign: "center",
+    },
+    // --------------------------------
     listContainer: {
         paddingHorizontal: 20,
         paddingBottom: 24,

@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Modal,
@@ -37,7 +37,7 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 3,
-    title: "Nilai",
+    title: "Nilai\nTugas",
     icon: "card-bulleted-outline",
     color: "#FFADAD",
     route: "/page/nilai",
@@ -98,15 +98,15 @@ const otherFeatures: FeatureItem[] = [
     title: "Materi Pelajaran",
     icon: "book-open-page-variant-outline",
     color: "#FFD166",
-    route: "/page/materi_pelajaran",
+    route: "/page/materi",
   },
-  {
-    id: 104,
-    title: "Ekstrakulikuler",
-    icon: "basketball", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
-    color: "#FDFFB6",
-    route: "/page/ekstrakurikuler",
-  },
+  // {
+  //   id: 104,
+  //   title: "Ekstrakulikuler",
+  //   icon: "basketball", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
+  //   color: "#FDFFB6",
+  //   route: "/page/ekstrakurikuler",
+  // },
   {
     id: 105,
     title: "Poin & Prestasi",
@@ -126,7 +126,7 @@ const otherFeatures: FeatureItem[] = [
     title: "Tanya Anise",
     icon: "headset", // Ikon bantuan / asisten tanya jawab
     color: "#A0E8AF",
-    route: "/page/tanya_anise",
+    route: "/page/asisten",
   },
 ];
 

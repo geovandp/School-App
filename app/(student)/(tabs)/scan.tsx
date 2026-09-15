@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  ActivityIndicator,
-} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useIsFocused } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+// import { useIsFocused } from "@react-navigation/native";
 import { Colors } from "@/constants/Colors";
+import { useFocusEffect, useRouter } from "expo-router";
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -17,8 +17,19 @@ export default function ScanScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const isFocused = useIsFocused();
+  const [isFocused, setIsFocused] = useState(false);
+
   const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+
+      return () => {
+        setIsFocused(false);
+      };
+    }, [])
+  );
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -94,7 +105,7 @@ export default function ScanScreen() {
     <View style={styles.container}>
       {isFocused ? (
         <CameraView
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           facing="back"
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{

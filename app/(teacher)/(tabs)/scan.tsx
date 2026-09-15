@@ -1,22 +1,35 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useIsFocused } from "@react-navigation/native"; // 1. Import hook ini
+import { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+// import { useIsFocused } from "@react-navigation/native";
 import { Colors } from "@/constants/Colors";
+import { useFocusEffect, useRouter } from "expo-router";
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // 2. Gunakan hook untuk mengecek apakah halaman ini sedang aktif/terbuka
-  const isFocused = useIsFocused();
+  const [isFocused, setIsFocused] = useState(false);
+
+  const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+
+      return () => {
+        setIsFocused(false);
+      };
+    }, [])
+  );
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -37,25 +50,62 @@ export default function ScanScreen() {
     );
   }
 
-  const handleBarcodeScanned = ({
+  const verifyAttendanceToServer = (qrData: string) => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+
+      setTimeout(() => {
+        setIsLoading(false);
+
+        if (qrData) {
+          resolve({
+            status: "success",
+            message: `Absensi berhasil: ${qrData}`,
+          });
+        } else {
+          reject({ status: "error", message: "QR Code tidak valid!" });
+        }
+      }, 1000);
+    });
+  };
+
+  const handleBarcodeScanned = async ({
     type,
     data,
   }: {
     type: string;
     data: string;
   }) => {
+    if (scanned || isLoading) return;
+
     setScanned(true);
-    Alert.alert("Absensi Berhasil!", `Data QR: ${data}`, [
-      { text: "OK", onPress: () => setScanned(false) },
-    ]);
+
+    try {
+      const response: any = await verifyAttendanceToServer(data);
+
+      // Tampilkan pesan sukses di layar
+      setSuccessMessage(response.message);
+
+      // Tunggu 1.5 detik lalu reset state dan kembali ke Beranda
+      setTimeout(() => {
+        setScanned(false); // Reset state agar tidak nyangkut saat dibuka kembali
+        setSuccessMessage(null);
+        router.replace("/(student)/(tabs)");
+      }, 1500);
+    } catch (error: any) {
+      setSuccessMessage("Gagal memproses QR Code");
+      setTimeout(() => {
+        setScanned(false);
+        setSuccessMessage(null);
+      }, 1500);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* 3. Hanya render/hidupkan kamera JIKA layar sedang difokuskan (isFocused === true) */}
       {isFocused ? (
         <CameraView
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           facing="back"
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
@@ -71,23 +121,28 @@ export default function ScanScreen() {
                 <View style={[styles.corner, styles.topRight]} />
                 <View style={[styles.corner, styles.bottomLeft]} />
                 <View style={[styles.corner, styles.bottomRight]} />
+
+                {/* Indikator Loading */}
+                {isLoading && (
+                  <View style={styles.popupOverlay}>
+                    <ActivityIndicator size="large" color={Colors.primary} />
+                    <Text style={styles.popupText}>Memproses...</Text>
+                  </View>
+                )}
+
+                {/* Pesan Sukses Menggantikan Alert */}
+                {successMessage && (
+                  <View style={styles.popupOverlay}>
+                    <Text style={styles.successText}>{successMessage}</Text>
+                  </View>
+                )}
               </View>
               <View style={styles.unfocusedContainer}></View>
             </View>
             <View style={styles.unfocusedContainer}></View>
           </View>
-
-          {scanned && (
-            <TouchableOpacity
-              style={styles.scanAgainButton}
-              onPress={() => setScanned(false)}
-            >
-              <Text style={styles.scanAgainText}>Scan Lagi</Text>
-            </TouchableOpacity>
-          )}
         </CameraView>
       ) : (
-        // 4. Jika sedang membuka menu lain, tampilkan layar hitam kosong agar kamera mati
         <View style={styles.container} />
       )}
     </View>
@@ -98,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#000", // Warna hitam akan membuat transisi terlihat mulus saat pindah tab
+    backgroundColor: "#000",
   },
   permissionContainer: {
     flex: 1,
@@ -130,6 +185,8 @@ const styles = StyleSheet.create({
   focusedContainer: {
     flex: 4,
     position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   corner: {
     position: "absolute",
@@ -142,18 +199,29 @@ const styles = StyleSheet.create({
   topRight: { top: 0, right: 0, borderBottomWidth: 0, borderLeftWidth: 0 },
   bottomLeft: { bottom: 0, left: 0, borderTopWidth: 0, borderRightWidth: 0 },
   bottomRight: { bottom: 0, right: 0, borderTopWidth: 0, borderLeftWidth: 0 },
-  scanAgainButton: {
+  popupOverlay: {
     position: "absolute",
-    bottom: 50,
-    alignSelf: "center",
-    backgroundColor: Colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    padding: 15,
+    borderRadius: 12,
+    alignItems: "center",
+    width: "80%",
   },
-  scanAgainText: {
-    color: "#FFF",
+  popupText: {
+    marginTop: 8,
+    fontSize: 13,
     fontWeight: "bold",
-    fontSize: 16,
+    color: "#333",
+  },
+  successText: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#3B8312",
+    textAlign: "center",
+  },
+  subText: {
+    marginTop: 4,
+    fontSize: 11,
+    color: "#666",
   },
 });
