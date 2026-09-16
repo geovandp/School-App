@@ -64,7 +64,6 @@ export default function NotifikasiScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  // Fungsi menandai semua notifikasi sudah dibaca
   const markAllAsRead = () => {
     setNotifications((prev) =>
       prev.map((notif) => ({ ...notif, isRead: true })),
@@ -84,7 +83,7 @@ export default function NotifikasiScreen() {
   const getNotificationStyle = (type: string) => {
     switch (type) {
       case "tugas":
-        return { icon: "book-edit-outline", color: "#3B82F6", bg: "#EFF6FF" }; // Biru
+        return { icon: "book-edit-outline", color: "#3B82F6", bg: "#EFF6FF" };
       case "nilai":
         return {
           icon: "star-shooting-outline",
@@ -104,7 +103,7 @@ export default function NotifikasiScreen() {
           bg: "#F5F3FF",
         }; // Ungu
       default:
-        return { icon: "bell-outline", color: "#64748B", bg: "#F1F5F9" }; // Abu-abu (Pengumuman Umum)
+        return { icon: "bell-outline", color: "#64748B", bg: "#F1F5F9" };
     }
   };
 
@@ -221,8 +220,10 @@ export default function NotifikasiScreen() {
 }
 
 const styles = StyleSheet.create({
-  mainWrapper: { flex: 1, backgroundColor: "#F8FAFC" },
-
+  mainWrapper: {
+    flex: 1,
+    backgroundColor: "#F8FAFC",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -237,10 +238,8 @@ const styles = StyleSheet.create({
   backButton: { padding: 5, marginRight: 10 },
   headerTitle: { fontSize: 20, fontWeight: "bold", color: "#1E293B" },
   markAllButton: { padding: 8, backgroundColor: "#F0FDF4", borderRadius: 8 },
-
   contentContainer: { paddingBottom: 40 },
   listContainer: { paddingTop: 10 },
-
   // Desain Kartu Notifikasi
   notificationCard: {
     flexDirection: "row",
@@ -254,7 +253,6 @@ const styles = StyleSheet.create({
   notificationCardUnread: {
     backgroundColor: "#F4F8FC", // Warna latar sedikit biru terang/abu untuk yang belum dibaca
   },
-
   iconBox: {
     width: 48,
     height: 48,
@@ -263,7 +261,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 15,
   },
-
   contentBox: {
     flex: 1,
     paddingRight: 10,
@@ -292,7 +289,6 @@ const styles = StyleSheet.create({
     color: "#94A3B8",
     fontWeight: "500",
   },
-
   unreadDot: {
     width: 10,
     height: 10,
@@ -300,7 +296,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary, // Menggunakan warna hijau aplikasi
     marginLeft: 5,
   },
-
   // Empty State
   emptyState: {
     alignItems: "center",
