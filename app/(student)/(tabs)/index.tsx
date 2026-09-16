@@ -5,12 +5,12 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image, // <-- Tambahan
-  Dimensions, // <-- Tambahan
+  Image,
+  Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router"; // <-- Tambahan
-import { MaterialCommunityIcons } from "@expo/vector-icons"; // <-- Tambahan
+import { useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../../constants/Colors";
 import HeaderProfile from "../../../components/student/HeaderProfile";
 import ScheduleCard from "../../../components/student/ScheduleCard";

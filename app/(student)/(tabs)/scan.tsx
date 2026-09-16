@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from "react-native";
-// import { useIsFocused } from "@react-navigation/native";
 import { Colors } from "@/constants/Colors";
 import { useFocusEffect, useRouter } from "expo-router";
 
@@ -18,7 +17,6 @@ export default function ScanScreen() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [isFocused, setIsFocused] = useState(false);
-
   const router = useRouter();
 
   useFocusEffect(
@@ -28,7 +26,7 @@ export default function ScanScreen() {
       return () => {
         setIsFocused(false);
       };
-    }, [])
+    }, []),
   );
 
   if (!permission) {
@@ -83,12 +81,10 @@ export default function ScanScreen() {
     try {
       const response: any = await verifyAttendanceToServer(data);
 
-      // Tampilkan pesan sukses di layar
       setSuccessMessage(response.message);
 
-      // Tunggu 1.5 detik lalu reset state dan kembali ke Beranda
       setTimeout(() => {
-        setScanned(false); // Reset state agar tidak nyangkut saat dibuka kembali
+        setScanned(false);
         setSuccessMessage(null);
         router.replace("/(student)/(tabs)");
       }, 1500);
@@ -104,14 +100,19 @@ export default function ScanScreen() {
   return (
     <View style={styles.container}>
       {isFocused ? (
-        <CameraView
-          style={StyleSheet.absoluteFill}
-          facing="back"
-          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
-        >
+        // Menggunakan Fragment (<>...</>) untuk membungkus CameraView dan Overlay secara sejajar
+        <>
+          {/* 1. CameraView ditutup langsung (self-closing tag) */}
+          <CameraView
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+          />
+
+          {/* 2. Overlay diletakkan DI LUAR CameraView */}
           <View style={styles.overlay}>
             <View style={styles.unfocusedContainer}></View>
             <View style={styles.middleContainer}>
@@ -122,7 +123,6 @@ export default function ScanScreen() {
                 <View style={[styles.corner, styles.bottomLeft]} />
                 <View style={[styles.corner, styles.bottomRight]} />
 
-                {/* Indikator Loading */}
                 {isLoading && (
                   <View style={styles.popupOverlay}>
                     <ActivityIndicator size="large" color={Colors.primary} />
@@ -130,7 +130,6 @@ export default function ScanScreen() {
                   </View>
                 )}
 
-                {/* Pesan Sukses Menggantikan Alert */}
                 {successMessage && (
                   <View style={styles.popupOverlay}>
                     <Text style={styles.successText}>{successMessage}</Text>
@@ -141,7 +140,7 @@ export default function ScanScreen() {
             </View>
             <View style={styles.unfocusedContainer}></View>
           </View>
-        </CameraView>
+        </>
       ) : (
         <View style={styles.container} />
       )}
@@ -149,6 +148,7 @@ export default function ScanScreen() {
   );
 }
 
+// Styling tetap sama persis, tidak ada yang diubah
 const styles = StyleSheet.create({
   container: {
     flex: 1,
