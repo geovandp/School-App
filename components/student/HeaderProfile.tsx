@@ -27,8 +27,8 @@ export default function HeaderProfile() {
           style={styles.image}
         />
         <View style={styles.textContainer}>
-          <Text style={styles.name}>Geo anak baik</Text>
-          <Text style={styles.npm}>Siswa Nakal • 1201220450</Text>
+          <Text style={styles.name}>Giovan Deo Pratama</Text>
+          <Text style={styles.npm}>Siswa • 666666</Text>
         </View>
       </View>
     </LinearGradient>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     top: -10,
     width: 230,
     height: 230,
-    opacity: 0.25,
+    opacity: 0.30,
     transform: [{ rotate: "-15deg" }],
   },
 
