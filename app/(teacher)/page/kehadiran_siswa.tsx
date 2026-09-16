@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     FlatList,
     ScrollView,
@@ -112,6 +112,21 @@ export default function KehadiranSiswaPage() {
                 </Text>
                 <View style={{ width: 40 }} />
             </View>
+
+            {/* presensi hari ini */}
+            <TouchableOpacity
+                style={styles.cardRoom2}
+                activeOpacity={0.8}
+            >
+                <View style={styles.roomIconBox2}>
+                    <MaterialCommunityIcons name="google-classroom" size={24} color="#000" />
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.roomName}>Test</Text>
+                    <Text style={styles.roomCode}>Test</Text>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#000" />
+            </TouchableOpacity>
 
             {/* Subtitle / Keterangan Alur */}
             <View style={styles.subHeaderContainer}>
@@ -229,6 +244,39 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#FDFBF7",
     },
+
+    scanButton: {
+        backgroundColor: "#4361EE",
+        borderRadius: 16,
+        // borderWidth: 3,
+        borderColor: "#000",
+        paddingTop: 50,
+        marginHorizontal: 20,
+        marginVertical: 30,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 0,
+        elevation: 6,
+    },
+    scanIconContainer: {
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    scanButtonText: {
+        fontSize: 18,
+        fontWeight: "900",
+        color: "#FFF",
+        textTransform: "uppercase",
+    },
+    scanButtonSubtext: {
+        fontSize: 13,
+        fontWeight: "600",
+        color: "#E0E0E0",
+        marginTop: 4,
+    },
+
     pageHeader: {
         flexDirection: "row",
         alignItems: "center",
@@ -290,6 +338,34 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 0,
         elevation: 6,
+    },
+    cardRoom2: {
+        backgroundColor: "#FFC6FF",
+        borderRadius: 16,
+        padding: 16,
+        borderWidth: 3,
+        borderColor: "#000",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        shadowColor: "#000",
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 0,
+        elevation: 6,
+        marginVertical:20,
+        marginHorizontal:20
+    },
+    roomIconBox2: {
+        marginVertical: 40,
+        width: 44,
+        height: 44,
+        backgroundColor: "#FFF",
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: "#000",
+        justifyContent: "center",
+        alignItems: "center",
     },
     roomIconBox: {
         width: 44,

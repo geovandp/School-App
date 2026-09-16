@@ -7,7 +7,7 @@ export default function TeacherHeader() {
     <View style={styles.headerContainer}>
       <View>
         <Text style={styles.welcomeText}>Selamat Datang,</Text>
-        <Text style={styles.nameText}>Bapak Budi, S.Pd</Text>
+        <Text style={styles.nameText}>Bapak Budii, S.Pd</Text>
       </View>
       <View style={styles.headerNavContainer}>
         <TouchableOpacity style={styles.notificationButton} onPress={() => router.push('/(teacher)/page/notifikasi')}>

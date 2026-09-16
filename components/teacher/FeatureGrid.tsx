@@ -65,10 +65,10 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 7,
-    title: "Info\nSekolah",
-    icon: "bullhorn-outline",
+    title: "Presensi\nKehadiran",
+    icon: "qrcode-scan",
     color: "#E4D4FF",
-    route: "/page/info",
+    route: "/page/presensi_guru",
   },
   {
     id: 8,
