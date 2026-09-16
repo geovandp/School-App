@@ -27,7 +27,6 @@ export default function TanyaAniseScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
-
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -246,7 +245,7 @@ export default function TanyaAniseScreen() {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
-              placeholder="Tanya soal jadwal, tugas, nilai..."
+              placeholder="Tanya soal jadwal, tugas, nilai"
               placeholderTextColor="#94A3B8"
               value={inputText}
               onChangeText={setInputText}
@@ -271,8 +270,10 @@ export default function TanyaAniseScreen() {
 }
 
 const styles = StyleSheet.create({
-  mainWrapper: { flex: 1, backgroundColor: "#F8FAFC" }, // Background abu-abu kebiruan terang
-
+  mainWrapper: { 
+    flex: 1,
+    backgroundColor: "#F8FAFC",
+  }, // Background abu-abu kebiruan terang
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -288,8 +289,14 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
-  backButton: { marginRight: 15, padding: 5 },
-  headerTitleContainer: { flexDirection: "row", alignItems: "center" },
+  backButton: {
+    marginRight: 15,
+    padding: 5,
+  },
+  headerTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   avatarBox: {
     width: 40,
     height: 40,
@@ -299,7 +306,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 12,
   },
-  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#1A1A1A" },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1A1A1A"
+  },
   headerSubtitle: {
     fontSize: 12,
     color: "#10B981",
@@ -315,8 +326,10 @@ const styles = StyleSheet.create({
     marginRight: 4,
     marginTop: 2,
   },
-
-  chatContainer: { padding: 20, paddingBottom: 20 },
+  chatContainer: {
+    padding: 20,
+    paddingBottom: 20,
+  },
   dateLabel: {
     textAlign: "center",
     fontSize: 12,
@@ -324,7 +337,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 20,
   },
-
   messageBubbleWrapper: {
     flexDirection: "row",
     marginBottom: 15,
@@ -332,7 +344,6 @@ const styles = StyleSheet.create({
   },
   wrapperUser: { justifyContent: "flex-end" },
   wrapperBot: { justifyContent: "flex-start" },
-
   chatAvatar: {
     width: 28,
     height: 28,
@@ -342,29 +353,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 8,
   },
-
   messageBubble: {
     maxWidth: "75%",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 20,
   },
-  bubbleUser: { backgroundColor: Colors.primary, borderBottomRightRadius: 4 },
+  bubbleUser: {
+    backgroundColor: Colors.primary,
+    borderBottomRightRadius: 4,
+  },
   bubbleBot: {
     backgroundColor: "#FFFFFF",
     borderBottomLeftRadius: 4,
     borderWidth: 1,
     borderColor: "#F1F5F9",
   },
-
-  messageText: { fontSize: 14, lineHeight: 22 },
+  messageText: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
   textUser: { color: "#FFFFFF" },
   textBot: { color: "#1E293B" },
-
   timeText: { fontSize: 10, marginTop: 6, alignSelf: "flex-end" },
   timeUser: { color: "rgba(255,255,255,0.7)" },
   timeBot: { color: "#94A3B8" },
-
   typingBubble: {
     flexDirection: "row",
     alignItems: "center",
@@ -376,7 +389,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontStyle: "italic",
   },
-
   inputSection: {
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
@@ -413,5 +425,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 2,
   },
-  sendButtonDisabled: { backgroundColor: "#CBD5E1" },
+  sendButtonDisabled: { 
+    backgroundColor: "#CBD5E1",
+  },
 });
