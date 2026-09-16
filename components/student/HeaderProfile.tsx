@@ -8,13 +8,11 @@ export default function HeaderProfile() {
   const insets = useSafeAreaInsets();
 
   return (
-    // 2. GANTI <View> MENJADI <LinearGradient>
     <LinearGradient
       colors={[Colors.primary, "#FFFFFF"]} // Gradasi dari Hijau (Primary) ke Putih
       locations={[0.5, 1]}
       style={[styles.container, { paddingTop: insets.top + 20 }]}
     >
-      {/* 3. TAMBAHKAN GAMBAR LOGO BAYANGAN (WATERMARK) DI SINI */}
       <Image
         source={require("../../assets/images/example_logo.png")}
         style={styles.watermarkLogo}
@@ -27,8 +25,8 @@ export default function HeaderProfile() {
           style={styles.image}
         />
         <View style={styles.textContainer}>
-          <Text style={styles.name}>Geo anak baik</Text>
-          <Text style={styles.npm}>Siswa Nakal • 1201220450</Text>
+          <Text style={styles.name}>Giovan Deo Pratama</Text>
+          <Text style={styles.npm}>Siswa • 666999</Text>
         </View>
       </View>
     </LinearGradient>
@@ -47,11 +45,11 @@ const styles = StyleSheet.create({
   // 4. TAMBAHKAN STYLE UNTUK WATERMARK LOGO
   watermarkLogo: {
     position: "absolute",
-    right: -40, // Menggeser logo setengah keluar dari layar sebelah kanan
+    right: -40,
     top: -10,
     width: 230,
     height: 230,
-    opacity: 0.25,
+    opacity: 0.30,
     transform: [{ rotate: "-15deg" }],
   },
 

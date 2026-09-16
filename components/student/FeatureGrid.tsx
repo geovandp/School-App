@@ -90,7 +90,14 @@ const ALL_FEATURES = [
     title: "KPI",
     icon: "chart-line",
     color: Colors.primary,
-    route: null,
+    route: "kpi",
+  },
+  {
+    id: 12,
+    title: "Survey Guru",
+    icon: "ballot-outline",
+    color: Colors.primary,
+    route: "survey",
   },
 ];
 
