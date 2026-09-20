@@ -14,7 +14,7 @@ export default function HeaderProfile() {
       style={[styles.container, { paddingTop: insets.top + 20 }]}
     >
       <Image
-        source={require("../../assets/images/example_logo.png")}
+        source={require("../../assets/images/android-icon-foreground.png")}
         style={styles.watermarkLogo}
         resizeMode="contain"
       />
@@ -25,8 +25,8 @@ export default function HeaderProfile() {
           style={styles.image}
         />
         <View style={styles.textContainer}>
-          <Text style={styles.name}>Giovan Deo Pratama</Text>
-          <Text style={styles.npm}>Siswa • 666999</Text>
+          <Text style={styles.name}>Alexander</Text>
+          <Text style={styles.npm}>Murid • 666999</Text>
         </View>
       </View>
     </LinearGradient>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     top: -10,
     width: 230,
     height: 230,
-    opacity: 0.30,
+    opacity: 0.60,
     transform: [{ rotate: "-15deg" }],
   },
 

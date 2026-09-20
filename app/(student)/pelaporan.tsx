@@ -150,7 +150,7 @@ export default function PelaporanScreen() {
           </TouchableOpacity>
           <View>
             <Text style={styles.headerTitle}>Lapor Kode Etik</Text>
-            <Text style={styles.headerSubtitle}>Layanan Pengaduan Siswa</Text>
+            <Text style={styles.headerSubtitle}>Layanan Pengaduan Murid</Text>
           </View>
         </View>
 
