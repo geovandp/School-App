@@ -186,7 +186,7 @@ export default function AbsensiScreen() {
           <MaterialCommunityIcons name="arrow-left" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <View>
-          <Text style={styles.headerTitle}>Kehadiran Siswa</Text>
+          <Text style={styles.headerTitle}>Kehadiran Murid</Text>
           <Text style={styles.headerSubtitle}>Riwayat Absensi Akademik</Text>
         </View>
       </View>

@@ -16,12 +16,12 @@ import { Colors } from "@/constants/Colors";
 
 // --- DATA DUMMY SISWA ---
 const STUDENT_DATA = {
-  schoolName: "SMAN 1 Peunaron",
-  name: "Giovan Deo Pratama",
+  schoolName: "SMAN Sederajat",
+  name: "Alexander",
   nisn: "666666",
   nis: "999999",
   kelas: "XII MIPA 1",
-  role: "SISWA",
+  role: "MURID",
 };
 
 export default function ProfileScreen() {
@@ -68,7 +68,7 @@ export default function ProfileScreen() {
           <View style={styles.cardSchoolHeader}>
             {/* Ganti ikon dengan Image logo lokal */}
             <Image
-              source={require("@/assets/images/example_logo.png")}
+              source={require("@/assets/images/android-icon-foreground.png")}
               style={styles.schoolLogo}
               resizeMode="contain"
             />
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     marginBottom: 12 
   },
   schoolLogo: {
-    width: 20,
+    width: 25,
     height: 20,
     borderRadius: 4, // Opsional jika ingin sedikit melengkung
   },
