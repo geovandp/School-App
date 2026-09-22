@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import { documentDirectory, EncodingType, writeAsStringAsync } from "expo-file-system";
 import * as FileSystem from "expo-file-system";
 import * as Print from "expo-print";
 import { router } from "expo-router";
@@ -61,10 +60,12 @@ const PERIOD_OPTIONS = ["Harian", "Mingguan", "Bulanan", "Triwulan", "Per Semest
 export default function KehadiranSiswaPage() {
     const insets = useSafeAreaInsets();
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-
-    // State untuk Modal Export
+    
+    // State Filter Periode (Default: Harian)
+    const [activePeriod, setActivePeriod] = useState("Harian");
+    
+    // State untuk Modal Export (sekarang hanya pilih format PDF/Excel)
     const [isExportModalVisible, setExportModalVisible] = useState(false);
-    const [selectedPeriod, setSelectedPeriod] = useState("Harian");
 
     const handleBack = () => {
         if (selectedRoom) {
@@ -88,10 +89,23 @@ export default function KehadiranSiswaPage() {
         }
     };
 
+    // Helper untuk mengubah header kolom berdasarkan filter yang dipilih
+    const getColumns = () => {
+        switch (activePeriod) {
+            case "Mingguan": return ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"];
+            case "Bulanan": return ["Bulan 1", "Bulan 2", "Bulan 3", "Bulan 4"];
+            case "Triwulan": return ["Triwulan 1", "Triwulan 2", "Triwulan 3", "Triwulan 4"];
+            case "Per Semester": return ["Semester 1", "Semester 2", "Semester 3", "Semester 4"];
+            case "Harian":
+            default: return ["01 Sep", "02 Sep", "03 Sep", "04 Sep"];
+        }
+    };
+
+    const columns = getColumns();
+
     // --- FUNGSI EXPORT PDF ---
     const handleExportPDF = async () => {
         try {
-            // Note: Data bisa disesuaikan/di-fetch ulang berdasarkan selectedPeriod
             let htmlContent = `
                 <html>
                 <head>
@@ -105,11 +119,11 @@ export default function KehadiranSiswaPage() {
                 </head>
                 <body>
                     <h2>Laporan Kehadiran - ${selectedRoom?.code}</h2>
-                    <p>Periode: <b>${selectedPeriod}</b></p>
+                    <p>Periode Filter: <b>${activePeriod}</b></p>
                     <table>
                         <tr>
                             <th class="name-col">Nama Siswa</th>
-                            <th>01 Sep</th><th>02 Sep</th><th>03 Sep</th><th>04 Sep</th>
+                            <th>${columns[0]}</th><th>${columns[1]}</th><th>${columns[2]}</th><th>${columns[3]}</th>
                         </tr>
                         ${currentStudents.map(student => `
                             <tr>
@@ -136,10 +150,7 @@ export default function KehadiranSiswaPage() {
     // --- FUNGSI EXPORT EXCEL (CSV) ---
     const handleExportExcel = async () => {
         try {
-            // Gunakan 'as any' untuk mem-bypass error TypeScript pada library
             const fs: any = FileSystem;
-            
-            // Gunakan cacheDirectory untuk file sementara (export)
             const dirUri = fs.documentDirectory || fs.cacheDirectory;
 
             if (!dirUri) {
@@ -147,19 +158,17 @@ export default function KehadiranSiswaPage() {
                 return;
             }
 
-            // Buat header CSV
-            let csvString = `Nama Siswa,01 Sep,02 Sep,03 Sep,04 Sep\n`;
+            // Header CSV dinamis mengikuti filter
+            let csvString = `Nama Siswa,${columns[0]},${columns[1]},${columns[2]},${columns[3]}\n`;
             
             // Loop data siswa
             currentStudents.forEach(student => {
                 csvString += `${student.studentName},${student.date1},${student.date2},${student.date3},${student.date4}\n`;
             });
 
-            // Tentukan lokasi file
-            const fileName = `Kehadiran_${selectedRoom?.name.replace(" ", "_")}_${selectedPeriod}.csv`;
+            const fileName = `Kehadiran_${selectedRoom?.name.replace(" ", "_")}_${activePeriod.replace(" ", "")}.csv`;
             const fileUri = `${dirUri}${fileName}`;
 
-            // Tulis file dan bagikan
             await fs.writeAsStringAsync(fileUri, csvString, { encoding: fs.EncodingType.UTF8 });
             await Sharing.shareAsync(fileUri, { mimeType: 'text/csv' });
             
@@ -172,18 +181,17 @@ export default function KehadiranSiswaPage() {
 
     return (
         <View style={[styles.container, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) }]}>
-
+            
             {/* Header Halaman */}
             <View style={styles.pageHeader}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.7}>
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-
+                
                 <Text style={styles.pageTitle} numberOfLines={1}>
                     {selectedRoom ? selectedRoom.name : "Kehadiran Siswa"}
                 </Text>
-
-                {/* Tombol Export Muncul Jika Kelas Dipilih */}
+                
                 {selectedRoom ? (
                     <TouchableOpacity style={styles.exportButton} onPress={() => setExportModalVisible(true)} activeOpacity={0.7}>
                         <MaterialCommunityIcons name="export" size={24} color="#000" />
@@ -223,84 +231,89 @@ export default function KehadiranSiswaPage() {
                 />
             )}
 
-            {/* ALUR 2: TABEL KEHADIRAN */}
+            {/* ALUR 2: FILTER & TABEL KEHADIRAN */}
             {selectedRoom && (
-                <View style={styles.tableWrapper}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-                        <View style={styles.tableContainer}>
-                            {/* Header Tabel */}
-                            <View style={styles.tableHeaderRow}>
-                                <View style={[styles.cellHeader, styles.colName]}>
-                                    <Text style={styles.headerText}>Nama Siswa</Text>
-                                </View>
-                                <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>01 Sep</Text></View>
-                                <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>02 Sep</Text></View>
-                                <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>03 Sep</Text></View>
-                                <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>04 Sep</Text></View>
-                            </View>
-
-                            {/* Baris Data Siswa */}
-                            <FlatList
-                                data={currentStudents}
-                                keyExtractor={(item) => item.id}
-                                showsVerticalScrollIndicator={false}
-                                renderItem={({ item, index }) => (
-                                    <View style={[styles.tableRow, index % 2 === 1 ? styles.rowAlternate : null]}>
-                                        <View style={[styles.cellBody, styles.colName]}>
-                                            <Text style={styles.bodyTextName} numberOfLines={1}>{item.studentName}</Text>
-                                        </View>
-                                        <View style={[styles.cellBody, styles.colDate]}>
-                                            <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date1).bg }]}>
-                                                <Text style={styles.bodyTextStatus}>{item.date1}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={[styles.cellBody, styles.colDate]}>
-                                            <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date2).bg }]}>
-                                                <Text style={styles.bodyTextStatus}>{item.date2}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={[styles.cellBody, styles.colDate]}>
-                                            <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date3).bg }]}>
-                                                <Text style={styles.bodyTextStatus}>{item.date3}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={[styles.cellBody, styles.colDate]}>
-                                            <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date4).bg }]}>
-                                                <Text style={styles.bodyTextStatus}>{item.date4}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                )}
-                            />
-                        </View>
-                    </ScrollView>
-                </View>
-            )}
-
-            {/* MODAL EXPORT */}
-            <Modal visible={isExportModalVisible} transparent={true} animationType="fade">
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Export Data</Text>
-                            <TouchableOpacity onPress={() => setExportModalVisible(false)}>
-                                <MaterialCommunityIcons name="close" size={24} color="#000" />
-                            </TouchableOpacity>
-                        </View>
-
-                        <Text style={styles.modalSubtitle}>Pilih Periode Export:</Text>
-                        <View style={styles.periodContainer}>
+                <View style={{ flex: 1 }}>
+                    {/* Chip Filters (Harian, Mingguan, dll) */}
+                    <View style={styles.filterWrapper}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
                             {PERIOD_OPTIONS.map((period) => (
-                                <TouchableOpacity
-                                    key={period}
-                                    style={[styles.periodBadge, selectedPeriod === period && styles.periodBadgeActive]}
-                                    onPress={() => setSelectedPeriod(period)}
+                                <TouchableOpacity 
+                                    key={period} 
+                                    style={[styles.filterChip, activePeriod === period && styles.filterChipActive]}
+                                    onPress={() => setActivePeriod(period)}
                                 >
-                                    <Text style={[styles.periodText, selectedPeriod === period && styles.periodTextActive]}>
+                                    <Text style={[styles.filterChipText, activePeriod === period && styles.filterChipTextActive]}>
                                         {period}
                                     </Text>
                                 </TouchableOpacity>
                             ))}
+                        </ScrollView>
+                    </View>
+
+                    {/* Tabel Data */}
+                    <View style={styles.tableWrapper}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                            <View style={styles.tableContainer}>
+                                {/* Header Tabel (Dinamis dari state) */}
+                                <View style={styles.tableHeaderRow}>
+                                    <View style={[styles.cellHeader, styles.colName]}>
+                                        <Text style={styles.headerText}>Nama Siswa</Text>
+                                    </View>
+                                    <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>{columns[0]}</Text></View>
+                                    <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>{columns[1]}</Text></View>
+                                    <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>{columns[2]}</Text></View>
+                                    <View style={[styles.cellHeader, styles.colDate]}><Text style={styles.headerText}>{columns[3]}</Text></View>
+                                </View>
+
+                                {/* Baris Data Siswa */}
+                                <FlatList
+                                    data={currentStudents}
+                                    keyExtractor={(item) => item.id}
+                                    showsVerticalScrollIndicator={false}
+                                    renderItem={({ item, index }) => (
+                                        <View style={[styles.tableRow, index % 2 === 1 ? styles.rowAlternate : null]}>
+                                            <View style={[styles.cellBody, styles.colName]}>
+                                                <Text style={styles.bodyTextName} numberOfLines={1}>{item.studentName}</Text>
+                                            </View>
+                                            <View style={[styles.cellBody, styles.colDate]}>
+                                                <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date1).bg }]}>
+                                                    <Text style={styles.bodyTextStatus}>{item.date1}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={[styles.cellBody, styles.colDate]}>
+                                                <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date2).bg }]}>
+                                                    <Text style={styles.bodyTextStatus}>{item.date2}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={[styles.cellBody, styles.colDate]}>
+                                                <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date3).bg }]}>
+                                                    <Text style={styles.bodyTextStatus}>{item.date3}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={[styles.cellBody, styles.colDate]}>
+                                                <View style={[styles.statusBadge, { backgroundColor: getStatusBadgeStyle(item.date4).bg }]}>
+                                                    <Text style={styles.bodyTextStatus}>{item.date4}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    )}
+                                />
+                            </View>
+                        </ScrollView>
+                    </View>
+                </View>
+            )}
+
+            {/* MODAL EXPORT FORMAT SAJA */}
+            <Modal visible={isExportModalVisible} transparent={true} animationType="fade">
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Export Data {activePeriod}</Text>
+                            <TouchableOpacity onPress={() => setExportModalVisible(false)}>
+                                <MaterialCommunityIcons name="close" size={24} color="#000" />
+                            </TouchableOpacity>
                         </View>
 
                         <Text style={styles.modalSubtitle}>Pilih Format File:</Text>
@@ -309,7 +322,7 @@ export default function KehadiranSiswaPage() {
                                 <MaterialCommunityIcons name="file-pdf-box" size={28} color="#000" />
                                 <Text style={styles.actionBtnText}>PDF</Text>
                             </TouchableOpacity>
-
+                            
                             <TouchableOpacity style={[styles.actionBtn, { backgroundColor: "#CAFFBF" }]} onPress={handleExportExcel} activeOpacity={0.8}>
                                 <MaterialCommunityIcons name="microsoft-excel" size={28} color="#000" />
                                 <Text style={styles.actionBtnText}>Excel</Text>
@@ -345,7 +358,7 @@ const styles = StyleSheet.create({
     subHeaderContainer: { paddingHorizontal: 20, paddingVertical: 16 },
     subHeaderTitle: { fontSize: 14, fontWeight: "700", color: "#333" },
     listContainer: { paddingHorizontal: 20, paddingBottom: 24, gap: 16 },
-
+    
     // Card Ruang
     cardRoom: {
         backgroundColor: "#FFC6FF", borderRadius: 16, padding: 16, borderWidth: 3,
@@ -358,6 +371,17 @@ const styles = StyleSheet.create({
     },
     roomName: { fontSize: 16, fontWeight: "900", color: "#000" },
     roomCode: { fontSize: 12, fontWeight: "700", color: "#333", marginTop: 2 },
+    
+    // Filters UI
+    filterWrapper: { marginBottom: 16 },
+    filterScroll: { paddingHorizontal: 20, gap: 10 },
+    filterChip: {
+        paddingVertical: 8, paddingHorizontal: 14, backgroundColor: "#FFF", borderRadius: 12,
+        borderWidth: 2, borderColor: "#000",
+    },
+    filterChipActive: { backgroundColor: "#000" },
+    filterChipText: { fontSize: 13, fontWeight: "800", color: "#000" },
+    filterChipTextActive: { color: "#FFF" },
 
     // Tabel
     tableWrapper: {
@@ -372,8 +396,8 @@ const styles = StyleSheet.create({
     cellHeader: { paddingVertical: 12, paddingHorizontal: 10, justifyContent: "center", alignItems: "center", borderRightWidth: 1.5, borderRightColor: "#000" },
     cellBody: { paddingVertical: 10, paddingHorizontal: 10, justifyContent: "center", alignItems: "center", borderRightWidth: 1.5, borderRightColor: "#000" },
     colName: { width: 180, alignItems: "flex-start" },
-    colDate: { width: 75 },
-    headerText: { fontSize: 12, fontWeight: "900", color: "#000", textTransform: "uppercase" },
+    colDate: { width: 90 }, // Sedikit diperlebar agar muat tulisan "Semester X"
+    headerText: { fontSize: 11, fontWeight: "900", color: "#000", textTransform: "uppercase", textAlign: "center" },
     bodyTextName: { fontSize: 13, fontWeight: "800", color: "#000" },
     statusBadge: { width: 32, height: 32, borderRadius: 6, borderWidth: 1.5, borderColor: "#000", justifyContent: "center", alignItems: "center" },
     bodyTextStatus: { fontSize: 12, fontWeight: "900", color: "#000" },
@@ -386,18 +410,10 @@ const styles = StyleSheet.create({
         width: "100%", backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000",
         padding: 20, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
-    modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
+    modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
     modalTitle: { fontSize: 20, fontWeight: "900", color: "#000" },
     modalSubtitle: { fontSize: 14, fontWeight: "800", color: "#000", marginBottom: 10, marginTop: 10 },
-
-    periodContainer: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 10 },
-    periodBadge: {
-        paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, borderWidth: 2, borderColor: "#000", backgroundColor: "#FFF"
-    },
-    periodBadgeActive: { backgroundColor: "#000" },
-    periodText: { fontSize: 12, fontWeight: "800", color: "#000" },
-    periodTextActive: { color: "#FFF" },
-
+    
     exportActionsRow: { flexDirection: "row", gap: 16, marginTop: 10 },
     actionBtn: {
         flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center",

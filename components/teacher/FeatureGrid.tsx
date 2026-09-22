@@ -61,7 +61,7 @@ const mainFeatures: FeatureItem[] = [
     title: "Arsip\nDokumen",
     icon: "folder-multiple-outline",
     color: "#A0E8AF",
-    route: "/page/pembiasaan",
+    route: "/page/arsip_dokumen",
   },
   {
     id: 7,
@@ -84,7 +84,7 @@ const otherFeatures: FeatureItem[] = [
     title: "Arsip Dokumen",
     icon: "folder-multiple-outline",
     color: "#FFC6FF",
-    route: "/page/arsip",
+    route: "/page/arsip_dokumen",
   },
   {
     id: 102,
@@ -119,7 +119,7 @@ const otherFeatures: FeatureItem[] = [
     title: "KPI",
     icon: "chart-box-outline", // Ikon grafik/kinerja untuk KPI
     color: "#E4D4FF",
-    route: "/page/kpi",
+    route: "/page/KPI",
   },
   {
     id: 107,
