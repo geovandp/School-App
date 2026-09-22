@@ -58,8 +58,8 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 6,
-    title: "Pembiasaan",
-    icon: "clipboard-text-clock-outline",
+    title: "Arsip\nDokumen",
+    icon: "folder-multiple-outline",
     color: "#A0E8AF",
     route: "/page/pembiasaan",
   },
@@ -107,13 +107,13 @@ const otherFeatures: FeatureItem[] = [
   //   color: "#FDFFB6",
   //   route: "/page/ekstrakurikuler",
   // },
-  {
-    id: 105,
-    title: "Poin & Prestasi",
-    icon: "trophy-outline", // Ikon piala untuk prestasi
-    color: "#FFADAD",
-    route: "/page/prestasi",
-  },
+  // {
+  //   id: 105,
+  //   title: "Poin & Prestasi",
+  //   icon: "trophy-outline", // Ikon piala untuk prestasi
+  //   color: "#FFADAD",
+  //   route: "/page/prestasi",
+  // },
   {
     id: 106,
     title: "KPI",
