@@ -1,8 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Colors } from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Colors } from "../../../constants/Colors";
 
 export default function HeaderProfile() {
   const insets = useSafeAreaInsets();
@@ -14,7 +13,7 @@ export default function HeaderProfile() {
       style={[styles.container, { paddingTop: insets.top + 20 }]}
     >
       <Image
-        source={require("../../assets/images/android-icon-foreground.png")}
+        source={require("../../../assets/images/android-icon-foreground.png")}
         style={styles.watermarkLogo}
         resizeMode="contain"
       />
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
     top: -10,
     width: 230,
     height: 230,
-    opacity: 0.60,
+    opacity: 0.6,
     transform: [{ rotate: "-15deg" }],
   },
 

@@ -1,6 +1,7 @@
+import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dimensions,
   Modal,
@@ -11,7 +12,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Colors } from "../../constants/Colors";
 
 const { width } = Dimensions.get("window");
 const ALL_FEATURES = [
@@ -20,7 +20,7 @@ const ALL_FEATURES = [
     title: "Jadwal\nPelajaran",
     icon: "calendar",
     color: Colors.primary,
-    route: "/jadwal",
+    route: "/jadwal-pelajaran/jadwal",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const ALL_FEATURES = [
   },
   {
     id: 3,
-    title: "7 Pembiasaan",
+    title: "G 7 KAIH",
     icon: "clipboard-text-clock-outline",
     color: Colors.primary,
     route: "/pembiasaan",
@@ -59,7 +59,7 @@ const ALL_FEATURES = [
   },
   {
     id: 7,
-    title: "Tanya\nAnise",
+    title: "Tanya\nSimirda",
     icon: "robot-outline",
     color: Colors.primary,
     route: "ai-assistant",

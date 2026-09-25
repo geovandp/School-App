@@ -1,20 +1,19 @@
-import React from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import {
-  View,
-  StyleSheet,
+  Dimensions,
+  Image,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
-  Dimensions,
+  View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import FeatureGrid from "../../../components/student/home-page/FeatureGrid";
+import HeaderProfile from "../../../components/student/home-page/HeaderProfile";
+import ScheduleCard from "../../../components/student/home-page/ScheduleCard";
 import { Colors } from "../../../constants/Colors";
-import HeaderProfile from "../../../components/student/HeaderProfile";
-import ScheduleCard from "../../../components/student/ScheduleCard";
-import FeatureGrid from "../../../components/student/FeatureGrid";
 
 const { width } = Dimensions.get("window"); // <-- Tambahan
 
@@ -44,7 +43,7 @@ const SCHOOL_EVENTS = [
 ];
 
 export default function StudentHomeScreen() {
-  const router = useRouter(); // <-- Tambahan
+  const router = useRouter();
 
   return (
     <View style={styles.container}>

@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
