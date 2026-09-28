@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
 import {
     Alert,
     Image,
@@ -50,7 +49,7 @@ export default function ProfilePage() {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                
+
                 {/* CARD PROFIL UTAMA */}
                 <View style={styles.profileCard}>
                     <View style={styles.avatarContainer}>
@@ -117,6 +116,24 @@ export default function ProfilePage() {
                         <View style={styles.menuTextBox}>
                             <Text style={styles.menuTitle}>Pusat Bantuan</Text>
                             <Text style={styles.menuDesc}>FAQ, panduan aplikasi, & hubungi admin</Text>
+                        </View>
+                        <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.menuCard}
+                        activeOpacity={0.8}
+                        // Aksi disesuaikan dengan konteks menu
+                        onPress={() => handleMenuPress("Pendaftaran Wajah")}
+                    >
+                        <View style={[styles.menuIconBox, { backgroundColor: "#FDFFB6" }]}>
+                            {/* Ikon diperbarui ke face-recognition */}
+                            <MaterialCommunityIcons name="face-recognition" size={22} color="#000" />
+                        </View>
+                        <View style={styles.menuTextBox}>
+                            <Text style={styles.menuTitle}>Pendaftaran Wajah AI</Text>
+                            {/* Deskripsi disesuaikan */}
+                            <Text style={styles.menuDesc}>Daftarkan atau perbarui data wajah untuk presensi</Text>
                         </View>
                         <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
                     </TouchableOpacity>
