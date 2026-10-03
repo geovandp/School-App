@@ -112,7 +112,7 @@ const otherFeatures: FeatureItem[] = [
     title: "Test",
     icon: "trophy-outline", // Ikon piala untuk prestasi
     color: "#FFADAD",
-    route: "/page/test",
+    route: "/page/ujian",
   },
   {
     id: 106,
@@ -123,11 +123,12 @@ const otherFeatures: FeatureItem[] = [
   },
   {
     id: 107,
-    title: "Tanya Anise",
+    title: "test2",
     icon: "headset", // Ikon bantuan / asisten tanya jawab
-    color: "#A0E8AF",
-    route: "/page/asisten",
+    color: "#7bd3ff",
+    route: "/page/test",
   },
+  
 ];
 
 export default function TeacherFeatureGrid() {

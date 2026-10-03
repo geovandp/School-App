@@ -5,8 +5,8 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
@@ -18,6 +18,7 @@
     "@react-navigation/native": "^7.3.18",
     "@vscode/codicons": "^0.0.46-24",
     "expo": "~57.0.24",
+    "expo-av": "^16.0.8",
     "expo-camera": "~57.0.5",
     "expo-constants": "~57.0.18",
     "expo-document-picker": "~57.0.2",
@@ -26,6 +27,7 @@
     "expo-haptics": "~57.0.3",
     "expo-image": "~57.0.5",
     "expo-image-picker": "~57.0.19",
+    "expo-keep-awake": "~57.0.2",
     "expo-linear-gradient": "~57.0.2",
     "expo-linking": "~57.0.10",
     "expo-location": "~57.0.19",
