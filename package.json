@@ -17,6 +17,7 @@
     "@react-navigation/native": "^7.3.18",
     "@vscode/codicons": "^0.0.46-24",
     "expo": "~57.0.24",
+    "expo-av": "^16.0.8",
     "expo-camera": "~57.0.5",
     "expo-constants": "~57.0.18",
     "expo-document-picker": "~57.0.2",

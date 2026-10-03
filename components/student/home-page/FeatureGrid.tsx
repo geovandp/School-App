@@ -45,10 +45,10 @@ const ALL_FEATURES = [
   },
   {
     id: 5,
-    title: "Pelaporan\nKode Etik",
-    icon: "shield-alert-outline",
+    title: "Ujian",
+    icon: "file-certificate-outline",
     color: Colors.primary,
-    route: "/pelaporan",
+    route: "/ujian/list-ujian",
   },
   {
     id: 6,
@@ -98,6 +98,13 @@ const ALL_FEATURES = [
     icon: "ballot-outline",
     color: Colors.primary,
     route: "survey",
+  },
+  {
+    id: 13,
+    title: "Pelaporan\nKode Etik",
+    icon: "shield-alert-outline",
+    color: Colors.primary,
+    route: "/pelaporan",
   },
 ];
 

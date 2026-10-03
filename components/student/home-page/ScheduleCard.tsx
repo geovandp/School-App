@@ -56,7 +56,15 @@ const SCHEDULE_DATA: Record<string, any[]> = {
       teacher: "Bpk. Eko",
     },
   ],
-  Sabtu: [],
+  Sabtu: [
+    {
+      id: "7",
+      subject: "Senam Malam",
+      time: "20:30 - 23:30",
+      room: "Lapangan Utama",
+      teacher: "Bpk. Eko",
+    },
+  ],
   Minggu: [],
 };
 
@@ -88,7 +96,7 @@ export default function ScheduleCard() {
     <TouchableOpacity
       style={styles.card}
       activeOpacity={0.9}
-      onPress={() => router.push("/jadwal")}
+      onPress={() => router.push("/jadwal-pelajaran/jadwal")}
     >
       {currentActiveSchedule ? (
         // === TAMPILAN KETIKA ADA PELAJARAN BERLANGSUNG ===

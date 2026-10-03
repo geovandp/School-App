@@ -100,9 +100,25 @@ const SCHEDULE_DATA: Record<string, any[]> = {
       teacher: "Bpk. Eko",
     },
   ],
+  Sabtu: [
+    {
+      id: "13",
+      subject: "Senam Pagi",
+      time: "20:30 - 23:30",
+      room: "Lapangan",
+      type: "event",
+    },
+    {
+      id: "14",
+      subject: "Prakarya",
+      time: "07:30 - 09:00",
+      room: "Ruang 102",
+      teacher: "Bpk. Eko",
+    },
+  ],
 };
 
-const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
+const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
 export default function ScheduleScreen() {
   const [selectedDay, setSelectedDay] = useState("Senin");
