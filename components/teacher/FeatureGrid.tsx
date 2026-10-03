@@ -107,13 +107,13 @@ const otherFeatures: FeatureItem[] = [
     color: "#FDFFB6",
     route: "/page/tata_usaha",
   },
-  // {
-  //   id: 105,
-  //   title: "Poin & Prestasi",
-  //   icon: "trophy-outline", // Ikon piala untuk prestasi
-  //   color: "#FFADAD",
-  //   route: "/page/prestasi",
-  // },
+  {
+    id: 105,
+    title: "Test",
+    icon: "trophy-outline", // Ikon piala untuk prestasi
+    color: "#FFADAD",
+    route: "/page/test",
+  },
   {
     id: 106,
     title: "KPI",
