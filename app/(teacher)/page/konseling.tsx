@@ -1,382 +1,218 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Daftar Kategori Laporan
-const KATEGORI_OPSI = [
-  "Konsumsi Minuman Beralkohol",
-  "Merokok",
-  "Perundungan",
-  "Pengerusakan Fasilitas",
-  "Pelecehan",
-  "Berkelahi / Tawuran",
-  "Bolos",
-  "Lainnya",
+// Data dummy diperbarui dengan penambahan kronologi dan fotoBukti
+const DAFTAR_LAPORAN = [
+  {
+    id: "LP-001",
+    tanggal: "29 Sep 2026",
+    kategori: "Bolos",
+    lokasi: "Kantin Belakang",
+    pelapor: "Anonim",
+    status: "Menunggu",
+    statusColor: "#FFD6A5", 
+    kronologi: "Terlihat sekelompok siswa melompat pagar belakang kantin pada jam pelajaran ke-3 matematika.",
+    fotoBukti: "https://via.placeholder.com/400x300.png?text=Foto+Bukti+1", // Contoh link gambar
+  },
+  {
+    id: "LP-002",
+    tanggal: "28 Sep 2026",
+    kategori: "Merokok",
+    lokasi: "Toilet Lantai 2",
+    pelapor: "Siswa Kelas 11",
+    status: "Diproses",
+    statusColor: "#FDFFB6", 
+    kronologi: "Tercium bau asap rokok yang menyengat dari bilik ujung toilet pria lantai 2 pada saat jam istirahat pertama.",
+    fotoBukti: "https://via.placeholder.com/400x300.png?text=Foto+Bukti+2",
+  },
+  {
+    id: "LP-003",
+    tanggal: "25 Sep 2026",
+    kategori: "Perundungan",
+    lokasi: "Koridor Kelas 10",
+    pelapor: "Anonim",
+    status: "Selesai",
+    statusColor: "#CAFFBF", 
+    kronologi: "Seorang siswa diolok-olok secara verbal oleh 3 kakak kelas saat berjalan menuju ruang guru.",
+    fotoBukti: null, // Contoh jika pelapor tidak menyertakan foto
+  },
 ];
 
-export default function LaporKodeEtikPage() {
+export default function DaftarLaporanPage() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
-  // State untuk menyimpan input pengguna
-  const [kategori, setKategori] = useState("");
-  const [lokasi, setLokasi] = useState("");
-  const [kronologi, setKronologi] = useState("");
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  // State untuk melacak ID laporan mana yang sedang dibuka/di-expand
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // Fungsi asli untuk membuka galeri ponsel
-  const handlePickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (permissionResult.granted === false) {
-      alert("Maaf, kami membutuhkan izin akses galeri untuk mengunggah foto.");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'], 
-      allowsEditing: true, 
-      aspect: [4, 3], 
-      quality: 0.7, 
-    });
-
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!kategori) {
-      alert("Mohon pilih kategori laporan terlebih dahulu.");
-      return;
-    }
-    if (!lokasi.trim() || !kronologi.trim()) {
-      alert("Mohon isi lokasi dan kronologi kejadian.");
-      return;
-    }
-    
-    alert("Laporan berhasil dikirim!");
-    router.back();
+  // Fungsi untuk toggle (buka/tutup) kartu
+  const toggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingBottom: Math.max(insets.bottom, 16),
+        },
+      ]}
     >
-      <View
-        style={[
-          styles.container,
-          {
-            paddingTop: insets.top,
-            paddingBottom: Math.max(insets.bottom, 16),
-          },
-        ]}
-      >
-        {/* Header */}
-        <View style={styles.pageHeader}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            activeOpacity={0.7}
-          >
-            <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text style={styles.pageTitle}>Lapor Kode Etik</Text>
-          <View style={{ width: 40 }} />
-        </View>
-
-        {/* Form Content */}
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+      <View style={styles.pageHeader}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+          activeOpacity={0.7}
         >
-          <View style={styles.warningBox}>
-            <MaterialCommunityIcons name="shield-alert-outline" size={24} color="#000" />
-            <Text style={styles.warningText}>
-              Laporan Anda bersifat rahasia dan akan ditindaklanjuti oleh tim kedisiplinan.
-            </Text>
-          </View>
-
-          {/* Opsi Kategori */}
-          <Text style={styles.inputLabel}>Kategori Kejadian <Text style={styles.requiredAsterisk}>*</Text></Text>
-          <View style={styles.kategoriContainer}>
-            {KATEGORI_OPSI.map((item) => {
-              const isSelected = kategori === item;
-              return (
-                <TouchableOpacity
-                  key={item}
-                  style={[styles.kategoriChip, isSelected && styles.kategoriChipSelected]}
-                  onPress={() => setKategori(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.kategoriText, isSelected && styles.kategoriTextSelected]}>
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          {/* Input Lokasi */}
-          <Text style={styles.inputLabel}>Lokasi Kejadian <Text style={styles.requiredAsterisk}>*</Text></Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Contoh: Kantin Sekolah, Lorong Kelas 10..."
-            placeholderTextColor="#888"
-            value={lokasi}
-            onChangeText={setLokasi}
-          />
-
-          {/* Input Kronologi */}
-          <Text style={styles.inputLabel}>Kronologi <Text style={styles.requiredAsterisk}>*</Text></Text>
-          <TextInput
-            style={[styles.textInput, styles.textArea]}
-            placeholder="Ceritakan secara detail apa yang terjadi..."
-            placeholderTextColor="#888"
-            value={kronologi}
-            onChangeText={setKronologi}
-            multiline={true}
-            numberOfLines={5}
-            textAlignVertical="top"
-          />
-
-          {/* Input Foto (Opsional) */}
-          <Text style={styles.inputLabel}>Unggah Foto Bukti (Opsional)</Text>
-          <TouchableOpacity 
-            style={styles.uploadBox} 
-            activeOpacity={0.7}
-            onPress={handlePickImage}
-          >
-            {imageUri ? (
-              <View style={styles.imageContainer}>
-                <Image source={{ uri: imageUri }} style={styles.previewImage} />
-                <View style={styles.changeImageBadge}>
-                  <MaterialCommunityIcons name="refresh" size={16} color="#FFF" />
-                  <Text style={styles.changeImageText}>Ganti Foto</Text>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.uploadPlaceholder}>
-                <MaterialCommunityIcons name="camera-plus-outline" size={32} color="#555" />
-                <Text style={styles.uploadText}>Ketuk untuk memilih foto</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </ScrollView>
-
-        {/* Tombol Kirim */}
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.submitButton} activeOpacity={0.8} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Kirim Laporan</Text>
-            <MaterialCommunityIcons name="send-check" size={20} color="#000" />
-          </TouchableOpacity>
-        </View>
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.pageTitle}>Daftar Laporan</Text>
+        <View style={{ width: 40 }} />
       </View>
-    </KeyboardAvoidingView>
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.infoBox}>
+          <MaterialCommunityIcons name="inbox-multiple-outline" size={24} color="#000" />
+          <Text style={styles.infoText}>
+            Berikut adalah daftar laporan yang masuk. Ketuk kartu untuk melihat detail kronologi dan foto bukti.
+          </Text>
+        </View>
+
+        <View style={styles.listContainer}>
+          {DAFTAR_LAPORAN.map((laporan) => {
+            const isExpanded = expandedId === laporan.id;
+
+            return (
+              <TouchableOpacity
+                key={laporan.id}
+                style={[
+                    styles.laporanCard, 
+                    // Menambahkan bayangan ekstra jika kartu sedang dibuka
+                    isExpanded && { elevation: 8, shadowOffset: { width: 6, height: 6 } } 
+                ]}
+                activeOpacity={0.9}
+                onPress={() => toggleExpand(laporan.id)}
+              >
+                <View style={styles.cardHeader}>
+                  <Text style={styles.laporanId}>{laporan.id}</Text>
+                  <View style={[styles.statusBadge, { backgroundColor: laporan.statusColor }]}>
+                    <Text style={styles.statusText}>{laporan.status}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.cardBody}>
+                  <Text style={styles.laporanKategori}>{laporan.kategori}</Text>
+                  
+                  <View style={styles.metaRow}>
+                    <MaterialCommunityIcons name="map-marker-outline" size={14} color="#555" />
+                    <Text style={styles.metaText}>{laporan.lokasi}</Text>
+                  </View>
+                  
+                  <View style={styles.metaRow}>
+                    <MaterialCommunityIcons name="calendar-clock-outline" size={14} color="#555" />
+                    <Text style={styles.metaText}>{laporan.tanggal}</Text>
+                  </View>
+
+                  <View style={styles.metaRow}>
+                    <MaterialCommunityIcons name="account-eye-outline" size={14} color="#555" />
+                    <Text style={styles.metaText}>Pelapor: {laporan.pelapor}</Text>
+                  </View>
+
+                  {/* Indikator buka/tutup */}
+                  <View style={styles.expandIndicator}>
+                      <Text style={styles.expandText}>
+                          {isExpanded ? "Tutup Detail" : "Lihat Detail"}
+                      </Text>
+                      <MaterialCommunityIcons 
+                          name={isExpanded ? "chevron-up" : "chevron-down"} 
+                          size={16} 
+                          color="#4361EE" 
+                      />
+                  </View>
+                </View>
+
+                {/* --- KONTEN DETAIL & FOTO (Hanya Muncul Jika Di-Expand) --- */}
+                {isExpanded && (
+                  <View style={styles.expandedContent}>
+                    <View style={styles.divider} />
+                    
+                    <Text style={styles.detailLabel}>Kronologi Kejadian:</Text>
+                    <Text style={styles.detailText}>{laporan.kronologi}</Text>
+
+                    <Text style={styles.detailLabel}>Foto Bukti:</Text>
+                    {laporan.fotoBukti ? (
+                        <Image 
+                            source={{ uri: laporan.fotoBukti }} 
+                            style={styles.buktiImage} 
+                        />
+                    ) : (
+                        <View style={styles.noPhotoBox}>
+                            <MaterialCommunityIcons name="image-off-outline" size={24} color="#888" />
+                            <Text style={styles.noPhotoText}>Tidak ada foto bukti</Text>
+                        </View>
+                    )}
+
+                    {/* Tombol Aksi Opsional untuk Penerima Laporan */}
+                    <TouchableOpacity style={styles.actionButton} activeOpacity={0.8}>
+                        <Text style={styles.actionButtonText}>Tindak Lanjuti Kasus</Text>
+                        <MaterialCommunityIcons name="shield-check" size={18} color="#FFF" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FDFBF7",
-  },
-  // --- Header ---
-  pageHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
-    zIndex: 10,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
-  },
-  pageTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
-    textAlign: "center",
-    flex: 1,
-  },
-  // --- Scroll Content ---
-  scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  warningBox: {
-    flexDirection: "row",
-    backgroundColor: "#FDFFB6",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    alignItems: "center",
-    boxShadow: "3px 3px 0px rgba(0, 0, 0, 1)",
-  },
-  warningText: {
-    flex: 1,
-    marginLeft: 12,
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#000",
-    lineHeight: 18,
-  },
-  // --- Opsi Kategori (Chip Buttons) ---
-  kategoriContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap", // Agar otomatis turun ke baris bawah jika tidak muat
-    gap: 10,
-    marginBottom: 20,
-  },
-  kategoriChip: {
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
-  },
-  kategoriChipSelected: {
-    backgroundColor: "#9BF6FF", // Warna cyan pastel saat ditekan
-    boxShadow: "0px 0px 0px rgba(0, 0, 0, 1)", // Hilangkan bayangan seolah ditekan
-    transform: [{ translateX: 2 }, { translateY: 2 }], // Efek tombol masuk
-  },
-  kategoriText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#555",
-  },
-  kategoriTextSelected: {
-    fontWeight: "900",
-    color: "#000",
-  },
-  // --- Form Inputs ---
-  inputLabel: {
-    fontSize: 15,
-    fontWeight: "800",
-    color: "#000",
-    marginBottom: 8,
-  },
-  requiredAsterisk: {
-    color: "#FF595E",
-  },
-  textInput: {
-    backgroundColor: "#FFF",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 20,
-    boxShadow: "3px 3px 0px rgba(0, 0, 0, 1)",
-  },
-  textArea: {
-    height: 120,
-    paddingTop: 16, 
-  },
-  // --- Upload Box ---
-  uploadBox: {
-    backgroundColor: "#E4D4FF",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderStyle: "dashed",
-    borderRadius: 12,
-    height: 160,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  uploadPlaceholder: {
-    alignItems: "center",
-  },
-  uploadText: {
-    marginTop: 8,
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#555",
-  },
-  imageContainer: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-  },
-  previewImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  changeImageBadge: {
-    position: "absolute",
-    bottom: 12,
-    right: 12,
-    backgroundColor: "#000",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    gap: 4,
-  },
-  changeImageText: {
-    color: "#FFF",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  // --- Bottom Button ---
-  bottomContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    backgroundColor: "#FDFBF7",
-  },
-  submitButton: {
-    backgroundColor: "#A0E8AF",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 14,
-    paddingVertical: 16,
-    gap: 8,
-    boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
-  },
-  submitButtonText: {
-    fontSize: 16,
-    fontWeight: "900",
-    color: "#000",
-  },
+  container: { flex: 1, backgroundColor: "#FDFBF7" },
+  pageHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingVertical: 15, borderBottomWidth: 3, borderBottomColor: "#000", backgroundColor: "#FFF", zIndex: 10 },
+  backButton: { width: 40, height: 40, backgroundColor: "#FFF", borderWidth: 2, borderColor: "#000", borderRadius: 10, justifyContent: "center", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 2, height: 2 }, shadowOpacity: 1, shadowRadius: 0, elevation: 3 },
+  pageTitle: { fontSize: 18, fontWeight: "900", color: "#000", textAlign: "center", flex: 1 },
+  scrollContent: { padding: 20, paddingBottom: 40 },
+  infoBox: { flexDirection: "row", backgroundColor: "#9BF6FF", borderWidth: 3, borderColor: "#000", borderRadius: 12, padding: 16, marginBottom: 24, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 3, height: 3 }, shadowOpacity: 1, shadowRadius: 0, elevation: 4 },
+  infoText: { flex: 1, marginLeft: 12, fontSize: 13, fontWeight: "700", color: "#000", lineHeight: 18 },
+  listContainer: { gap: 16 },
+  laporanCard: { backgroundColor: "#FFF", borderWidth: 3, borderColor: "#000", borderRadius: 16, padding: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, shadowRadius: 0, elevation: 6 },
+  cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12, paddingBottom: 8, borderBottomWidth: 2, borderBottomColor: "#F0F0F0" },
+  laporanId: { fontSize: 14, fontWeight: "800", color: "#555" },
+  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, borderWidth: 2, borderColor: "#000" },
+  statusText: { fontSize: 10, fontWeight: "900", color: "#000", textTransform: "uppercase" },
+  cardBody: { gap: 8 },
+  laporanKategori: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 4 },
+  metaRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  metaText: { fontSize: 13, fontWeight: "600", color: "#333" },
+  expandIndicator: { flexDirection: "row", alignItems: "center", marginTop: 8, gap: 4 },
+  expandText: { fontSize: 13, fontWeight: "700", color: "#4361EE" },
+  
+  // --- Gaya untuk Konten Terbuka (Expanded) ---
+  expandedContent: { marginTop: 12 },
+  divider: { height: 2, backgroundColor: "#F0F0F0", marginBottom: 12 },
+  detailLabel: { fontSize: 13, fontWeight: "800", color: "#000", marginBottom: 4 },
+  detailText: { fontSize: 13, fontWeight: "500", color: "#444", lineHeight: 20, marginBottom: 16 },
+  buktiImage: { width: "100%", height: 200, borderRadius: 12, borderWidth: 2, borderColor: "#000", backgroundColor: "#F0F0F0", marginBottom: 16, resizeMode: "cover" },
+  noPhotoBox: { width: "100%", height: 100, borderRadius: 12, borderWidth: 2, borderColor: "#888", borderStyle: "dashed", backgroundColor: "#FAFAFA", justifyContent: "center", alignItems: "center", marginBottom: 16, gap: 8 },
+  noPhotoText: { fontSize: 13, fontWeight: "600", color: "#888" },
+  actionButton: { backgroundColor: "#4361EE", flexDirection: "row", justifyContent: "center", alignItems: "center", paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: "#000", gap: 8 },
+  actionButtonText: { fontSize: 14, fontWeight: "800", color: "#FFF" }
 });

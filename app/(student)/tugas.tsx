@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-// 1. IMPORT DOCUMENT PICKER
 import * as DocumentPicker from "expo-document-picker";
 import { Colors } from "../../constants/Colors";
 
@@ -49,7 +48,6 @@ export default function AssignmentScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS);
-
   const sortedAssignments = [...assignments].sort((a, b) => {
     return (
       new Date(a.deadlineDate).getTime() - new Date(b.deadlineDate).getTime()
@@ -181,8 +179,8 @@ export default function AssignmentScreen() {
           <MaterialCommunityIcons name="arrow-left" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <View>
-          <Text style={styles.headerTitle}>Tugas Siswa</Text>
-          <Text style={styles.headerSubtitle}>Daftar Deadline Tugas Siswa</Text>
+          <Text style={styles.headerTitle}>Tugas Murid</Text>
+          <Text style={styles.headerSubtitle}>Daftar Deadline Tugas Murid</Text>
         </View>
       </View>
 

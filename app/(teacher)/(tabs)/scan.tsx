@@ -19,6 +19,7 @@ export default function ScanScreen() {
   // State Waktu dan Lokasi
   const [currentTime, setCurrentTime] = useState(new Date());
   const [locationText, setLocationText] = useState("Mendeteksi lokasi...");
+  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Effect untuk Jam Real-time
   useEffect(() => {
@@ -48,6 +49,13 @@ export default function ScanScreen() {
         let location = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
+
+        if (isMounted) {
+          setCoordinates({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        }
 
         let geocode = await Location.reverseGeocodeAsync({
           latitude: location.coords.latitude,
@@ -132,55 +140,60 @@ export default function ScanScreen() {
         // barcodeScannerSettings={{
         //   barcodeTypes: ["qr"],
         // }}
-      >
-        <View style={styles.overlay}>
+      />
+      <View style={styles.overlay}>
+        <View style={styles.unfocusedContainer} />
+
+        <View style={styles.middleContainer}>
           <View style={styles.unfocusedContainer} />
 
-          <View style={styles.middleContainer}>
-            <View style={styles.unfocusedContainer} />
+          <View style={styles.focusedContainer}>
+            <View style={[styles.corner, styles.topLeft]} />
+            <View style={[styles.corner, styles.topRight]} />
+            <View style={[styles.corner, styles.bottomLeft]} />
+            <View style={[styles.corner, styles.bottomRight]} />
 
-            <View style={styles.focusedContainer}>
-              <View style={[styles.corner, styles.topLeft]} />
-              <View style={[styles.corner, styles.topRight]} />
-              <View style={[styles.corner, styles.bottomLeft]} />
-              <View style={[styles.corner, styles.bottomRight]} />
+            {isLoading && (
+              <View style={styles.popupOverlay}>
+                <ActivityIndicator size="large" color="#000" />
+                <Text style={styles.popupText}>Memproses...</Text>
+              </View>
+            )}
 
-              {isLoading && (
-                <View style={styles.popupOverlay}>
-                  <ActivityIndicator size="large" color="#000" />
-                  <Text style={styles.popupText}>Memproses...</Text>
-                </View>
-              )}
-
-              {successMessage && (
-                <View style={styles.popupOverlaySuccess}>
-                  <MaterialCommunityIcons name="check-decagram" size={32} color="#000" />
-                  <Text style={styles.successText}>{successMessage}</Text>
-                </View>
-              )}
-            </View>
-
-            <View style={styles.unfocusedContainer} />
+            {successMessage && (
+              <View style={styles.popupOverlaySuccess}>
+                <MaterialCommunityIcons name="check-decagram" size={32} color="#000" />
+                <Text style={styles.successText}>{successMessage}</Text>
+              </View>
+            )}
           </View>
 
-          <View style={styles.unfocusedContainer}>
-            <View style={styles.bottomInfoCard}>
-              <View style={styles.dateTimeHeader}>
-                <Text style={styles.dateText}>{formattedDate}</Text>
-                <Text style={styles.timeText}>{formattedTime}</Text>
-              </View>
-              <View style={styles.locationBadge}>
-                {locationText === "Mendeteksi lokasi..." ? (
-                  <ActivityIndicator size="small" color="#E63946" />
-                ) : (
-                  <MaterialCommunityIcons name="map-marker-radius" size={16} color="#E63946" />
-                )}
-                <Text style={styles.locationText} numberOfLines={1}>{locationText}</Text>
-              </View>
+          <View style={styles.unfocusedContainer} />
+        </View>
+
+        <View style={styles.unfocusedContainer}>
+          <View style={styles.bottomInfoCard}>
+            <View style={styles.dateTimeHeader}>
+              <Text style={styles.dateText}>{formattedDate}</Text>
+              <Text style={styles.timeText}>{formattedTime}</Text>
             </View>
+            <View style={styles.locationBadge}>
+              {locationText === "Mendeteksi lokasi..." ? (
+                <ActivityIndicator size="small" color="#E63946" />
+              ) : (
+                <MaterialCommunityIcons name="map-marker-radius" size={16} color="#E63946" />
+              )}
+              <Text style={styles.locationText} numberOfLines={1}>{locationText}</Text>
+            </View>
+            {coordinates && (
+              <View style={styles.coordinatesRow}>
+                <Text style={styles.coordinatesText}>Lat: {coordinates.latitude.toFixed(6)}</Text>
+                <Text style={styles.coordinatesText}>Long: {coordinates.longitude.toFixed(6)}</Text>
+              </View>
+            )}
           </View>
         </View>
-      </CameraView>
+      </View>
     </View>
   );
 }
@@ -194,7 +207,7 @@ const styles = StyleSheet.create({
   permissionText: { fontSize: 16, fontWeight: "700", textAlign: "center", marginBottom: 20 },
   permissionButton: { backgroundColor: "#CAFFBF", paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8, borderWidth: 2, borderColor: "#000" },
   permissionButtonText: { fontWeight: "900", fontSize: 16 },
-  overlay: { flex: 1 },
+  overlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 },
   unfocusedContainer: { flex: 1, justifyContent: "flex-end", paddingBottom: 20},
   middleContainer: { flexDirection: "row", height: 250 },
   focusedContainer: { width: 250, justifyContent: "center", alignItems: "center", position: "relative" },
@@ -213,4 +226,6 @@ const styles = StyleSheet.create({
   timeText: { fontSize: 16, fontWeight: "900", color: "#4361EE" },
   locationBadge: { flexDirection: "row", alignItems: "center", backgroundColor: "#F0F0F0", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, borderWidth: 1.5, borderColor: "#000", gap: 6, maxWidth: "100%" },
   locationText: { fontSize: 13, fontWeight: "800", color: "#000", flexShrink: 1 },
+  coordinatesRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 8 },
+  coordinatesText: { fontSize: 12, fontWeight: "700", color: "#333" },
 });

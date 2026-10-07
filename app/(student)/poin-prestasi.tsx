@@ -248,9 +248,9 @@ export default function PoinScreen() {
                 <MaterialCommunityIcons
                   name="alert-octagon"
                   size={18}
-                  color="#FF0000"
+                  color="#FF0100"
                 />
-                <Text style={[styles.statBoxTitle, { color: "#FF0000" }]}>
+                <Text style={[styles.statBoxTitle, { color: "#FFFFFF" }]}>
                   PELANGGARAN
                 </Text>
               </View>
@@ -377,10 +377,15 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  tabText: { fontSize: 13, fontWeight: "700", color: "#64748B" },
+  tabText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#64748B"
+  },
   tabTextActive: { color: Colors.primary },
-
-  contentContainer: { padding: 20, paddingBottom: 40 },
+  contentContainer: {
+    padding: 20, paddingBottom: 40
+  },
 
   // --- KARTU RINGKASAN SESUAI TEMA APLIKASI ---
   summaryCard: {
@@ -406,15 +411,21 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     marginBottom: 6,
   },
-  scoreRow: { flexDirection: "row", alignItems: "baseline" },
-  scoreValue: { color: "#FFFFFF", fontSize: 48, fontWeight: "900" },
+  scoreRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
+  scoreValue: {
+    color: "#FFFFFF",
+    fontSize: 48,
+    fontWeight: "900",
+  },
   scoreStatus: {
     fontSize: 16,
     fontWeight: "700",
     marginLeft: 6,
     color: "rgba(255,255,255,0.9)",
   }, // Putih agar menyatu
-
   shieldIconBox: {
     width: 56,
     height: 56,
@@ -428,15 +439,17 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-
   summaryDescription: {
     color: "rgba(255,255,255,0.85)",
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 25,
   },
-
-  statsRow: { flexDirection: "row", justifyContent: "space-between", gap: 15 },
+  statsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 15,
+  },
   statBox: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.15)",
@@ -457,8 +470,11 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     letterSpacing: 0.5,
   },
-  statBoxValue: { fontSize: 26, fontWeight: "900", color: "#FFFFFF" },
-
+  statBoxValue: {
+    fontSize: 26,
+    fontWeight: "900",
+    color: "#FFFFFF",
+  },
   sectionTitle: {
     fontSize: 14,
     fontWeight: "800",
@@ -466,7 +482,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     letterSpacing: 1,
   },
-
   historyList: { gap: 16 },
   historyCard: {
     backgroundColor: "#FFFFFF",
@@ -484,7 +499,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "space-between",
   },
-  historyTitleBox: { flex: 1, paddingRight: 15 },
+  historyTitleBox: {
+    flex: 1,
+    paddingRight: 15,
+  },
   historyTitle: {
     fontSize: 16,
     fontWeight: "bold",
@@ -492,12 +510,26 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     lineHeight: 22,
   },
-
-  tagRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap" },
-  categoryTag: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  categoryTagText: { fontSize: 10, fontWeight: "bold", letterSpacing: 0.5 },
-  dateText: { fontSize: 12, color: "#94A3B8", fontWeight: "500" },
-
+  tagRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap"
+  },
+  categoryTag: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  categoryTagText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    letterSpacing: 0.5
+  },
+  dateText: {
+    fontSize: 12,
+    color: "#94A3B8",
+    fontWeight: "500",
+  },
   pointBadge: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -505,8 +537,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  historyPoints: { fontSize: 16, fontWeight: "900", color: "#FFFFFF" },
-
+  historyPoints: {
+    fontSize: 16,
+    fontWeight: "900",
+    color: "#FFFFFF",
+  },
   noteBubble: {
     flexDirection: "row",
     backgroundColor: "#F8FAFC",
@@ -516,7 +551,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#F1F5F9",
   },
-  quoteIcon: { marginRight: 10, marginTop: 2 },
+  quoteIcon: {
+    marginRight: 10,
+    marginTop: 2,
+  },
   noteContent: { flex: 1 },
   noteLabel: {
     fontSize: 12,
@@ -524,5 +562,9 @@ const styles = StyleSheet.create({
     color: "#64748B",
     marginBottom: 4,
   },
-  noteText: { fontSize: 14, color: "#475569", lineHeight: 22 },
+  noteText: {
+    fontSize: 14,
+    color: "#475569",
+    lineHeight: 22,
+  },
 });

@@ -58,10 +58,10 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 6,
-    title: "Pembiasaan",
-    icon: "clipboard-text-clock-outline",
+    title: "Arsip\nDokumen",
+    icon: "folder-multiple-outline",
     color: "#A0E8AF",
-    route: "/page/pembiasaan",
+    route: "/page/arsip_dokumen",
   },
   {
     id: 7,
@@ -84,7 +84,7 @@ const otherFeatures: FeatureItem[] = [
     title: "Arsip Dokumen",
     icon: "folder-multiple-outline",
     color: "#FFC6FF",
-    route: "/page/arsip",
+    route: "/page/arsip_dokumen",
   },
   {
     id: 102,
@@ -100,34 +100,35 @@ const otherFeatures: FeatureItem[] = [
     color: "#FFD166",
     route: "/page/materi",
   },
-  // {
-  //   id: 104,
-  //   title: "Ekstrakulikuler",
-  //   icon: "basketball", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
-  //   color: "#FDFFB6",
-  //   route: "/page/ekstrakurikuler",
-  // },
+  {
+    id: 104,
+    title: "Tata\nUsaha",
+    icon: "card-account-mail-outline", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
+    color: "#FDFFB6",
+    route: "/page/tata_usaha",
+  },
   {
     id: 105,
-    title: "Poin & Prestasi",
+    title: "Test",
     icon: "trophy-outline", // Ikon piala untuk prestasi
     color: "#FFADAD",
-    route: "/page/prestasi",
+    route: "/page/ujian",
   },
   {
     id: 106,
     title: "KPI",
     icon: "chart-box-outline", // Ikon grafik/kinerja untuk KPI
     color: "#E4D4FF",
-    route: "/page/kpi",
+    route: "/page/KPI",
   },
   {
     id: 107,
-    title: "Tanya Anise",
+    title: "test2",
     icon: "headset", // Ikon bantuan / asisten tanya jawab
-    color: "#A0E8AF",
-    route: "/page/asisten",
+    color: "#7bd3ff",
+    route: "/page/test",
   },
+  
 ];
 
 export default function TeacherFeatureGrid() {

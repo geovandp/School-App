@@ -57,12 +57,9 @@ const SEMESTERS = [
 export default function NilaiScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
   const [selectedClass, setSelectedClass] = useState("10");
   const [selectedSemester, setSelectedSemester] = useState("1");
-
   const currentGrades = GRADES_DATA[selectedClass]?.[selectedSemester as "1" | "2"] || [];
-  
   const averageScore = currentGrades.length > 0 
     ? (currentGrades.reduce((sum, item) => sum + item.score, 0) / currentGrades.length).toFixed(1)
     : "0.0";
@@ -93,7 +90,7 @@ export default function NilaiScreen() {
         </TouchableOpacity>
         <View>
           <Text style={styles.headerTitle}>Nilai Akademik</Text>
-          <Text style={styles.headerSubtitle}>Laporan Hasil Belajar Siswa</Text>
+          <Text style={styles.headerSubtitle}>Laporan Hasil Belajar Murid</Text>
         </View>
       </View>
 
@@ -148,7 +145,7 @@ export default function NilaiScreen() {
             style={styles.summaryCard}
           >
             <View style={styles.summaryInfo}>
-              <Text style={styles.summaryLabel}>Rata-Rata Nilai</Text>
+              <Text style={styles.summaryLabel}>Rerata Nilai</Text>
               <View style={styles.remarkBadge}>
                 <Text style={styles.remarkText}>{getAverageRemark(Number(averageScore))}</Text>
               </View>
@@ -171,7 +168,7 @@ export default function NilaiScreen() {
                   <View style={styles.subjectInfo}>
                     <Text style={styles.subjectTitle}>{item.subject}</Text>
                     <View style={styles.scoreRow}>
-                      <Text style={styles.subjectScore}> Skor Akhir: {item.score}</Text>
+                      <Text style={styles.subjectScore}> Nilai: {item.score}</Text>
                     </View>
                   </View>
                   
