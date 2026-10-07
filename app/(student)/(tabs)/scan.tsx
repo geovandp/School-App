@@ -1,0 +1,227 @@
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Colors } from "@/constants/Colors";
+import { useFocusEffect, useRouter } from "expo-router";
+
+export default function ScanScreen() {
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const [isFocused, setIsFocused] = useState(false);
+  const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+
+      return () => {
+        setIsFocused(false);
+      };
+    }, []),
+  );
+
+  if (!permission) {
+    return <View style={styles.container} />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={styles.permissionText}>
+          Kami membutuhkan akses kamera untuk melakukan absensi QR Code.
+        </Text>
+        <Button
+          onPress={requestPermission}
+          title="Izinkan Kamera"
+          color={Colors.primary}
+        />
+      </View>
+    );
+  }
+
+  const verifyAttendanceToServer = (qrData: string) => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+
+      setTimeout(() => {
+        setIsLoading(false);
+
+        if (qrData) {
+          resolve({
+            status: "success",
+            message: `Absensi berhasil: ${qrData}`,
+          });
+        } else {
+          reject({ status: "error", message: "QR Code tidak valid!" });
+        }
+      }, 1000);
+    });
+  };
+
+  const handleBarcodeScanned = async ({
+    type,
+    data,
+  }: {
+    type: string;
+    data: string;
+  }) => {
+    if (scanned || isLoading) return;
+
+    setScanned(true);
+
+    try {
+      const response: any = await verifyAttendanceToServer(data);
+
+      setSuccessMessage(response.message);
+
+      setTimeout(() => {
+        setScanned(false);
+        setSuccessMessage(null);
+        router.replace("/(student)/(tabs)");
+      }, 1500);
+    } catch (error: any) {
+      setSuccessMessage("Gagal memproses QR Code");
+      setTimeout(() => {
+        setScanned(false);
+        setSuccessMessage(null);
+      }, 1500);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {isFocused ? (
+        // Menggunakan Fragment (<>...</>) untuk membungkus CameraView dan Overlay secara sejajar
+        <>
+          {/* 1. CameraView ditutup langsung (self-closing tag) */}
+          <CameraView
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+          />
+
+          {/* 2. Overlay diletakkan DI LUAR CameraView */}
+          <View style={styles.overlay}>
+            <View style={styles.unfocusedContainer}></View>
+            <View style={styles.middleContainer}>
+              <View style={styles.unfocusedContainer}></View>
+              <View style={styles.focusedContainer}>
+                <View style={[styles.corner, styles.topLeft]} />
+                <View style={[styles.corner, styles.topRight]} />
+                <View style={[styles.corner, styles.bottomLeft]} />
+                <View style={[styles.corner, styles.bottomRight]} />
+
+                {isLoading && (
+                  <View style={styles.popupOverlay}>
+                    <ActivityIndicator size="large" color={Colors.primary} />
+                    <Text style={styles.popupText}>Memproses...</Text>
+                  </View>
+                )}
+
+                {successMessage && (
+                  <View style={styles.popupOverlay}>
+                    <Text style={styles.successText}>{successMessage}</Text>
+                  </View>
+                )}
+              </View>
+              <View style={styles.unfocusedContainer}></View>
+            </View>
+            <View style={styles.unfocusedContainer}></View>
+          </View>
+        </>
+      ) : (
+        <View style={styles.container} />
+      )}
+    </View>
+  );
+}
+
+// Styling tetap sama persis, tidak ada yang diubah
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#000",
+  },
+  permissionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#FFF",
+  },
+  permissionText: {
+    textAlign: "center",
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  unfocusedContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  middleContainer: {
+    flexDirection: "row",
+    flex: 1.5,
+  },
+  focusedContainer: {
+    flex: 4,
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  corner: {
+    position: "absolute",
+    width: 40,
+    height: 40,
+    borderColor: "#3B8312",
+    borderWidth: 4,
+  },
+  topLeft: { top: 0, left: 0, borderBottomWidth: 0, borderRightWidth: 0 },
+  topRight: { top: 0, right: 0, borderBottomWidth: 0, borderLeftWidth: 0 },
+  bottomLeft: { bottom: 0, left: 0, borderTopWidth: 0, borderRightWidth: 0 },
+  bottomRight: { bottom: 0, right: 0, borderTopWidth: 0, borderLeftWidth: 0 },
+  popupOverlay: {
+    position: "absolute",
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    padding: 15,
+    borderRadius: 12,
+    alignItems: "center",
+    width: "80%",
+  },
+  popupText: {
+    marginTop: 8,
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  successText: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#3B8312",
+    textAlign: "center",
+  },
+  subText: {
+    marginTop: 4,
+    fontSize: 11,
+    color: "#666",
+  },
+});
