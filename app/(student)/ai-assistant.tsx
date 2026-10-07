@@ -23,7 +23,7 @@ type Message = {
   timestamp: Date;
 };
 
-export default function TanyaAniseScreen() {
+export default function TanyaSimirdaScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -32,14 +32,14 @@ export default function TanyaAniseScreen() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Halo! Aku Anise, asisten akademik kamu. Kamu bisa tanya soal jadwal pelajaran, tugas yang belum selesai, nilai, atau absensi. Ada yang bisa Anise bantu hari ini?",
+      text: "Halo! Aku Simirda, asisten akademik kamu. Kamu bisa tanya soal jadwal pelajaran, tugas yang belum selesai, nilai, atau absensi. Ada yang bisa Simirda bantu hari ini?",
       sender: "bot",
       timestamp: new Date(),
     },
   ]);
 
   // --- LOGIKA MOCK AI (Pendeteksi Kata Kunci) ---
-  const generateAniseResponse = (question: string) => {
+  const generateSimirdaResponse = (question: string) => {
     const q = question.toLowerCase();
 
     if (
@@ -73,9 +73,8 @@ export default function TanyaAniseScreen() {
     ) {
       return "Total kehadiranmu semester ini mencapai 95%. Kamu tercatat izin 4 kali dan sakit 2 kali. Pertahankan terus kedisiplinanmu! 🏫";
     }
-
     // Fallback: Jika di luar konteks
-    return "Maaf ya, Anise hanya diprogram untuk menjawab informasi seputar sekolah, seperti jadwal pelajaran, tugas, nilai, dan absensi. Ada hal terkait akademik yang ingin kamu tanyakan?";
+    return "Maaf ya, Simirda hanya diprogram untuk menjawab informasi seputar sekolah, seperti jadwal pelajaran, tugas, nilai, dan absensi. Ada hal terkait akademik yang ingin kamu tanyakan?";
   };
 
   const handleSend = () => {
@@ -95,7 +94,7 @@ export default function TanyaAniseScreen() {
 
     // 2. Simulasikan jeda waktu AI "berpikir" selama 1-2 detik
     setTimeout(() => {
-      const botResponseText = generateAniseResponse(userMsg.text);
+      const botResponseText = generateSimirdaResponse(userMsg.text);
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -149,7 +148,7 @@ export default function TanyaAniseScreen() {
               />
             </View>
             <View>
-              <Text style={styles.headerTitle}>Tanya Anise</Text>
+              <Text style={styles.headerTitle}>Tanya Simirda</Text>
               <Text style={styles.headerSubtitle}>
                 <View style={styles.onlineDot} /> Online
               </Text>
@@ -234,7 +233,7 @@ export default function TanyaAniseScreen() {
                 ]}
               >
                 <ActivityIndicator size="small" color={Colors.primary} />
-                <Text style={styles.typingText}>Anise sedang mengetik...</Text>
+                <Text style={styles.typingText}>Simirda sedang mengetik...</Text>
               </View>
             </View>
           )}

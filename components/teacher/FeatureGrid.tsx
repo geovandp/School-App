@@ -100,20 +100,20 @@ const otherFeatures: FeatureItem[] = [
     color: "#FFD166",
     route: "/page/materi",
   },
-  // {
-  //   id: 104,
-  //   title: "Ekstrakulikuler",
-  //   icon: "basketball", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
-  //   color: "#FDFFB6",
-  //   route: "/page/ekstrakurikuler",
-  // },
-  // {
-  //   id: 105,
-  //   title: "Poin & Prestasi",
-  //   icon: "trophy-outline", // Ikon piala untuk prestasi
-  //   color: "#FFADAD",
-  //   route: "/page/prestasi",
-  // },
+  {
+    id: 104,
+    title: "Tata\nUsaha",
+    icon: "card-account-mail-outline", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
+    color: "#FDFFB6",
+    route: "/page/tata_usaha",
+  },
+  {
+    id: 105,
+    title: "Test",
+    icon: "trophy-outline", // Ikon piala untuk prestasi
+    color: "#FFADAD",
+    route: "/page/ujian",
+  },
   {
     id: 106,
     title: "KPI",
@@ -123,11 +123,12 @@ const otherFeatures: FeatureItem[] = [
   },
   {
     id: 107,
-    title: "Tanya Anise",
+    title: "test2",
     icon: "headset", // Ikon bantuan / asisten tanya jawab
-    color: "#A0E8AF",
-    route: "/page/asisten",
+    color: "#7bd3ff",
+    route: "/page/test",
   },
+  
 ];
 
 export default function TeacherFeatureGrid() {

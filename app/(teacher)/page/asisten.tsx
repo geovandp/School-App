@@ -2,15 +2,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-    FlatList,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -73,14 +73,47 @@ export default function ChatBotPage() {
     };
 
     setMessages((prevMessages) => [...prevMessages, userMsg]);
-    setInputText(""); // Kosongkan kolom input
-    setIsBotTyping(true); // Tampilkan status bot sedang memproses (opsional)
 
-    // 2. Beri jeda 1 detik seolah bot sedang "mengetik", lalu munculkan balasannya
+    // Simpan teks ke variabel sementara lalu ubah ke huruf kecil untuk pengecekan
+    const currentInput = inputText.toLowerCase();
+    setInputText(""); // Kosongkan kolom input
+    setIsBotTyping(true);
+
+    // 2. Beri jeda 1 detik seolah bot sedang "mengetik", lalu tentukan balasan
     setTimeout(() => {
+      let replyText = "";
+
+      // Logika if-statement untuk variasi balasan bot
+      if (currentInput.includes("halo") || currentInput.includes("hai")) {
+        replyText = "Halo juga! Ada yang bisa saya bantu terkait informasi sekolah hari ini?";
+      }
+      else if (currentInput.includes("absen") || currentInput.includes("kehadiran")) {
+        replyText = "Untuk mengecek atau mengubah data kehadiran, Anda bisa langsung menuju menu 'Kehadiran Siswa' di beranda.";
+      }
+      else if (currentInput.includes("kpi") || currentInput.includes("kinerja")) {
+        replyText = "Data KPI Guru dan Rombel dapat Anda lihat melalui menu KPI. Anda bisa menggunakan filter untuk melihat data bulan ini atau per semester.";
+      }
+      else if (currentInput.includes("dokumen") || currentInput.includes("arsip") || currentInput.includes("surat")) {
+        replyText = "Anda bisa mencari dokumen, RPP, atau surat masuk di menu 'Arsip Dokumen'.";
+      }
+      else if (currentInput.includes("terima kasih") || currentInput.includes("makasih")) {
+        replyText = "Sama-sama! Jangan ragu untuk bertanya lagi jika Anda membutuhkan bantuan lain. 😊";
+      }
+      else {
+        // Balasan acak jika kata kunci tidak ada yang cocok (Default Fallback)
+        const randomReplies = [
+          "Maaf, saya kurang menangkap maksud Anda. Bisa dijelaskan lebih spesifik?",
+          "Saat ini saya masih dalam tahap belajar. Apakah Anda mau bertanya seputar absensi atau arsip?",
+          "Hmm, pertanyaan yang menarik, tapi sayangnya saya belum punya jawaban untuk itu saat ini. 🙏",
+          "Sistem saya belum mengenali perintah tersebut. Coba gunakan kata kunci seperti 'absen', 'kpi', atau 'arsip'."
+        ];
+        // Pilih salah satu balasan secara acak
+        replyText = randomReplies[Math.floor(Math.random() * randomReplies.length)];
+      }
+
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Maaf, bot belum bisa beroperasi untuk saat ini. 🙏 Minta tolong kembali nanti ya!",
+        text: replyText,
         sender: "bot",
       };
 

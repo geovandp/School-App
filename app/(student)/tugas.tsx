@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-// 1. IMPORT DOCUMENT PICKER
 import * as DocumentPicker from "expo-document-picker";
 import { Colors } from "../../constants/Colors";
 
