@@ -37,7 +37,7 @@ const mainFeatures: FeatureItem[] = [
   },
   {
     id: 3,
-    title: "Nilai\nTugas",
+    title: "Nilai\nSiswa",
     icon: "card-bulleted-outline",
     color: "#FFADAD",
     route: "/page/nilai",
@@ -109,7 +109,7 @@ const otherFeatures: FeatureItem[] = [
   },
   {
     id: 105,
-    title: "Test",
+    title: "Ujian",
     icon: "trophy-outline", // Ikon piala untuk prestasi
     color: "#FFADAD",
     route: "/page/ujian",
@@ -121,14 +121,6 @@ const otherFeatures: FeatureItem[] = [
     color: "#E4D4FF",
     route: "/page/KPI",
   },
-  {
-    id: 107,
-    title: "test2",
-    icon: "headset", // Ikon bantuan / asisten tanya jawab
-    color: "#7bd3ff",
-    route: "/page/test",
-  },
-  
 ];
 
 export default function TeacherFeatureGrid() {
