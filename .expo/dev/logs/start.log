@@ -8443,3 +8443,9 @@
 {"_e":"metro:bundling:progress","_t":1791641766976,"id":"u","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:progress","_t":1791641766978,"id":"u","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1791641767160,"id":"u","total":1,"ms":184.0371}
+{"_e":"metro:bundling:started","_t":1791641815650,"id":"y","platform":"ios","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1791641815650,"id":"y","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1791641815733,"id":"y","total":1,"ms":83.3601}
+{"_e":"metro:bundling:started","_t":1791641826771,"id":"10","platform":"ios","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1791641826771,"id":"10","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1791641826850,"id":"10","total":1,"ms":78.7332}
