@@ -6632,6 +6632,7 @@
 {"_e":"metro:client_log","_t":1791368460544,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
 {"_e":"metro:client_log","_t":1791368460622,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
 {"_e":"metro:client_log","_t":1791368460725,"level":"warn","data":["\"textShadow*\" style props are deprecated. Use \"textShadow\"."]}
+<<<<<<< HEAD
 {"_e":"root:init","_t":1791640520012,"format":"v0-jsonl","version":"57.0.26"}
 {"_e":"env:mode","_t":1791640520036,"nodeEnv":"development","babelEnv":"development","mode":"development"}
 {"_e":"env:load","_t":1791640520063,"mode":"development","files":["../..\\..\\.env"],"env":{"EXPO_ROUTER_DISABLE_RN_NAVIGATION_CHECK":"1"}}
@@ -8449,3 +8450,5 @@
 {"_e":"metro:bundling:started","_t":1791641826771,"id":"10","platform":"ios","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
 {"_e":"metro:bundling:progress","_t":1791641826771,"id":"10","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1791641826850,"id":"10","total":1,"ms":78.7332}
+=======
+>>>>>>> 813fb4b5098fa3e4739a6441022b375e8ff99baf
