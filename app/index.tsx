@@ -13,7 +13,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 export default function HomeScreen() {
-  // Animasi Values untuk efek masuk yang halus (Fade In & Slide Up)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -55,7 +54,6 @@ export default function HomeScreen() {
           Pilih peran Anda untuk masuk ke sistem ujian aman
         </Text>
 
-        {/* Tombol 1: Ke Halaman Siswa */}
         <TouchableOpacity
           style={[styles.button, styles.studentButton]}
           onPress={() => router.push("/(student)/(tabs)")}
@@ -76,7 +74,6 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
 
-        {/* Tombol 2: Ke Halaman Guru */}
         <TouchableOpacity
           style={[styles.button, styles.teacherButton]}
           onPress={() => router.push("/(teacher)/(tabs)")}
@@ -171,10 +168,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   studentButton: {
-    backgroundColor: "#2563EB", // Biru Modern Professional
+    backgroundColor: "#2563EB",
   },
   teacherButton: {
-    backgroundColor: "#059669", // Hijau Emerald Professional
+    backgroundColor: "#059669",
   },
   buttonContent: {
     flexDirection: "row",
