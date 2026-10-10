@@ -42,15 +42,12 @@ export default function RuangUjianScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { examTitle } = useLocalSearchParams();
-
   const [appState, setAppState] = useState(AppState.currentState);
   const [isLocked, setIsLocked] = useState(false);
   const [superVisorPassword, setSuperVisorPassword] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const questionsPerPage = 5;
   const totalPages = Math.ceil(EXAM_QUESTIONS.length / questionsPerPage);
-
-  // State penyimpanan jawaban
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, number>
   >({});
