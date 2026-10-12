@@ -94,7 +94,7 @@ export default function KpiScreen() {
         <View>
           <Text style={styles.headerTitle}>Performa Kinerja (KPI)</Text>
           <Text style={styles.headerSubtitle}>
-            Evaluasi dan indikator mandiri siswa
+            Evaluasi dan indikator mandiri murid
           </Text>
         </View>
       </View>

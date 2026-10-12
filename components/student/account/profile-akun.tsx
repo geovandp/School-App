@@ -12,15 +12,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "@/constants/Colors";
 
 // --- DATA DUMMY SISWA ---
 const STUDENT_DATA = {
   schoolName: "SMAN Sederajat",
   name: "Alexander",
   nisn: "666666",
-  nis: "999999",
   kelas: "XII MIPA 1",
+  tahunPelajaran: "2026/2027",
   role: "MURID",
 };
 
@@ -38,8 +37,7 @@ export default function ProfileScreen() {
           text: "Keluar",
           style: "destructive",
           onPress: () => {
-            // Logika logout disini (hapus token, dll)
-            router.replace("/login"); // Arahkan kembali ke halaman login
+            router.replace("/login");
           },
         },
       ],
@@ -57,41 +55,45 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >
-        {/* --- KARTU PELAJAR DIGITAL (RFID READY) --- */}
+        {/* --- KARTU PELAJAR DIGITAL (CUSTOM PRIMARY GRADIENT) --- */}
         <LinearGradient
-          colors={["#2A4B54", "#172A30"]} // Warna Teal gelap menyerupai referensi gambar
+          // Gradasi memadukan Hitam Pekat (#0F172A), Hijau Primary (#3B8312), & Turunan Aksen (#2D650E)
+          colors={["#0F172A", "#2D650E", "#3B8312"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.idCard}
         >
+          {/* Efek Kilau / Overlay Cahaya Halus di Kartu */}
+          <View style={styles.cardGlowEffect} />
+
           {/* Baris Atas: Logo & Nama Sekolah */}
           <View style={styles.cardSchoolHeader}>
-            {/* Ganti ikon dengan Image logo lokal */}
-            <Image
-              source={require("@/assets/images/android-icon-foreground.png")}
-              style={styles.schoolLogo}
-              resizeMode="contain"
-            />
+            <View style={styles.logoWrapper}>
+              <Image
+                source={require("@/assets/images/android-icon-foreground.png")}
+                style={styles.schoolLogo}
+                resizeMode="contain"
+              />
+            </View>
             <Text style={styles.cardSchoolText}>{STUDENT_DATA.schoolName}</Text>
           </View>
 
-          {/* Judul Kartu */}
+          {/* Judul Kartu dengan Aksen Modern */}
           <View style={styles.cardTitleContainer}>
             <Text style={styles.cardTitle}>KARTU PELAJAR DIGITAL</Text>
             <View style={styles.cardTitleUnderline} />
           </View>
 
           <View style={styles.cardBody}>
-            {/* Bagian Kiri: Foto Profil */}
+            {/* Bagian Kiri: Foto Profil & Status */}
             <View style={styles.photoSection}>
               <View style={styles.photoPlaceholder}>
                 <MaterialCommunityIcons
                   name="account"
-                  size={60}
-                  color="#CBD5E1"
+                  size={54}
+                  color="#64748B"
                 />
               </View>
-              {/* Label Status / Absen (Warna Pink/Merah seperti referensi) */}
               <View style={styles.statusLabel}>
                 <Text style={styles.statusLabelText}>AKTIF</Text>
               </View>
@@ -101,19 +103,23 @@ export default function ProfileScreen() {
             <View style={styles.infoSection}>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Nama</Text>
-                <Text style={styles.infoValue}>: {STUDENT_DATA.name}</Text>
+                <Text style={styles.infoValue} numberOfLines={1}>
+                  : {STUDENT_DATA.name}
+                </Text>
               </View>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>NISN</Text>
                 <Text style={styles.infoValue}>: {STUDENT_DATA.nisn}</Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>NIS</Text>
-                <Text style={styles.infoValue}>: {STUDENT_DATA.nis}</Text>
-              </View>
-              <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Kelas</Text>
                 <Text style={styles.infoValue}>: {STUDENT_DATA.kelas}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Tahun</Text>
+                <Text style={styles.infoValue}>
+                  : {STUDENT_DATA.tahunPelajaran}
+                </Text>
               </View>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Role</Text>
@@ -122,13 +128,14 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* Ikon QR Code di sudut kanan bawah */}
-          <MaterialCommunityIcons
-            name="qrcode-scan"
-            size={24}
-            color="rgba(255,255,255,0.2)"
-            style={styles.qrWatermark}
-          />
+          {/* Ikon Watermark QR di sudut kanan bawah */}
+          <View style={styles.qrWatermarkContainer}>
+            <MaterialCommunityIcons
+              name="qrcode-scan"
+              size={36}
+              color="rgba(255,255,255,0.15)"
+            />
+          </View>
         </LinearGradient>
 
         <Text style={styles.sectionTitle}>Pengaturan Akun</Text>
@@ -140,12 +147,12 @@ export default function ProfileScreen() {
             style={styles.menuItem}
             activeOpacity={0.7}
             onPress={() => router.push("/(student)/profile-akun/edit-profile")}
-        >
-            <View style={[styles.menuIconBox, { backgroundColor: "#EFF6FF" }]}>
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: "#F0FDF4" }]}>
               <MaterialCommunityIcons
                 name="account-edit-outline"
                 size={22}
-                color="#3B82F6"
+                color="#3B8312"
               />
             </View>
             <Text style={styles.menuText}>Edit Profile</Text>
@@ -166,7 +173,7 @@ export default function ProfileScreen() {
               <MaterialCommunityIcons
                 name="shield-lock-outline"
                 size={22}
-                color="#10B981"
+                color="#059669"
               />
             </View>
             <Text style={styles.menuText}>Keamanan Akun</Text>
@@ -187,7 +194,7 @@ export default function ProfileScreen() {
               <MaterialCommunityIcons
                 name="help-circle-outline"
                 size={22}
-                color="#F59E0B"
+                color="#D97706"
               />
             </View>
             <Text style={styles.menuText}>Pusat Bantuan</Text>
@@ -220,97 +227,138 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingTop: 10,
     backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
   },
-  headerTitle: { fontSize: 24, fontWeight: "bold", color: "#1E293B" },
-
-  contentContainer: { padding: 20, paddingBottom: 40 },
-
-  // --- KARTU PELAJAR STYLES ---
-  idCard: {
-    borderRadius: 16,
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "900",
+    color: "#1E293B",
+  },
+  contentContainer: {
     padding: 20,
-    marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
+    paddingBottom: 40,
+  },
+  idCard: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 28,
+    shadowColor: "#3B8312",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
     elevation: 8,
-    overflow: "hidden", // Agar watermark QR tidak keluar batas
+    overflow: "hidden",
+    position: "relative",
+  },
+  cardGlowEffect: {
+    position: "absolute",
+    top: -50,
+    right: -50,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   cardSchoolHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 14,
+  },
+  logoWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   schoolLogo: {
-    width: 25,
-    height: 20,
-    borderRadius: 4, // Opsional jika ingin sedikit melengkung
+    width: 18,
+    height: 18,
   },
   cardSchoolText: {
-    color: "#E2E8F0",
-    fontSize: 11,
-    fontWeight: "bold",
-    marginLeft: 6,
+    color: "#F8FAFC",
+    fontSize: 12,
+    fontWeight: "800",
+    marginLeft: 8,
+    letterSpacing: 0.5,
     textTransform: "uppercase",
   },
   cardTitleContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   cardTitle: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "900",
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
   cardTitleUnderline: {
     width: "100%",
-    height: 1,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginTop: 8,
+    height: 1.5,
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    marginTop: 6,
+    borderRadius: 1,
   },
   cardBody: {
     flexDirection: "row",
     alignItems: "center",
   },
-  // Foto & Label
-  photoSection: { alignItems: "center", marginRight: 15 },
+  photoSection: {
+    alignItems: "center", 
+    marginRight: 16,
+  },
   photoPlaceholder: {
-    width: 80,
-    height: 95,
-    backgroundColor: "#F1F5F9",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    width: 76,
+    height: 92,
+    backgroundColor: "#E2E8F0",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   statusLabel: {
-    backgroundColor: "#F43F5E", // Warna Pink/Merah menyala
-    width: 80,
-    paddingVertical: 6,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    backgroundColor: "#10B981",
+    width: 76,
+    paddingVertical: 5,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
     alignItems: "center",
   },
   statusLabelText: {
     color: "#FFFFFF",
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: "900",
+    letterSpacing: 1,
   },
-  // Info Text
   infoSection: { flex: 1 },
-  infoRow: { flexDirection: "row", marginBottom: 6 },
-  infoLabel: { width: 50, color: "#E2E8F0", fontSize: 12, fontWeight: "600" },
-  infoValue: { flex: 1, color: "#FFFFFF", fontSize: 12, fontWeight: "bold" },
-  qrWatermark: {
+  infoRow: { 
+    flexDirection: "row",
+    marginBottom: 5,
+   },
+  infoLabel: { 
+    width: 52,
+    color: "#CBD5E1",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  infoValue: { 
+    flex: 1,
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  qrWatermarkContainer: {
     position: "absolute",
-    bottom: 15,
+    bottom: 12,
     right: 15,
   },
-  // --- MENU STYLES ---
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 15,
+    fontWeight: "800",
     color: "#1E293B",
     marginBottom: 12,
   },
@@ -319,12 +367,17 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: "#F1F5F9",
-    marginBottom: 25,
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 2,
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#F1F5F9",
@@ -335,27 +388,26 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 15,
+    marginRight: 14,
   },
   menuText: {
     flex: 1,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "700",
     color: "#334155",
   },
-  // --- LOGOUT BUTTON ---
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FEF2F2",
-    paddingVertical: 16,
+    paddingVertical: 15,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: "#FECACA",
   },
   logoutText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#EF4444",
     marginLeft: 8,
