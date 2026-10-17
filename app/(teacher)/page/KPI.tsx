@@ -1,3 +1,4 @@
+import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import {
@@ -9,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// --- DUMMY DATA KHUSUS BU SITI ---
+// Data Dummy KPI Utama Siti Aminah
 const teacherProfile = {
     name: "Siti Aminah, S.Pd",
     nip: "19850723 201001 2 014",
@@ -17,49 +18,48 @@ const teacherProfile = {
 };
 
 const teacherKpi = {
-    overallAttendance: 93, // Rata-rata kehadiran di kelas Bu Siti
+    overallAttendance: 93,
     targetAttendance: 95,
-    totalStudents: 142, // Total siswa yang diajar
-    totalClasses: 4,    // Jumlah rombel yang diajar
+    totalStudents: 142,
+    totalClasses: 4,
 };
 
 const classKpiData = [
     { id: "c1", name: "Kelas X IPA 1", attendance: 96 },
     { id: "c2", name: "Kelas X IPA 2", attendance: 91 },
-    { id: "c3", name: "Kelas XI IPS 1", attendance: 82 }, // Di bawah target
+    { id: "c3", name: "Kelas XI IPS 1", attendance: 82 },
     { id: "c4", name: "Kelas XI IPS 2", attendance: 98 },
 ];
 
-export default function KpiGuruPage() {
+export default function KpiDefaultPage() {
     const insets = useSafeAreaInsets();
 
     const handleBack = () => {
         router.back();
     };
 
-    // Helper untuk warna progress bar dan status kehadiran
     const getPerformanceStyle = (score: number) => {
-        if (score >= 95) return { color: "#CAFFBF", status: "Sangat Baik" }; // Hijau
-        if (score >= 90) return { color: "#9BF6FF", status: "Baik" };        // Biru
-        if (score >= 75) return { color: "#FDFFB6", status: "Perhatian" };   // Kuning
-        return { color: "#FFADAD", status: "Kritis" };                       // Merah
+        if (score >= 95) return { color: "#CAFFBF", status: "Sangat Baik" };
+        if (score >= 90) return { color: "#9BF6FF", status: "Baik" };
+        if (score >= 75) return { color: "#FDFFB6", status: "Perhatian" };
+        return { color: "#FFADAD", status: "Kritis" };
     };
 
     return (
         <View style={[styles.container, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) }]}>
             
-            {/* --- HEADER --- */}
+            {/* HEADER */}
             <View style={styles.pageHeader}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.7}>
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.pageTitle} numberOfLines={1}>Kinerja Guru</Text>
+                <Text style={styles.pageTitle} numberOfLines={1}>KPI Utama Guru</Text>
                 <View style={{ width: 40 }} />
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 
-                {/* --- PROFIL GURU --- */}
+                {/* PROFIL GURU */}
                 <View style={styles.profileCard}>
                     <View style={styles.avatarBox}>
                         <MaterialCommunityIcons name="face-woman-outline" size={40} color="#000" />
@@ -70,11 +70,31 @@ export default function KpiGuruPage() {
                     </View>
                 </View>
 
-                {/* --- BAGIAN 1: KARTU HIGHLIGHT UTAMA --- */}
-                <Text style={styles.sectionTitle}>Ringkasan (Bulan Ini)</Text>
+                {/* BANNER SHORTCUT KE DASHBOARD PKSP SITI AMINAH */}
+                <TouchableOpacity 
+                    style={styles.pkspBanner}
+                    activeOpacity={0.85}
+                    onPress={() => router.push("/(teacher)/page/PkspDashboard")} // Ubah path sesuai router Anda
+                >
+                    <View style={styles.pkspBannerIcon}>
+                        <MaterialCommunityIcons name="clipboard-account-outline" size={32} color="#000" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                            <Text style={styles.pkspBannerTitle}>Layanan PKSP</Text>
+                            <View style={styles.badgeNew}>
+                                <Text style={styles.badgeNewText}>64 Instrumen</Text>
+                            </View>
+                        </View>
+                        <Text style={styles.pkspBannerSub}>Penilaian Sejawat & Hasil Evaluasi Kinerja</Text>
+                    </View>
+                    <MaterialCommunityIcons name="arrow-right-bold-circle" size={28} color="#000" />
+                </TouchableOpacity>
+
+                {/* RINGKASAN KINERJA MENGAJAR */}
+                <Text style={styles.sectionTitle}>Ringkasan Mengajar</Text>
                 
                 <View style={styles.highlightRow}>
-                    {/* Kartu Rata-Rata Kehadiran Kelas yang Diajar */}
                     <View style={[styles.highlightCard, { backgroundColor: "#FFC6FF", flex: 1.2 }]}>
                         <View style={styles.cardIconBox}>
                             <MaterialCommunityIcons name="google-classroom" size={28} color="#000" />
@@ -82,14 +102,12 @@ export default function KpiGuruPage() {
                         <Text style={styles.highlightValue}>{teacherKpi.overallAttendance}%</Text>
                         <Text style={styles.highlightLabel}>Kehadiran Siswa Diajar</Text>
                         
-                        {/* Custom Progress Bar */}
                         <View style={styles.progressBarBg}>
                             <View style={[styles.progressBarFill, { width: `${teacherKpi.overallAttendance}%`, backgroundColor: getPerformanceStyle(teacherKpi.overallAttendance).color }]} />
                         </View>
-                        <Text style={styles.targetText}>Target Sekolah: {teacherKpi.targetAttendance}%</Text>
+                        <Text style={styles.targetText}>Target: {teacherKpi.targetAttendance}%</Text>
                     </View>
 
-                    {/* Kartu Data Lainnya */}
                     <View style={styles.highlightColumn}>
                         <View style={[styles.smallCard, { backgroundColor: "#9BF6FF" }]}>
                             <Text style={styles.smallCardValue}>{teacherKpi.totalStudents}</Text>
@@ -102,12 +120,9 @@ export default function KpiGuruPage() {
                     </View>
                 </View>
 
-                {/* --- BAGIAN 2: DAFTAR KINERJA PER KELAS --- */}
+                {/* PERFORMA KELAS */}
                 <View style={styles.sectionHeaderRow}>
-                    <Text style={styles.sectionTitle}>Performa Kelas</Text>
-                    <TouchableOpacity style={styles.filterBtn}>
-                        <MaterialCommunityIcons name="filter-variant" size={20} color="#000" />
-                    </TouchableOpacity>
+                    <Text style={styles.sectionTitle}>Performa Per Kelas</Text>
                 </View>
 
                 {classKpiData.map((item) => {
@@ -141,12 +156,7 @@ export default function KpiGuruPage() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FDFBF7",
-    },
-    
-    // Header
+    container: { flex: 1, backgroundColor: "#FDFBF7" },
     pageHeader: {
         flexDirection: "row", alignItems: "center", justifyContent: "space-between",
         paddingHorizontal: 20, paddingVertical: 15, borderBottomWidth: 3,
@@ -154,180 +164,59 @@ const styles = StyleSheet.create({
     },
     backButton: {
         width: 40, height: 40, backgroundColor: "#FFF", borderWidth: 2,
-        borderColor: "#000", borderRadius: 10, justifyContent: "center",
-        alignItems: "center", shadowColor: "#000", shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1, elevation: 3,
+        borderColor: "#000", borderRadius: 10, justifyContent: "center", alignItems: "center",
+        shadowColor: "#000", shadowOffset: { width: 2, height: 2 }, shadowOpacity: 1, elevation: 3,
     },
-    pageTitle: { fontSize: 18, fontWeight: "900", color: "#000", textAlign: "center", flex: 1, paddingHorizontal: 10 },
-
-    scrollContent: {
-        padding: 20,
-    },
-
-    // Profil Guru
+    pageTitle: { fontSize: 18, fontWeight: "900", color: "#000", textAlign: "center", flex: 1 },
+    scrollContent: { padding: 20 },
     profileCard: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFF",
-        padding: 16,
-        borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        marginBottom: 24,
-        gap: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
+        flexDirection: "row", alignItems: "center", backgroundColor: "#FFF",
+        padding: 16, borderRadius: 16, borderWidth: 3, borderColor: "#000",
+        marginBottom: 16, gap: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
     avatarBox: {
-        width: 60,
-        height: 60,
-        backgroundColor: "#FFADAD",
-        borderRadius: 16,
-        borderWidth: 2,
-        borderColor: "#000",
-        justifyContent: "center",
-        alignItems: "center",
+        width: 60, height: 60, backgroundColor: "#FFADAD", borderRadius: 16,
+        borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center",
     },
     profileName: { fontSize: 18, fontWeight: "900", color: "#000" },
     profileSub: { fontSize: 13, fontWeight: "700", color: "#555", marginTop: 4 },
 
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: "900",
-        color: "#000",
-        marginBottom: 16,
+    // PKSP BANNER
+    pkspBanner: {
+        flexDirection: "row", alignItems: "center", backgroundColor: "#BDB2FF",
+        padding: 16, borderRadius: 16, borderWidth: 3, borderColor: "#000",
+        marginBottom: 24, gap: 12, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
-    sectionHeaderRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: 24,
-        marginBottom: 16,
+    pkspBannerIcon: {
+        width: 48, height: 48, backgroundColor: "#FFF", borderRadius: 12, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center",
     },
-    filterBtn: {
-        backgroundColor: "#FFF",
-        borderWidth: 2,
-        borderColor: "#000",
-        borderRadius: 8,
-        padding: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1,
-    },
+    pkspBannerTitle: { fontSize: 16, fontWeight: "900", color: "#000" },
+    pkspBannerSub: { fontSize: 11, fontWeight: "700", color: "#333", marginTop: 2 },
+    badgeNew: { backgroundColor: "#FDFFB6", borderWidth: 2, borderColor: "#000", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
+    badgeNewText: { fontSize: 10, fontWeight: "900", color: "#000" },
 
-    // Bagian 1: Cards Highlight
-    highlightRow: {
-        flexDirection: "row",
-        gap: 16,
-    },
-    highlightCard: {
-        borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        padding: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
-    },
-    cardIconBox: {
-        width: 48,
-        height: 48,
-        backgroundColor: "#FFF",
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: "#000",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 16,
-    },
-    highlightValue: { fontSize: 36, fontWeight: "900", color: "#000", lineHeight: 40 },
+    sectionTitle: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 16 },
+    sectionHeaderRow: { marginTop: 24, marginBottom: 16 },
+    highlightRow: { flexDirection: "row", gap: 16 },
+    highlightCard: { borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
+    cardIconBox: { width: 48, height: 48, backgroundColor: "#FFF", borderRadius: 12, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center", marginBottom: 16 },
+    highlightValue: { fontSize: 36, fontWeight: "900", color: "#000" },
     highlightLabel: { fontSize: 13, fontWeight: "700", color: "#333", marginTop: 4 },
-    
-    // Progress Bar Style (Besar)
-    progressBarBg: {
-        height: 12,
-        backgroundColor: "#FFF",
-        borderRadius: 6,
-        borderWidth: 2,
-        borderColor: "#000",
-        marginTop: 16,
-        overflow: "hidden",
-    },
-    progressBarFill: {
-        height: "100%",
-        borderRightWidth: 2,
-        borderColor: "#000",
-    },
+    progressBarBg: { height: 12, backgroundColor: "#FFF", borderRadius: 6, borderWidth: 2, borderColor: "#000", marginTop: 16, overflow: "hidden" },
+    progressBarFill: { height: "100%", borderRightWidth: 2, borderColor: "#000" },
     targetText: { fontSize: 11, fontWeight: "700", color: "#555", marginTop: 8, textAlign: "right" },
-
     highlightColumn: { flex: 1, gap: 16 },
-    smallCard: {
-        flex: 1,
-        borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        padding: 16,
-        justifyContent: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
-    },
+    smallCard: { flex: 1, borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
     smallCardValue: { fontSize: 24, fontWeight: "900", color: "#000" },
     smallCardLabel: { fontSize: 12, fontWeight: "700", color: "#333", marginTop: 4 },
-
-    // Bagian 2: List Kelas
-    listCard: {
-        backgroundColor: "#FFF",
-        borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
-    },
-    listCardHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 16,
-    },
+    listCard: { backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
+    listCardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 },
     className: { fontSize: 16, fontWeight: "900", color: "#000" },
     teacherName: { fontSize: 12, fontWeight: "700", color: "#555", marginTop: 4 },
-    statusBadge: {
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
-    },
+    statusBadge: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, borderWidth: 2, borderColor: "#000" },
     statusText: { fontSize: 11, fontWeight: "900", color: "#000", textTransform: "uppercase" },
-    
-    // Progress Bar Style (Kecil)
-    progressRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-    },
-    progressBarBgList: {
-        flex: 1,
-        height: 14,
-        backgroundColor: "#F0F0F0",
-        borderRadius: 7,
-        borderWidth: 2,
-        borderColor: "#000",
-        overflow: "hidden",
-    },
-    progressBarFillList: {
-        height: "100%",
-        borderRightWidth: 2,
-        borderColor: "#000",
-    },
+    progressRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+    progressBarBgList: { flex: 1, height: 14, backgroundColor: "#F0F0F0", borderRadius: 7, borderWidth: 2, borderColor: "#000", overflow: "hidden" },
+    progressBarFillList: { height: "100%", borderRightWidth: 2, borderColor: "#000" },
     progressValueText: { fontSize: 14, fontWeight: "900", color: "#000", width: 40, textAlign: "right" },
 });
