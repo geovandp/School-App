@@ -74,7 +74,7 @@ export default function KpiDefaultPage() {
                 <TouchableOpacity 
                     style={styles.pkspBanner}
                     activeOpacity={0.85}
-                    onPress={() => router.push("/(teacher)/page/PkspDashboard")} // Ubah path sesuai router Anda
+                    onPress={() => router.push("/(teacher)/page/PkspDashboard")} 
                 >
                     <View style={styles.pkspBannerIcon}>
                         <MaterialCommunityIcons name="clipboard-account-outline" size={32} color="#000" />
