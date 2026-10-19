@@ -125,7 +125,7 @@ export default function TeacherTabsLayout() {
                 <MaterialCommunityIcons name="assistant" size={24} color="#000" />
               </View>
               <Text style={[styles.menuLabel, focused && styles.menuLabelActive]}>
-                Anise
+                Simirda
               </Text>
             </View>
           ),

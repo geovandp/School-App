@@ -2,7 +2,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+    Alert,
     FlatList,
+    Modal,
     ScrollView,
     StyleSheet,
     Text,
@@ -12,40 +14,51 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// --- DUMMY DATA ---
+// --- STRUKTUR DATA ARSIP ASN ---
 type DocumentItem = {
     id: string;
     title: string;
-    category: string;
+    category: "Arsip Utama" | "Arsip Kondisional";
+    subCategory: string;
     date: string;
     size: string;
     type: "pdf" | "docx" | "xlsx";
 };
 
-const CATEGORIES = ["Semua", "Surat Masuk", "Surat Keluar", "RPP", "Laporan"];
+const CATEGORIES = ["Semua", "Arsip Utama", "Arsip Kondisional"];
 
-const documentsData: DocumentItem[] = [
-    { id: "d1", title: "Surat Edaran Libur Nasional", category: "Surat Keluar", date: "12 Sep 2026", size: "2.4 MB", type: "pdf" },
-    { id: "d2", title: "RPP Matematika Kelas X - SMT 1", category: "RPP", date: "10 Sep 2026", size: "1.1 MB", type: "docx" },
-    { id: "d3", title: "Undangan Rapat Komite Sekolah", category: "Surat Masuk", date: "08 Sep 2026", size: "800 KB", type: "pdf" },
-    { id: "d4", title: "Rekapitulasi Nilai UTS Kelas XI", category: "Laporan", date: "05 Sep 2026", size: "3.5 MB", type: "xlsx" },
-    { id: "d5", title: "SK Pembagian Tugas Mengajar", category: "Surat Keluar", date: "01 Sep 2026", size: "1.8 MB", type: "pdf" },
-    { id: "d6", title: "Laporan BOS Triwulan 3", category: "Laporan", date: "28 Agu 2026", size: "5.2 MB", type: "xlsx" },
+// Daftar Dokumen Default Sesuai Regulasi Kepegawaian ASN
+const initialDocuments: DocumentItem[] = [
+    { id: "d1", title: "SK CPNS / Pengangkatan PPPK", category: "Arsip Utama", subCategory: "Riwayat CPNS / PPPK", date: "15 Jan 2022", size: "2.4 MB", type: "pdf" },
+    { id: "d2", title: "SK PNS 100%", category: "Arsip Utama", subCategory: "Riwayat PNS", date: "20 Feb 2024", size: "1.8 MB", type: "pdf" },
+    { id: "d3", title: "Surat Pernyataan Melaksanakan Tugas (SPMT)", category: "Arsip Utama", subCategory: "Riwayat SPMT", date: "01 Feb 2022", size: "900 KB", type: "pdf" },
+    { id: "d4", title: "SK Kenaikan Pangkat (SKKP) / Golongan", category: "Arsip Utama", subCategory: "Riwayat Golongan", date: "10 Apr 2025", size: "3.1 MB", type: "pdf" },
+    { id: "d5", title: "Ijazah Terakhir & Transkrip Nilai", category: "Arsip Utama", subCategory: "Riwayat Pendidikan", date: "12 Aug 2020", size: "4.5 MB", type: "pdf" },
+    { id: "d6", title: "Hasil Evaluasi Kinerja / SKP Tahunan", category: "Arsip Kondisional", subCategory: "Riwayat SKP / Kinerja", date: "02 Jan 2026", size: "1.5 MB", type: "pdf" },
+    { id: "d7", title: "KTP, Kartu Keluarga, & NPWP", category: "Arsip Kondisional", subCategory: "Riwayat Keluarga & Identitas", date: "15 Jun 2023", size: "2.0 MB", type: "pdf" },
 ];
 
 export default function ArsipDokumenPage() {
     const insets = useSafeAreaInsets();
     const [searchQuery, setSearchQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState("Semua");
+    const [documents, setDocuments] = useState<DocumentItem[]>(initialDocuments);
+
+    // State untuk Modal Upload Dokumen Baru
+    const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
+    const [newDocTitle, setNewDocTitle] = useState("");
+    const [newDocCategory, setNewDocCategory] = useState<"Arsip Utama" | "Arsip Kondisional">("Arsip Utama");
+    const [newDocSub, setNewDocSub] = useState("Riwayat Pendidikan");
 
     const handleBack = () => {
         router.back();
     };
 
-    // Filter Data berdasarkan Pencarian & Kategori
-    const filteredDocuments = documentsData.filter((doc) => {
+    // Filter Data berdasarkan Pencarian & Kategori Utama
+    const filteredDocuments = documents.filter((doc) => {
         const matchCategory = activeCategory === "Semua" || doc.category === activeCategory;
-        const matchSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            doc.subCategory.toLowerCase().includes(searchQuery.toLowerCase());
         return matchCategory && matchSearch;
     });
 
@@ -59,6 +72,29 @@ export default function ArsipDokumenPage() {
         }
     };
 
+    // Fungsi Tambah Arsip Baru
+    const handleSaveNewDocument = () => {
+        if (!newDocTitle.trim()) {
+            Alert.alert("Perhatian", "Nama/Judul dokumen wajib diisi!");
+            return;
+        }
+
+        const newEntry: DocumentItem = {
+            id: Date.now().toString(),
+            title: newDocTitle,
+            category: newDocCategory,
+            subCategory: newDocSub,
+            date: "Hari Ini",
+            size: "1.2 MB",
+            type: "pdf",
+        };
+
+        setDocuments([newEntry, ...documents]);
+        setNewDocTitle("");
+        setIsUploadModalVisible(false);
+        Alert.alert("Berhasil", "Dokumen kepegawaian baru berhasil ditambahkan ke arsip.");
+    };
+
     return (
         <View style={[styles.container, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) }]}>
             
@@ -67,7 +103,7 @@ export default function ArsipDokumenPage() {
                 <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.7}>
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.pageTitle} numberOfLines={1}>Arsip Dokumen</Text>
+                <Text style={styles.pageTitle} numberOfLines={1}>Arsip Kepegawaian ASN</Text>
                 <View style={{ width: 40 }} />
             </View>
 
@@ -77,7 +113,7 @@ export default function ArsipDokumenPage() {
                     <MaterialCommunityIcons name="magnify" size={24} color="#555" />
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Cari nama dokumen..."
+                        placeholder="Cari dokumen utama atau kondisional..."
                         placeholderTextColor="#888"
                         value={searchQuery}
                         onChangeText={setSearchQuery}
@@ -90,7 +126,7 @@ export default function ArsipDokumenPage() {
                 </View>
             </View>
 
-            {/* --- FILTER KATEGORI --- */}
+            {/* --- FILTER KATEGORI UTAMA / KONDISIONAL --- */}
             <View style={styles.filterWrapper}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
                     {CATEGORIES.map((cat) => (
@@ -117,7 +153,7 @@ export default function ArsipDokumenPage() {
                 ListEmptyComponent={
                     <View style={styles.emptyState}>
                         <MaterialCommunityIcons name="file-search-outline" size={64} color="#000" />
-                        <Text style={styles.emptyStateText}>Dokumen tidak ditemukan.</Text>
+                        <Text style={styles.emptyStateText}>Arsip dokumen tidak ditemukan.</Text>
                     </View>
                 }
                 renderItem={({ item }) => {
@@ -131,9 +167,9 @@ export default function ArsipDokumenPage() {
                             <View style={styles.docInfo}>
                                 <Text style={styles.docTitle} numberOfLines={2}>{item.title}</Text>
                                 <Text style={styles.docSub}>
-                                    {item.date} • {item.size}
+                                    {item.subCategory} • {item.date}
                                 </Text>
-                                <View style={styles.badgeCategory}>
+                                <View style={[styles.badgeCategory, { backgroundColor: item.category === "Arsip Utama" ? "#CAFFBF" : "#FDFFB6" }]}>
                                     <Text style={styles.badgeText}>{item.category}</Text>
                                 </View>
                             </View>
@@ -145,20 +181,78 @@ export default function ArsipDokumenPage() {
                 }}
             />
 
-            {/* --- FLOATING ACTION BUTTON (ADD) --- */}
-            <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
+            {/* --- FLOATING ACTION BUTTON (TAMBAH ARSIP) --- */}
+            <TouchableOpacity 
+                style={styles.fab} 
+                activeOpacity={0.8}
+                onPress={() => setIsUploadModalVisible(true)}
+            >
                 <MaterialCommunityIcons name="plus" size={32} color="#FFF" />
             </TouchableOpacity>
+
+            {/* --- MODAL UPLOAD ARSIP BARU --- */}
+            <Modal
+                visible={isUploadModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setIsUploadModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Unggah Dokumen Kepegawaian</Text>
+                        <Text style={styles.modalSub}>Tambahkan dokumen ke arsip utama atau kondisional Anda.</Text>
+                        
+                        <Text style={styles.labelModal}>Nama Dokumen / SK</Text>
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Contoh: SK Kenaikan Pangkat Terakhir"
+                            placeholderTextColor="#888"
+                            value={newDocTitle}
+                            onChangeText={setNewDocTitle}
+                        />
+
+                        <Text style={styles.labelModal}>Kategori Utama</Text>
+                        <View style={styles.rowCategoryModal}>
+                            {(["Arsip Utama", "Arsip Kondisional"] as const).map((cat) => (
+                                <TouchableOpacity
+                                    key={cat}
+                                    style={[styles.chipModal, newDocCategory === cat && styles.chipModalActive]}
+                                    onPress={() => setNewDocCategory(cat)}
+                                >
+                                    <Text style={[styles.chipModalText, newDocCategory === cat && styles.chipModalTextActive]}>
+                                        {cat}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+
+                        <Text style={styles.labelModal}>Jenis Riwayat</Text>
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Contoh: Riwayat Golongan / SKP / Keluarga"
+                            placeholderTextColor="#888"
+                            value={newDocSub}
+                            onChangeText={setNewDocSub}
+                        />
+
+                        <View style={styles.modalButtonRow}>
+                            <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setIsUploadModalVisible(false)}>
+                                <Text style={styles.modalBtnCancelText}>Batal</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalBtnUpload} onPress={handleSaveNewDocument}>
+                                <Text style={styles.modalBtnUploadText}>Simpan Berkas</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FDFBF7",
-    },
+    container: { flex: 1, backgroundColor: "#FDFBF7" },
     
     // Header
     pageHeader: {
@@ -172,41 +266,22 @@ const styles = StyleSheet.create({
         alignItems: "center", shadowColor: "#000", shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 1, elevation: 3,
     },
-    pageTitle: { fontSize: 18, fontWeight: "900", color: "#000", textAlign: "center", flex: 1, paddingHorizontal: 10 },
+    pageTitle: { fontSize: 17, fontWeight: "900", color: "#000", textAlign: "center", flex: 1, paddingHorizontal: 5 },
 
     // Search Bar
-    searchContainer: {
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 10,
-    },
+    searchContainer: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10 },
     searchBox: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFF",
-        borderWidth: 3,
-        borderColor: "#000",
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        height: 50,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
+        flexDirection: "row", alignItems: "center", backgroundColor: "#FFF",
+        borderWidth: 3, borderColor: "#000", borderRadius: 12, paddingHorizontal: 12, height: 50,
+        shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
-    searchInput: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: "700",
-        color: "#000",
-        marginLeft: 10,
-    },
+    searchInput: { flex: 1, fontSize: 13, fontWeight: "700", color: "#000", marginLeft: 10 },
 
     // Filter Chips
     filterWrapper: { marginBottom: 16 },
     filterScroll: { paddingHorizontal: 20, gap: 10, paddingBottom: 10, paddingTop: 5 },
     filterChip: {
-        paddingVertical: 8, paddingHorizontal: 14, backgroundColor: "#FFF", borderRadius: 12,
+        paddingVertical: 8, paddingHorizontal: 16, backgroundColor: "#FFF", borderRadius: 12,
         borderWidth: 2, borderColor: "#000",
     },
     filterChipActive: { backgroundColor: "#000" },
@@ -214,91 +289,73 @@ const styles = StyleSheet.create({
     filterChipTextActive: { color: "#FFF" },
 
     // Document List
-    listContainer: {
-        paddingHorizontal: 20,
-        paddingBottom: 100, // Memberikan ruang agar tidak tertutup FAB
-        gap: 16,
-    },
+    listContainer: { paddingHorizontal: 20, paddingBottom: 100, gap: 16 },
     docCard: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFF",
-        borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        padding: 16,
-        gap: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
+        flexDirection: "row", alignItems: "center", backgroundColor: "#FFF",
+        borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, gap: 12,
+        shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
     docIconBox: {
-        width: 50,
-        height: 50,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: "#000",
-        justifyContent: "center",
-        alignItems: "center",
+        width: 50, height: 50, borderRadius: 12, borderWidth: 2, borderColor: "#000",
+        justifyContent: "center", alignItems: "center",
     },
-    docInfo: {
-        flex: 1,
-        justifyContent: "center",
-    },
+    docInfo: { flex: 1, justifyContent: "center" },
     docTitle: { fontSize: 15, fontWeight: "900", color: "#000", marginBottom: 4 },
-    docSub: { fontSize: 12, fontWeight: "700", color: "#555", marginBottom: 6 },
+    docSub: { fontSize: 11, fontWeight: "700", color: "#555", marginBottom: 6 },
     badgeCategory: {
-        alignSelf: "flex-start",
-        backgroundColor: "#FDFFB6",
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 6,
-        borderWidth: 1.5,
-        borderColor: "#000",
+        alignSelf: "flex-start", paddingVertical: 3, paddingHorizontal: 8,
+        borderRadius: 6, borderWidth: 1.5, borderColor: "#000",
     },
     badgeText: { fontSize: 10, fontWeight: "900", color: "#000", textTransform: "uppercase" },
     
     downloadBtn: {
-        width: 40,
-        height: 40,
-        backgroundColor: "#FFF",
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#000",
-        justifyContent: "center",
-        alignItems: "center",
+        width: 40, height: 40, backgroundColor: "#FFF", borderRadius: 10,
+        borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center",
     },
 
     // Empty State
-    emptyState: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingTop: 60,
-    },
-    emptyStateText: {
-        fontSize: 16,
-        fontWeight: "800",
-        color: "#555",
-        marginTop: 16,
-    },
+    emptyState: { alignItems: "center", justifyContent: "center", paddingTop: 60 },
+    emptyStateText: { fontSize: 15, fontWeight: "800", color: "#555", marginTop: 16 },
 
     // FAB
     fab: {
-        position: "absolute",
-        bottom: 50,
-        right: 20,
-        width: 60,
-        height: 60,
-        backgroundColor: "#4361EE", // Warna aksen biru
-        borderRadius: 30,
-        borderWidth: 3,
-        borderColor: "#000",
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        elevation: 6,
+        position: "absolute", bottom: 50, right: 20, width: 60, height: 60,
+        backgroundColor: "#4361EE", borderRadius: 30, borderWidth: 3, borderColor: "#000",
+        justifyContent: "center", alignItems: "center",
+        shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
+
+    // Modal Styles
+    modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", padding: 20 },
+    modalContent: {
+        backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000",
+        padding: 20, width: "100%", maxWidth: 420, shadowColor: "#000", shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 1, elevation: 6,
+    },
+    modalTitle: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 4 },
+    modalSub: { fontSize: 12, fontWeight: "700", color: "#555", marginBottom: 16 },
+    labelModal: { fontSize: 13, fontWeight: "800", color: "#000", marginBottom: 6, marginTop: 10 },
+    modalInput: {
+        backgroundColor: "#F9F6EE", borderWidth: 2, borderColor: "#000", borderRadius: 10,
+        paddingHorizontal: 12, paddingVertical: 10, fontSize: 13, fontWeight: "700", color: "#000",
+    },
+    rowCategoryModal: { flexDirection: "row", gap: 10, marginTop: 4 },
+    chipModal: {
+        flex: 1, paddingVertical: 10, borderWidth: 2, borderColor: "#000", borderRadius: 8,
+        alignItems: "center", backgroundColor: "#F9F6EE",
+    },
+    chipModalActive: { backgroundColor: "#CAFFBF" },
+    chipModalText: { fontSize: 12, fontWeight: "800", color: "#000" },
+    chipModalTextActive: { color: "#000" },
+    modalButtonRow: { flexDirection: "row", gap: 12, marginTop: 24 },
+    modalBtnCancel: {
+        flex: 1, paddingVertical: 12, borderWidth: 2, borderColor: "#000", borderRadius: 10,
+        alignItems: "center", backgroundColor: "#FFF",
+    },
+    modalBtnCancelText: { fontSize: 13, fontWeight: "900", color: "#000" },
+    modalBtnUpload: {
+        flex: 1, paddingVertical: 12, borderWidth: 2, borderColor: "#000", borderRadius: 10,
+        alignItems: "center", backgroundColor: "#4361EE",
+    },
+    modalBtnUploadText: { fontSize: 13, fontWeight: "900", color: "#FFF" },
 });

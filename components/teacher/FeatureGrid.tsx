@@ -110,7 +110,7 @@ const otherFeatures: FeatureItem[] = [
   {
     id: 105,
     title: "Ujian",
-    icon: "trophy-outline", // Ikon piala untuk prestasi
+    icon: "math-compass", // Ikon piala untuk prestasi
     color: "#FFADAD",
     route: "/page/ujian",
   },
@@ -120,6 +120,13 @@ const otherFeatures: FeatureItem[] = [
     icon: "chart-box-outline", // Ikon grafik/kinerja untuk KPI
     color: "#E4D4FF",
     route: "/page/KPI",
+  },
+  {
+    id: 107,
+    title: "Pengajuan\nCuti",
+    icon: "calendar-edit", // Ikon grafik/kinerja untuk KPI
+    color: "#9ddaa8",
+    route: "/page/cuti",
   },
 ];
 
