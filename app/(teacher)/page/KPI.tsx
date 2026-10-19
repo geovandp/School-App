@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import {
@@ -7,150 +7,236 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Modal,
+    TextInput,
+    Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Data Dummy KPI Utama Siti Aminah
+// Data Guru Sesuai Konteks Baru
 const teacherProfile = {
-    name: "Siti Aminah, S.Pd",
-    nip: "19850723 201001 2 014",
-    subject: "Matematika",
+    name: "Transjana Catur Isaputro, S.ST, S.ST",
+    nip: "198605062022211021",
+    subject: "Produktif / Mapel Kejuruan",
+    additionalTask: "Wakil Kepala Sekolah (Waka) & Wali Kelas",
+    menteeCount: 18, // Target bimbingan siswa sebagai guru wali
 };
-
-const teacherKpi = {
-    overallAttendance: 93,
-    targetAttendance: 95,
-    totalStudents: 142,
-    totalClasses: 4,
-};
-
-const classKpiData = [
-    { id: "c1", name: "Kelas X IPA 1", attendance: 96 },
-    { id: "c2", name: "Kelas X IPA 2", attendance: 91 },
-    { id: "c3", name: "Kelas XI IPS 1", attendance: 82 },
-    { id: "c4", name: "Kelas XI IPS 2", attendance: 98 },
-];
 
 export default function KpiDefaultPage() {
     const insets = useSafeAreaInsets();
+
+    // State untuk Modal Upload Perangkat KBM (Perencanaan)
+    const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
+    const [fileName, setFileName] = useState("Perangkat_KBM_Semester_Ini.pdf");
+
+    // State untuk Evaluasi / Catatan Harian (Evaluasi)
+    const [evaluationNotes, setEvaluationNotes] = useState([
+        { id: "e1", date: "19 Okt 2026", note: "Tingkatkan ketepatan waktu rekapitulasi penugasan harian siswa." },
+        { id: "e2", date: "18 Okt 2026", note: "Pencapaian JP minggu ini terpenuhi 100% di Lab Komputer." }
+    ]);
+    const [newNote, setNewNote] = useState("");
 
     const handleBack = () => {
         router.back();
     };
 
-    const getPerformanceStyle = (score: number) => {
-        if (score >= 95) return { color: "#CAFFBF", status: "Sangat Baik" };
-        if (score >= 90) return { color: "#9BF6FF", status: "Baik" };
-        if (score >= 75) return { color: "#FDFFB6", status: "Perhatian" };
-        return { color: "#FFADAD", status: "Kritis" };
+    const handleUploadKbm = () => {
+        Alert.alert("Berhasil", `Berkas digital "${fileName}" berhasil diunggah ke sistem Perencanaan KBM.`);
+        setIsUploadModalVisible(false);
+    };
+
+    const handleAddEvaluation = () => {
+        if (!newNote.trim()) return;
+        const entry = {
+            id: Date.now().toString(),
+            date: "Hari ini",
+            note: newNote,
+        };
+        setEvaluationNotes([entry, ...evaluationNotes]);
+        setNewNote("");
+        Alert.alert("Catatan Ditambahkan", "Evaluasi harian terekam secara digital.");
     };
 
     return (
         <View style={[styles.container, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) }]}>
-            
+
             {/* HEADER */}
             <View style={styles.pageHeader}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.7}>
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.pageTitle} numberOfLines={1}>KPI Utama Guru</Text>
+                <Text style={styles.pageTitle} numberOfLines={1}>KPI & Kinerja Guru</Text>
                 <View style={{ width: 40 }} />
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                
-                {/* PROFIL GURU */}
+
+                {/* PROFIL GURU & TUGAS TAMBAHAN */}
                 <View style={styles.profileCard}>
                     <View style={styles.avatarBox}>
-                        <MaterialCommunityIcons name="face-woman-outline" size={40} color="#000" />
+                        <MaterialCommunityIcons name="account-tie" size={40} color="#000" />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.profileName}>{teacherProfile.name}</Text>
-                        <Text style={styles.profileSub}>{teacherProfile.subject} • NIP. {teacherProfile.nip}</Text>
+                        <Text style={styles.profileSub}>NIP. {teacherProfile.nip}</Text>
+                        <View style={styles.badgeTask}>
+                            <Text style={styles.badgeTaskText}>{teacherProfile.additionalTask}</Text>
+                        </View>
                     </View>
                 </View>
 
-                {/* BANNER SHORTCUT KE DASHBOARD PKSP SITI AMINAH */}
-                <TouchableOpacity 
+                {/* BANNER SHORTCUT KE DASHBOARD PKSP */}
+                <TouchableOpacity
                     style={styles.pkspBanner}
                     activeOpacity={0.85}
-                    onPress={() => router.push("/(teacher)/page/PkspDashboard")} 
+                    onPress={() => router.push("/(teacher)/page/PkspDashboard")}
                 >
                     <View style={styles.pkspBannerIcon}>
                         <MaterialCommunityIcons name="clipboard-account-outline" size={32} color="#000" />
                     </View>
                     <View style={{ flex: 1 }}>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-                            <Text style={styles.pkspBannerTitle}>Layanan PKSP</Text>
-                            <View style={styles.badgeNew}>
-                                <Text style={styles.badgeNewText}>64 Instrumen</Text>
-                            </View>
+                            <Text style={styles.pkspBannerTitle}>Instrumen Penilaian PKSP</Text>
+                            
                         </View>
-                        <Text style={styles.pkspBannerSub}>Penilaian Sejawat & Hasil Evaluasi Kinerja</Text>
+                        <Text style={styles.pkspBannerSub}>Penilaian Kinerja & Sejawat Berbasis Digital</Text>
                     </View>
                     <MaterialCommunityIcons name="arrow-right-bold-circle" size={28} color="#000" />
                 </TouchableOpacity>
 
-                {/* RINGKASAN KINERJA MENGAJAR */}
-                <Text style={styles.sectionTitle}>Ringkasan Mengajar</Text>
-                
-                <View style={styles.highlightRow}>
-                    <View style={[styles.highlightCard, { backgroundColor: "#FFC6FF", flex: 1.2 }]}>
-                        <View style={styles.cardIconBox}>
-                            <MaterialCommunityIcons name="google-classroom" size={28} color="#000" />
-                        </View>
-                        <Text style={styles.highlightValue}>{teacherKpi.overallAttendance}%</Text>
-                        <Text style={styles.highlightLabel}>Kehadiran Siswa Diajar</Text>
-                        
-                        <View style={styles.progressBarBg}>
-                            <View style={[styles.progressBarFill, { width: `${teacherKpi.overallAttendance}%`, backgroundColor: getPerformanceStyle(teacherKpi.overallAttendance).color }]} />
-                        </View>
-                        <Text style={styles.targetText}>Target: {teacherKpi.targetAttendance}%</Text>
-                    </View>
-
-                    <View style={styles.highlightColumn}>
-                        <View style={[styles.smallCard, { backgroundColor: "#9BF6FF" }]}>
-                            <Text style={styles.smallCardValue}>{teacherKpi.totalStudents}</Text>
-                            <Text style={styles.smallCardLabel}>Siswa Diajar</Text>
-                        </View>
-                        <View style={[styles.smallCard, { backgroundColor: "#FDFFB6" }]}>
-                            <Text style={styles.smallCardValue}>{teacherKpi.totalClasses}</Text>
-                            <Text style={styles.smallCardLabel}>Rombel Diampu</Text>
-                        </View>
-                    </View>
-                </View>
-
-                {/* PERFORMA KELAS */}
+                {/* 1. PERENCANAAN */}
                 <View style={styles.sectionHeaderRow}>
-                    <Text style={styles.sectionTitle}>Performa Per Kelas</Text>
+                    <Text style={styles.sectionTitle}>1. Perencanaan KBM (e-File)</Text>
+                    <TouchableOpacity style={styles.smallActionButton} onPress={() => setIsUploadModalVisible(true)}>
+                        <MaterialCommunityIcons name="cloud-upload" size={16} color="#000" />
+                        <Text style={styles.smallActionText}>Upload Berkas</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.cardBox}>
+                    <View style={styles.rowItem}>
+                        <MaterialCommunityIcons name="file-document-check" size={24} color="#4361EE" />
+                        <View style={{ flex: 1, marginLeft: 12 }}>
+                            <Text style={styles.cardItemTitle}>Perangkat KBM & Silabus</Text>
+                            <Text style={styles.cardItemSub}>Status: Terunggah & Terverifikasi Sistem</Text>
+                        </View>
+                        <View style={styles.statusDone}>
+                            <Text style={styles.statusDoneText}>OK</Text>
+                        </View>
+                    </View>
                 </View>
 
-                {classKpiData.map((item) => {
-                    const perf = getPerformanceStyle(item.attendance);
-                    return (
-                        <View key={item.id} style={styles.listCard}>
-                            <View style={styles.listCardHeader}>
-                                <View>
-                                    <Text style={styles.className}>{item.name}</Text>
-                                    <Text style={styles.teacherName}>Mapel: {teacherProfile.subject}</Text>
-                                </View>
-                                <View style={[styles.statusBadge, { backgroundColor: perf.color }]}>
-                                    <Text style={styles.statusText}>{perf.status}</Text>
-                                </View>
-                            </View>
-
-                            <View style={styles.progressRow}>
-                                <View style={styles.progressBarBgList}>
-                                    <View style={[styles.progressBarFillList, { width: `${item.attendance}%`, backgroundColor: perf.color }]} />
-                                </View>
-                                <Text style={styles.progressValueText}>{item.attendance}%</Text>
-                            </View>
+                {/* 2. PEMBIMBINGAN */}
+                <Text style={styles.sectionTitle}>2. Pembimbingan & Tugas Tambahan</Text>
+                <View style={styles.cardBox}>
+                    <View style={styles.rowItem}>
+                        <MaterialCommunityIcons name="account-group" size={24} color="#7209B7" />
+                        <View style={{ flex: 1, marginLeft: 12 }}>
+                            <Text style={styles.cardItemTitle}>Wali Kelas / Guru Wali</Text>
+                            <Text style={styles.cardItemSub}>Membimbing {teacherProfile.menteeCount} Murid binaan aktif.</Text>
                         </View>
-                    );
-                })}
+                        <Text style={styles.boldScore}>100%</Text>
+                    </View>
+                    <View style={[styles.rowItem, { borderTopWidth: 2, borderTopColor: "#EEE", marginTop: 12, paddingTop: 12 }]}>
+                        <MaterialCommunityIcons name="briefcase-outline" size={24} color="#F77F00" />
+                        <View style={{ flex: 1, marginLeft: 12 }}>
+                            <Text style={styles.cardItemTitle}>Tugas Tambahan Institusional</Text>
+                            <Text style={styles.cardItemSub}>{teacherProfile.additionalTask}</Text>
+                        </View>
+                        <View style={styles.statusDone}>
+                            <Text style={styles.statusDoneText}>Aktif</Text>
+                        </View>
+                    </View>
+                </View>
+
+                {/* 3. PELAKSANAAN KBM */}
+                <Text style={styles.sectionTitle}>3. Pelaksanaan KBM (Kelas / Lab)</Text>
+                <View style={styles.cardBox}>
+                    <View style={styles.rowItem}>
+                        <MaterialCommunityIcons name="timer-check" size={24} color="#2A9D8F" />
+                        <View style={{ flex: 1, marginLeft: 12 }}>
+                            <Text style={styles.cardItemTitle}>Pencapaian Jam Pelajaran (JP) Mingguan</Text>
+                            <Text style={styles.cardItemSub}>Terlaksana masuk kelas/lab tepat waktu sesuai jadwal.</Text>
+                        </View>
+                        <Text style={styles.boldScore}>32 / 32 JP</Text>
+                    </View>
+                </View>
+
+                {/* 4. PENILAIAN */}
+                {/* 4. PENILAIAN */}
+                <Text style={styles.sectionTitle}>4. Penilaian & Pengembangan</Text>
+                <View style={styles.cardBox}>
+                    <Text style={styles.cardItemTitle}>Rekap Aktivitas Evaluasi Siswa</Text>
+                    <Text style={[styles.cardItemSub, { marginTop: 4, marginBottom: 12 }]}>
+                        Quiz, Penugasan Harian, Ulangan Harian, UTS/UAS terintegrasi.
+                    </Text>
+                    <View style={styles.progressRow}>
+                        <View style={styles.progressBarBgList}>
+                            <View style={[styles.progressBarFillList, { width: "95%", backgroundColor: "#CAFFBF" }]} />
+                        </View>
+                        <Text style={styles.progressValueText}>95%</Text>
+                    </View>
+                </View>
+
+                {/* 5. EVALUASI (DIGITAL LOGS) */}
+                <Text style={styles.sectionTitle}>5. Evaluasi & Catatan Perbaikan Harian</Text>
+                <View style={styles.cardBox}>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.inputNote}
+                            placeholder="Tulis catatan/evaluasi harian..."
+                            placeholderTextColor="#888"
+                            value={newNote}
+                            onChangeText={setNewNote}
+                        />
+                        <TouchableOpacity style={styles.addButton} onPress={handleAddEvaluation}>
+                            <MaterialCommunityIcons name="plus" size={20} color="#FFF" />
+                        </TouchableOpacity>
+                    </View>
+
+                    {evaluationNotes.map((item) => (
+                        <View key={item.id} style={styles.noteItem}>
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 4 }}>
+                                <Text style={styles.noteDate}>{item.date}</Text>
+                                <Text style={styles.noteTag}>Underline / Perbaikan</Text>
+                            </View>
+                            <Text style={styles.noteText}>{item.note}</Text>
+                        </View>
+                    ))}
+                </View>
 
                 <View style={{ height: 40 }} />
             </ScrollView>
+
+            {/* MODAL UPLOAD BERKAS */}
+            <Modal
+                visible={isUploadModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setIsUploadModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Upload e-File Perangkat KBM</Text>
+                        <Text style={styles.modalSub}>Pilih berkas digital perangkat pembelajaran Anda (Silabus, RPP/Modul Ajar).</Text>
+
+                        <TextInput
+                            style={styles.modalInput}
+                            value={fileName}
+                            onChangeText={setFileName}
+                        />
+
+                        <View style={styles.modalButtonRow}>
+                            <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setIsUploadModalVisible(false)}>
+                                <Text style={styles.modalBtnCancelText}>Batal</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalBtnUpload} onPress={handleUploadKbm}>
+                                <Text style={styles.modalBtnUploadText}>Unggah Sekarang</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     );
 }
@@ -175,48 +261,63 @@ const styles = StyleSheet.create({
         marginBottom: 16, gap: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
     avatarBox: {
-        width: 60, height: 60, backgroundColor: "#FFADAD", borderRadius: 16,
+        width: 60, height: 60, backgroundColor: "#FFB5A7", borderRadius: 16,
         borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center",
     },
-    profileName: { fontSize: 18, fontWeight: "900", color: "#000" },
-    profileSub: { fontSize: 13, fontWeight: "700", color: "#555", marginTop: 4 },
+    profileName: { fontSize: 16, fontWeight: "900", color: "#000" },
+    profileSub: { fontSize: 12, fontWeight: "700", color: "#555", marginTop: 2 },
+    badgeTask: { backgroundColor: "#FDFFB6", borderWidth: 1.5, borderColor: "#000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, alignSelf: "flex-start", marginTop: 6 },
+    badgeTaskText: { fontSize: 10, fontWeight: "900", color: "#000" },
 
     // PKSP BANNER
     pkspBanner: {
         flexDirection: "row", alignItems: "center", backgroundColor: "#BDB2FF",
         padding: 16, borderRadius: 16, borderWidth: 3, borderColor: "#000",
-        marginBottom: 24, gap: 12, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
+        marginBottom: 20, gap: 12, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6,
     },
     pkspBannerIcon: {
         width: 48, height: 48, backgroundColor: "#FFF", borderRadius: 12, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center",
     },
-    pkspBannerTitle: { fontSize: 16, fontWeight: "900", color: "#000" },
+    pkspBannerTitle: { fontSize: 15, fontWeight: "900", color: "#000" },
     pkspBannerSub: { fontSize: 11, fontWeight: "700", color: "#333", marginTop: 2 },
-    badgeNew: { backgroundColor: "#FDFFB6", borderWidth: 2, borderColor: "#000", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
+    badgeNew: { backgroundColor: "#CAFFBF", borderWidth: 2, borderColor: "#000", paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 },
     badgeNewText: { fontSize: 10, fontWeight: "900", color: "#000" },
 
-    sectionTitle: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 16 },
-    sectionHeaderRow: { marginTop: 24, marginBottom: 16 },
-    highlightRow: { flexDirection: "row", gap: 16 },
-    highlightCard: { borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
-    cardIconBox: { width: 48, height: 48, backgroundColor: "#FFF", borderRadius: 12, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center", marginBottom: 16 },
-    highlightValue: { fontSize: 36, fontWeight: "900", color: "#000" },
-    highlightLabel: { fontSize: 13, fontWeight: "700", color: "#333", marginTop: 4 },
-    progressBarBg: { height: 12, backgroundColor: "#FFF", borderRadius: 6, borderWidth: 2, borderColor: "#000", marginTop: 16, overflow: "hidden" },
-    progressBarFill: { height: "100%", borderRightWidth: 2, borderColor: "#000" },
-    targetText: { fontSize: 11, fontWeight: "700", color: "#555", marginTop: 8, textAlign: "right" },
-    highlightColumn: { flex: 1, gap: 16 },
-    smallCard: { flex: 1, borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
-    smallCardValue: { fontSize: 24, fontWeight: "900", color: "#000" },
-    smallCardLabel: { fontSize: 12, fontWeight: "700", color: "#333", marginTop: 4 },
-    listCard: { backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
-    listCardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 },
-    className: { fontSize: 16, fontWeight: "900", color: "#000" },
-    teacherName: { fontSize: 12, fontWeight: "700", color: "#555", marginTop: 4 },
-    statusBadge: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, borderWidth: 2, borderColor: "#000" },
-    statusText: { fontSize: 11, fontWeight: "900", color: "#000", textTransform: "uppercase" },
-    progressRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-    progressBarBgList: { flex: 1, height: 14, backgroundColor: "#F0F0F0", borderRadius: 7, borderWidth: 2, borderColor: "#000", overflow: "hidden" },
+    sectionHeaderRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10, marginTop: 10 },
+    sectionTitle: { fontSize: 16, fontWeight: "900", color: "#000", marginBottom: 10, marginTop: 15 },
+    smallActionButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#9BF6FF", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 2, borderColor: "#000", gap: 4 },
+    smallActionText: { fontSize: 11, fontWeight: "900", color: "#000" },
+
+    cardBox: { backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 16, marginBottom: 10, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 4 },
+    rowItem: { flexDirection: "row", alignItems: "center" },
+    cardItemTitle: { fontSize: 14, fontWeight: "900", color: "#000" },
+    cardItemSub: { fontSize: 11, fontWeight: "700", color: "#555", marginTop: 2 },
+    statusDone: { backgroundColor: "#CAFFBF", borderWidth: 2, borderColor: "#000", paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+    statusDoneText: { fontSize: 11, fontWeight: "900", color: "#000" },
+    boldScore: { fontSize: 15, fontWeight: "900", color: "#000" },
+
+    progressRow: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8 },
+    progressBarBgList: { flex: 1, height: 12, backgroundColor: "#F0F0F0", borderRadius: 6, borderWidth: 2, borderColor: "#000", overflow: "hidden" },
     progressBarFillList: { height: "100%", borderRightWidth: 2, borderColor: "#000" },
-    progressValueText: { fontSize: 14, fontWeight: "900", color: "#000", width: 40, textAlign: "right" },
+    progressValueText: { fontSize: 13, fontWeight: "900", color: "#000", width: 35, textAlign: "right" },
+
+    inputContainer: { flexDirection: "row", gap: 8, marginBottom: 12 },
+    inputNote: { flex: 1, backgroundColor: "#F9F6EE", borderWidth: 2, borderColor: "#000", borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, fontSize: 13, fontWeight: "700", color: "#000" },
+    addButton: { backgroundColor: "#4361EE", borderWidth: 2, borderColor: "#000", borderRadius: 10, width: 42, justifyContent: "center", alignItems: "center" },
+    noteItem: { backgroundColor: "#FFF", borderWidth: 2, borderColor: "#000", borderRadius: 10, padding: 10, marginBottom: 8 },
+    noteDate: { fontSize: 10, fontWeight: "900", color: "#555" },
+    noteTag: { fontSize: 9, fontWeight: "900", color: "#E63946", backgroundColor: "#FFE5E5", paddingHorizontal: 6, borderRadius: 4 },
+    noteText: { fontSize: 12, fontWeight: "700", color: "#333", marginTop: 2 },
+
+    // MODAL
+    modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", padding: 20 },
+    modalContent: { backgroundColor: "#FFF", borderRadius: 16, borderWidth: 3, borderColor: "#000", padding: 20, width: "100%", maxWidth: 400, shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, elevation: 6 },
+    modalTitle: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 6 },
+    modalSub: { fontSize: 12, fontWeight: "700", color: "#555", marginBottom: 16 },
+    modalInput: { backgroundColor: "#F9F6EE", borderWidth: 2, borderColor: "#000", borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 13, fontWeight: "700", color: "#000", marginBottom: 20 },
+    modalButtonRow: { flexDirection: "row", gap: 12 },
+    modalBtnCancel: { flex: 1, paddingVertical: 12, borderWidth: 2, borderColor: "#000", borderRadius: 10, alignItems: "center", backgroundColor: "#FFF" },
+    modalBtnCancelText: { fontSize: 13, fontWeight: "900", color: "#000" },
+    modalBtnUpload: { flex: 1, paddingVertical: 12, borderWidth: 2, borderColor: "#000000", borderRadius: 10, alignItems: "center", backgroundColor: "#CAFFBF" },
+    modalBtnUploadText: { fontSize: 13, fontWeight: "900", color: "#000" },
 });
