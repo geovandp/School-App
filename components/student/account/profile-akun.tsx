@@ -15,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 // --- DATA DUMMY SISWA ---
 const STUDENT_DATA = {
-  schoolName: "SMAN Sederajat",
+  schoolName: "SMAN 1 Peunaron",
   name: "Alexander",
   nisn: "666666",
   kelas: "XII MIPA 1",
@@ -26,7 +26,6 @@ const STUDENT_DATA = {
 export default function ProfileScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
   const handleLogout = () => {
     Alert.alert(
       "Konfirmasi Keluar",
@@ -57,8 +56,8 @@ export default function ProfileScreen() {
       >
         {/* --- KARTU PELAJAR DIGITAL (CUSTOM PRIMARY GRADIENT) --- */}
         <LinearGradient
-          // Gradasi memadukan Hitam Pekat (#0F172A), Hijau Primary (#3B8312), & Turunan Aksen (#2D650E)
-          colors={["#0F172A", "#2D650E", "#3B8312"]}
+          // Gradasi memadukan Hitam Pekat
+          colors={["#0F172A", "#184575", "#396BA0"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.idCard}
@@ -70,7 +69,7 @@ export default function ProfileScreen() {
           <View style={styles.cardSchoolHeader}>
             <View style={styles.logoWrapper}>
               <Image
-                source={require("@/assets/images/android-icon-foreground.png")}
+                source={require("@/assets/images/example_logo.png")}
                 style={styles.schoolLogo}
                 resizeMode="contain"
               />
@@ -274,8 +273,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   schoolLogo: {
-    width: 18,
-    height: 18,
+    width: 24,
+    height: 24,
   },
   cardSchoolText: {
     color: "#F8FAFC",

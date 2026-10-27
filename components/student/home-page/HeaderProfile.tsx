@@ -13,7 +13,7 @@ export default function HeaderProfile() {
       style={[styles.container, { paddingTop: insets.top + 20 }]}
     >
       <Image
-        source={require("../../../assets/images/android-icon-foreground.png")}
+        source={require("../../../assets/images/example_logo.png")}
         style={styles.watermarkLogo}
         resizeMode="contain"
       />

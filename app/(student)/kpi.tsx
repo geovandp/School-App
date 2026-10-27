@@ -105,7 +105,7 @@ export default function KpiScreen() {
       >
         {/* --- MAIN SUMMARY CARD --- */}
         <LinearGradient
-          colors={["#3B8312", "#2A630D"]}
+          colors={["#184575", "#396BA0"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.summaryCard}

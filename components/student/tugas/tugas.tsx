@@ -296,10 +296,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#EAEAEA",
   },
-  backButton: { marginRight: 15, padding: 5 },
-  headerTitle: { fontSize: 22, fontWeight: "bold", color: "#1A1A1A" },
-  headerSubtitle: { fontSize: 14, color: "#8E8E93", marginTop: 2 },
-  listContainer: { padding: 20, paddingBottom: 40 },
+  backButton: { 
+    marginRight: 15,
+    padding: 5,
+   },
+  headerTitle: { 
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1A1A1A",
+  },
+  headerSubtitle: { 
+    fontSize: 14,
+    color: "#8E8E93",
+    marginTop: 2,
+   },
+  listContainer: { 
+    padding: 20,
+    paddingBottom: 40,
+   },
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 16,
@@ -318,14 +332,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  subjectText: { fontSize: 13, fontWeight: "600", color: "#64748B", flex: 1 },
+  subjectText: { 
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#64748B",
+    flex: 1,
+   },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 8,
     marginLeft: 10,
   },
-  badgeText: { fontSize: 10, fontWeight: "bold" },
+  badgeText: { 
+    fontSize: 10,
+    fontWeight: "bold",
+   },
   titleText: {
     fontSize: 16,
     fontWeight: "bold",
@@ -341,11 +363,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: "flex-start",
   },
-  deadlineText: { fontSize: 13, fontWeight: "600", marginLeft: 6 },
-
+  deadlineText: { 
+    fontSize: 13,
+    fontWeight: "600",
+    marginLeft: 6,
+   },
   actionContainer: { marginTop: 15 },
-  divider: { height: 1, backgroundColor: "#F1F5F9", marginBottom: 10 },
-  infoRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  divider: { 
+    height: 1,
+    backgroundColor: "#F1F5F9",
+    marginBottom: 10,
+   },
+  infoRow: { 
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+   },
   infoText: {
     fontSize: 12,
     color: "#64748B",
