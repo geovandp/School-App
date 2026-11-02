@@ -10,7 +10,6 @@ import {
     View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 export default function ProfilePage() {
     const insets = useSafeAreaInsets();
 
@@ -120,20 +119,20 @@ export default function ProfilePage() {
                         <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
                     </TouchableOpacity>
 
+                    {/* Menu Pendaftaran Wajah AI */}
+                    {/* Menu Pendaftaran Wajah AI */}
+                    {/* Menu Pendaftaran Wajah AI */}
                     <TouchableOpacity
                         style={styles.menuCard}
                         activeOpacity={0.8}
-                        // Aksi disesuaikan dengan konteks menu
-                        onPress={() => handleMenuPress("Pendaftaran Wajah")}
+                        onPress={() => router.push("/(teacher)/page/face-registration")}
                     >
-                        <View style={[styles.menuIconBox, { backgroundColor: "#FDFFB6" }]}>
-                            {/* Ikon diperbarui ke face-recognition */}
+                        <View style={[styles.menuIconBox, { backgroundColor: "#CAFFBF" }]}>
                             <MaterialCommunityIcons name="face-recognition" size={22} color="#000" />
                         </View>
                         <View style={styles.menuTextBox}>
                             <Text style={styles.menuTitle}>Pendaftaran Wajah AI</Text>
-                            {/* Deskripsi disesuaikan */}
-                            <Text style={styles.menuDesc}>Daftarkan atau perbarui data wajah untuk presensi</Text>
+                            <Text style={styles.menuDesc}>Kalibrasi biometrik untuk presensi</Text>
                         </View>
                         <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
                     </TouchableOpacity>
