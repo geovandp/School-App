@@ -1,21 +1,21 @@
-import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
+    Alert,
+    Modal,
     ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
     View,
-    Modal,
-    TextInput,
-    Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Data Guru Sesuai Konteks Baru
 const teacherProfile = {
-    name: "Transjana Catur Isaputro, S.ST, S.ST",
+    name: "Transjana Catur Isaputro, S.ST",
     nip: "198605062022211021",
     subject: "Produktif / Mapel Kejuruan",
     additionalTask: "Wakil Kepala Sekolah (Waka) & Wali Kelas",
