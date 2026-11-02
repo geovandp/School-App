@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 export default function ProfilePage() {
     const insets = useSafeAreaInsets();
 
@@ -41,7 +42,7 @@ export default function ProfilePage() {
                     onPress={() => router.back()}
                     activeOpacity={0.7}
                 >
-                    <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+                    <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
                 </TouchableOpacity>
                 <Text style={styles.pageTitle}>Profil Akun</Text>
                 <View style={{ width: 40 }} />
@@ -69,13 +70,13 @@ export default function ProfilePage() {
                     {/* Informasi Detail (NISN, NIS, Kelas) */}
                     <View style={styles.infoGrid}>
                         <View style={styles.infoItem}>
-                            <Text style={styles.infoLabel}>NISN</Text>
-                            <Text style={styles.infoValue}>0051283910</Text>
+                            <Text style={styles.infoLabel}>NIP</Text>
+                            <Text style={styles.infoValue}>19850723 2010</Text>
                         </View>
                         <View style={styles.infoDivider} />
                         <View style={styles.infoItem}>
-                            <Text style={styles.infoLabel}>NIS</Text>
-                            <Text style={styles.infoValue}>2211045</Text>
+                            <Text style={styles.infoLabel}>Kode Guru</Text>
+                            <Text style={styles.infoValue}>GR-045</Text>
                         </View>
                         <View style={styles.infoDivider} />
                         <View style={styles.infoItem}>
@@ -91,50 +92,47 @@ export default function ProfilePage() {
 
                     <TouchableOpacity
                         style={styles.menuCard}
-                        activeOpacity={0.8}
+                        activeOpacity={0.7}
                         onPress={() => handleMenuPress("Keamanan Akun")}
                     >
-                        <View style={[styles.menuIconBox, { backgroundColor: "#CAFFBF" }]}>
-                            <MaterialCommunityIcons name="shield-lock-outline" size={22} color="#000" />
+                        <View style={[styles.menuIconBox, { backgroundColor: "#ECFDF5" }]}>
+                            <MaterialCommunityIcons name="shield-lock-outline" size={22} color="#10B981" />
                         </View>
                         <View style={styles.menuTextBox}>
                             <Text style={styles.menuTitle}>Keamanan Akun</Text>
                             <Text style={styles.menuDesc}>Ubah kata sandi & verifikasi keamanan</Text>
                         </View>
-                        <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
+                        <MaterialCommunityIcons name="chevron-right" size={22} color="#CBD5E1" />
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.menuCard}
-                        activeOpacity={0.8}
+                        activeOpacity={0.7}
                         onPress={() => handleMenuPress("Pusat Bantuan")}
                     >
-                        <View style={[styles.menuIconBox, { backgroundColor: "#FDFFB6" }]}>
-                            <MaterialCommunityIcons name="help-circle-outline" size={22} color="#000" />
+                        <View style={[styles.menuIconBox, { backgroundColor: "#FEF3C7" }]}>
+                            <MaterialCommunityIcons name="help-circle-outline" size={22} color="#F59E0B" />
                         </View>
                         <View style={styles.menuTextBox}>
                             <Text style={styles.menuTitle}>Pusat Bantuan</Text>
                             <Text style={styles.menuDesc}>FAQ, panduan aplikasi, & hubungi admin</Text>
                         </View>
-                        <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
+                        <MaterialCommunityIcons name="chevron-right" size={22} color="#CBD5E1" />
                     </TouchableOpacity>
 
-                    {/* Menu Pendaftaran Wajah AI */}
-                    {/* Menu Pendaftaran Wajah AI */}
-                    {/* Menu Pendaftaran Wajah AI */}
                     <TouchableOpacity
                         style={styles.menuCard}
-                        activeOpacity={0.8}
+                        activeOpacity={0.7}
                         onPress={() => router.push("/(teacher)/page/face-registration")}
                     >
-                        <View style={[styles.menuIconBox, { backgroundColor: "#CAFFBF" }]}>
-                            <MaterialCommunityIcons name="face-recognition" size={22} color="#000" />
+                        <View style={[styles.menuIconBox, { backgroundColor: "#EFF6FF" }]}>
+                            <MaterialCommunityIcons name="face-recognition" size={22} color="#3B82F6" />
                         </View>
                         <View style={styles.menuTextBox}>
                             <Text style={styles.menuTitle}>Pendaftaran Wajah AI</Text>
                             <Text style={styles.menuDesc}>Kalibrasi biometrik untuk presensi</Text>
                         </View>
-                        <MaterialCommunityIcons name="chevron-right" size={22} color="#000" />
+                        <MaterialCommunityIcons name="chevron-right" size={22} color="#CBD5E1" />
                     </TouchableOpacity>
                 </View>
 
@@ -144,7 +142,7 @@ export default function ProfilePage() {
                     activeOpacity={0.8}
                     onPress={handleLogout}
                 >
-                    <MaterialCommunityIcons name="logout" size={20} color="#FFF" />
+                    <MaterialCommunityIcons name="logout" size={20} color="#EF4444" />
                     <Text style={styles.logoutButtonText}>Keluar Akun</Text>
                 </TouchableOpacity>
 
@@ -156,7 +154,7 @@ export default function ProfilePage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FDFBF7",
+        backgroundColor: "#F8FAFC", // Off-white modern background
     },
     pageHeader: {
         flexDirection: "row",
@@ -164,29 +162,18 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingVertical: 15,
-        borderBottomWidth: 3,
-        borderBottomColor: "#000",
-        backgroundColor: "#FFF",
+        borderBottomWidth: 1,
+        borderBottomColor: "#F1F5F9",
+        backgroundColor: "#FFFFFF",
     },
     backButton: {
-        width: 40,
-        height: 40,
-        backgroundColor: "#FFF",
-        borderWidth: 2,
-        borderColor: "#000",
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 3,
+        padding: 5,
+        marginLeft: -5,
     },
     pageTitle: {
         fontSize: 18,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         textAlign: "center",
         flex: 1,
     },
@@ -195,67 +182,71 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 24,
     },
-    // Card Profil Utama
+    
+    // --- Card Profil Utama ---
     profileCard: {
-        backgroundColor: "#FFF",
-        borderRadius: 20,
-        padding: 20,
-        borderWidth: 3,
-        borderColor: "#000",
+        backgroundColor: "#FFFFFF",
+        borderRadius: 24,
+        padding: 24,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.05,
+        shadowRadius: 15,
+        elevation: 4,
         marginBottom: 24,
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
     },
     avatarContainer: {
         position: "relative",
-        marginBottom: 14,
+        marginBottom: 16,
     },
     avatarImage: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        borderWidth: 3,
-        borderColor: "#000",
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: "#E2E8F0",
     },
     roleBadge: {
         position: "absolute",
         bottom: 0,
-        right: 0,
-        backgroundColor: "#FFD166",
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 6,
-        borderWidth: 2,
-        borderColor: "#000",
+        right: -5,
+        backgroundColor: "#FEF3C7", // Amber Soft
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: "#FFFFFF", // Border putih agar tidak menyatu dengan foto
     },
     roleBadgeText: {
         fontSize: 10,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#F59E0B",
+        letterSpacing: 0.5,
     },
     profileName: {
         fontSize: 18,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         textAlign: "center",
         marginBottom: 4,
     },
     profileEmail: {
         fontSize: 13,
-        fontWeight: "600",
-        color: "#555",
-        marginBottom: 16,
+        fontWeight: "500",
+        color: "#64748B",
+        marginBottom: 20,
     },
     divider: {
         width: "100%",
-        height: 2,
-        backgroundColor: "#000",
-        marginBottom: 16,
+        height: 1,
+        backgroundColor: "#F1F5F9",
+        marginBottom: 20,
     },
+    
+    // --- Informasi Detail (Grid) ---
     infoGrid: {
         flexDirection: "row",
         width: "100%",
@@ -267,91 +258,92 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     infoDivider: {
-        width: 2,
+        width: 1,
         height: 30,
-        backgroundColor: "#000",
+        backgroundColor: "#F1F5F9",
     },
     infoLabel: {
         fontSize: 11,
-        fontWeight: "700",
-        color: "#666",
+        fontWeight: "600",
+        color: "#94A3B8",
         textTransform: "uppercase",
-        marginBottom: 4,
+        marginBottom: 6,
+        letterSpacing: 0.5,
     },
     infoValue: {
-        fontSize: 13,
-        fontWeight: "900",
-        color: "#000",
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "#334155",
     },
-    // Menu Section
+    
+    // --- Menu Section ---
     menuSection: {
         marginBottom: 24,
     },
     sectionTitle: {
         fontSize: 16,
-        fontWeight: "900",
-        color: "#000",
-        marginBottom: 12,
+        fontWeight: "bold",
+        color: "#0F172A",
+        marginBottom: 16,
     },
     menuCard: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#FFFFFF",
         borderRadius: 16,
-        padding: 14,
-        borderWidth: 3,
-        borderColor: "#000",
+        padding: 16,
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 3, height: 3 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 4,
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.03,
+        shadowRadius: 8,
+        elevation: 2,
     },
     menuIconBox: {
-        width: 42,
-        height: 42,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#000",
+        width: 44,
+        height: 44,
+        borderRadius: 12,
         justifyContent: "center",
         alignItems: "center",
-        marginRight: 12,
+        marginRight: 16,
     },
     menuTextBox: {
         flex: 1,
     },
     menuTitle: {
         fontSize: 15,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "600",
+        color: "#334155",
+        marginBottom: 2,
     },
     menuDesc: {
-        fontSize: 11,
-        fontWeight: "600",
-        color: "#555",
-        marginTop: 2,
+        fontSize: 12,
+        fontWeight: "500",
+        color: "#94A3B8",
     },
-    // Logout Button
+    
+    // --- Logout Button ---
     logoutButton: {
-        backgroundColor: "#FF6B6B",
+        backgroundColor: "#FEF2F2", // Latar merah sangat soft
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        paddingVertical: 14,
-        borderRadius: 14,
-        borderWidth: 3,
-        borderColor: "#000",
+        paddingVertical: 16,
+        borderRadius: 16,
         gap: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        // Soft Shadow
+        shadowColor: "#EF4444",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
     },
     logoutButtonText: {
-        color: "#FFF",
+        color: "#EF4444",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "bold",
     },
 });

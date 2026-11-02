@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Tipe Data untuk Alur
 type Room = {
     id: string;
     name: string;
@@ -25,7 +24,6 @@ type Task = {
     title: string;
     deadline: string;
     status: "Aktif" | "Selesai" | "Draft";
-    statusColor: string;
 };
 
 type StudentSubmission = {
@@ -37,23 +35,20 @@ type StudentSubmission = {
     status: "Sudah Dikumpul" | "Belum Kumpul";
 };
 
-// 1. Data Dummy 3 Ruangan
 const roomsData: Room[] = [
     { id: "r1", name: "Ruang 101", code: "Kelas X IPA 1", totalTasks: 2 },
     { id: "r2", name: "Ruang 204", code: "Kelas X IPS 2", totalTasks: 1 },
     { id: "r3", name: "Ruang 302", code: "Kelas XI IPA 3", totalTasks: 2 },
 ];
 
-// 2. Data Dummy Tugas Berdasarkan Ruangan
 const tasksData: Task[] = [
-    { id: "t1", roomId: "r1", title: "Membuat Analisis Teks Hikayat", deadline: "5 Sep 2026, 23:59", status: "Aktif", statusColor: "#CAFFBF" },
-    { id: "t2", roomId: "r1", title: "Menulis Puisi Bebas", deadline: "10 Sep 2026, 12:00", status: "Draft", statusColor: "#FDFFB6" },
-    { id: "t3", roomId: "r2", title: "Resensi Buku Novel Remaja", deadline: "3 Sep 2026, 23:59", status: "Selesai", statusColor: "#FFADAD" },
-    { id: "t4", roomId: "r3", title: "Laporan Praktikum Drama", deadline: "8 Sep 2026, 15:00", status: "Aktif", statusColor: "#CAFFBF" },
-    { id: "t5", roomId: "r3", title: "Kuis Bab 2: Kebahasaan", deadline: "12 Sep 2026, 23:59", status: "Draft", statusColor: "#FDFFB6" },
+    { id: "t1", roomId: "r1", title: "Membuat Analisis Teks Hikayat", deadline: "5 Sep 2026, 23:59", status: "Aktif" },
+    { id: "t2", roomId: "r1", title: "Menulis Puisi Bebas", deadline: "10 Sep 2026, 12:00", status: "Draft" },
+    { id: "t3", roomId: "r2", title: "Resensi Buku Novel Remaja", deadline: "3 Sep 2026, 23:59", status: "Selesai" },
+    { id: "t4", roomId: "r3", title: "Laporan Praktikum Drama", deadline: "8 Sep 2026, 15:00", status: "Aktif" },
+    { id: "t5", roomId: "r3", title: "Kuis Bab 2: Kebahasaan", deadline: "12 Sep 2026, 23:59", status: "Draft" },
 ];
 
-// 3. Data Dummy Siswa & Dokumen Tugas
 const submissionsData: StudentSubmission[] = [
     { id: "s1", taskId: "t1", studentName: "Ahmad Fauzi", documentName: "Analisis_Hikayat_Ahmad.pdf", submittedAt: "4 Sep 2026, 14:20", status: "Sudah Dikumpul" },
     { id: "s2", taskId: "t1", studentName: "Bunga Citra", documentName: "Tugas_Hikayat_Bunga.docx", submittedAt: "4 Sep 2026, 15:10", status: "Sudah Dikumpul" },
@@ -90,6 +85,19 @@ export default function PenugasanPage() {
         Alert.alert("Tambah Tugas", `Membuka form penambahan tugas baru untuk ${selectedRoom?.name}`);
     };
 
+    // Helper warna status tugas
+    const getTaskStatusStyle = (status: string) => {
+        switch (status) {
+            case "Aktif":
+                return { bg: "#ECFDF5", text: "#10B981" }; // Emerald
+            case "Selesai":
+                return { bg: "#F1F5F9", text: "#64748B" }; // Slate
+            case "Draft":
+            default:
+                return { bg: "#FEF3C7", text: "#F59E0B" }; // Amber
+        }
+    };
+
     return (
         <View
             style={[
@@ -107,7 +115,7 @@ export default function PenugasanPage() {
                     onPress={handleBack}
                     activeOpacity={0.7}
                 >
-                    <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+                    <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
                 </TouchableOpacity>
                 <Text style={styles.pageTitle}>
                     {selectedTask
@@ -130,7 +138,7 @@ export default function PenugasanPage() {
                 </Text>
             </View>
 
-            {/* ALUR 1: LIST DATA RUANGAN (3 SAJA) */}
+            {/* ALUR 1: LIST DATA RUANGAN */}
             {!selectedRoom && (
                 <FlatList
                     data={roomsData}
@@ -140,11 +148,11 @@ export default function PenugasanPage() {
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             style={styles.cardRoom}
-                            activeOpacity={0.8}
+                            activeOpacity={0.7}
                             onPress={() => setSelectedRoom(item)}
                         >
                             <View style={styles.roomIconBox}>
-                                <MaterialCommunityIcons name="door-open" size={24} color="#000" />
+                                <MaterialCommunityIcons name="door-open" size={22} color="#3B82F6" />
                             </View>
                             <View style={{ flex: 1 }}>
                                 <Text style={styles.roomName}>{item.name}</Text>
@@ -153,13 +161,13 @@ export default function PenugasanPage() {
                             <View style={styles.badgeTaskCount}>
                                 <Text style={styles.badgeTaskText}>{item.totalTasks} Tugas</Text>
                             </View>
-                            <MaterialCommunityIcons name="chevron-right" size={24} color="#000" />
+                            <MaterialCommunityIcons name="chevron-right" size={20} color="#94A3B8" />
                         </TouchableOpacity>
                     )}
                 />
             )}
 
-            {/* ALUR 2: LIST DATA TUGAS, WAKTU, STATUS */}
+            {/* ALUR 2: LIST DATA TUGAS */}
             {selectedRoom && !selectedTask && (
                 <View style={{ flex: 1 }}>
                     <FlatList
@@ -170,31 +178,34 @@ export default function PenugasanPage() {
                         ListEmptyComponent={
                             <Text style={styles.emptyText}>Belum ada tugas di ruangan ini.</Text>
                         }
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.cardTask}
-                                activeOpacity={0.8}
-                                onPress={() => setSelectedTask(item)}
-                            >
-                                <View style={styles.taskHeaderRow}>
-                                    <View style={styles.timeBox}>
-                                        <MaterialCommunityIcons name="clock-outline" size={14} color="#000" />
-                                        <Text style={styles.timeText}>{item.deadline}</Text>
+                        renderItem={({ item }) => {
+                            const taskStatusStyle = getTaskStatusStyle(item.status);
+                            return (
+                                <TouchableOpacity
+                                    style={styles.cardTask}
+                                    activeOpacity={0.7}
+                                    onPress={() => setSelectedTask(item)}
+                                >
+                                    <View style={styles.taskHeaderRow}>
+                                        <View style={styles.timeBox}>
+                                            <MaterialCommunityIcons name="clock-outline" size={14} color="#64748B" />
+                                            <Text style={styles.timeText}>{item.deadline}</Text>
+                                        </View>
+                                        <View style={[styles.statusBadge, { backgroundColor: taskStatusStyle.bg }]}>
+                                            <Text style={[styles.statusText, { color: taskStatusStyle.text }]}>{item.status}</Text>
+                                        </View>
                                     </View>
-                                    <View style={[styles.statusBadge, { backgroundColor: item.statusColor }]}>
-                                        <Text style={styles.statusText}>{item.status}</Text>
+                                    <Text style={styles.taskTitle}>{item.title}</Text>
+                                    <View style={styles.taskFooterRow}>
+                                        <Text style={styles.taskFooterLink}>Lihat Pengumpulan Siswa</Text>
+                                        <MaterialCommunityIcons name="arrow-right" size={16} color="#3B82F6" />
                                     </View>
-                                </View>
-                                <Text style={styles.taskTitle}>{item.title}</Text>
-                                <View style={styles.taskFooterRow}>
-                                    <Text style={styles.taskFooterLink}>Lihat Pengumpulan Siswa</Text>
-                                    <MaterialCommunityIcons name="arrow-right-bold" size={16} color="#000" />
-                                </View>
-                            </TouchableOpacity>
-                        )}
+                                </TouchableOpacity>
+                            );
+                        }}
                     />
 
-                    {/* BUTTON TAMBAH TUGAS (DI BAWAH SENDIRI KHUSUS ALUR 2) */}
+                    {/* BUTTON TAMBAH TUGAS */}
                     <View style={styles.footerButtonContainer}>
                         <TouchableOpacity
                             style={styles.addButton}
@@ -208,7 +219,7 @@ export default function PenugasanPage() {
                 </View>
             )}
 
-            {/* ALUR 3: LIST DATA SISWA, DOKUMEN TUGAS, WAKTU PENGUMPULAN */}
+            {/* ALUR 3: LIST DATA SISWA & DOKUMEN */}
             {selectedTask && (
                 <FlatList
                     data={submissionsData.filter((s) => s.taskId === selectedTask.id)}
@@ -218,50 +229,59 @@ export default function PenugasanPage() {
                     ListEmptyComponent={
                         <Text style={styles.emptyText}>Belum ada data siswa untuk tugas ini.</Text>
                     }
-                    renderItem={({ item }) => (
-                        <View style={styles.cardStudent}>
-                            <View style={styles.studentInfoRow}>
-                                <View style={styles.avatarBox}>
-                                    <MaterialCommunityIcons name="account" size={18} color="#000" />
+                    renderItem={({ item }) => {
+                        const isSubmitted = item.status === "Sudah Dikumpul";
+                        return (
+                            <View style={styles.cardStudent}>
+                                <View style={styles.studentInfoRow}>
+                                    <View style={styles.avatarBox}>
+                                        <MaterialCommunityIcons name="account-outline" size={18} color="#334155" />
+                                    </View>
+                                    <Text style={styles.studentName}>{item.studentName}</Text>
+                                    <View
+                                        style={[
+                                            styles.miniStatusBadge,
+                                            {
+                                                backgroundColor: isSubmitted ? "#ECFDF5" : "#FEF2F2",
+                                            },
+                                        ]}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.miniStatusText,
+                                                { color: isSubmitted ? "#10B981" : "#EF4444" },
+                                            ]}
+                                        >
+                                            {item.status}
+                                        </Text>
+                                    </View>
                                 </View>
-                                <Text style={styles.studentName}>{item.studentName}</Text>
-                                <View
-                                    style={[
-                                        styles.miniStatusBadge,
-                                        {
-                                            backgroundColor:
-                                                item.status === "Sudah Dikumpul" ? "#CAFFBF" : "#FFADAD",
-                                        },
-                                    ]}
-                                >
-                                    <Text style={styles.miniStatusText}>{item.status}</Text>
+
+                                <View style={styles.documentBox}>
+                                    <MaterialCommunityIcons
+                                        name={item.documentName !== "-" ? "file-document-outline" : "file-remove-outline"}
+                                        size={18}
+                                        color={item.documentName !== "-" ? "#3B82F6" : "#94A3B8"}
+                                    />
+                                    <Text
+                                        style={[
+                                            styles.documentNameText,
+                                            item.documentName === "-" && { color: "#94A3B8", fontStyle: "italic" },
+                                        ]}
+                                    >
+                                        {item.documentName}
+                                    </Text>
+                                </View>
+
+                                <View style={styles.submissionTimeRow}>
+                                    <MaterialCommunityIcons name="calendar-clock-outline" size={14} color="#64748B" />
+                                    <Text style={styles.submissionTimeText}>
+                                        Dikumpul: {item.submittedAt}
+                                    </Text>
                                 </View>
                             </View>
-
-                            <View style={styles.documentBox}>
-                                <MaterialCommunityIcons
-                                    name={item.documentName !== "-" ? "file-document-outline" : "file-remove-outline"}
-                                    size={18}
-                                    color="#555"
-                                />
-                                <Text
-                                    style={[
-                                        styles.documentNameText,
-                                        item.documentName === "-" && { color: "#888", fontStyle: "italic" },
-                                    ]}
-                                >
-                                    {item.documentName}
-                                </Text>
-                            </View>
-
-                            <View style={styles.submissionTimeRow}>
-                                <MaterialCommunityIcons name="calendar-clock" size={14} color="#666" />
-                                <Text style={styles.submissionTimeText}>
-                                    Dikumpul: {item.submittedAt}
-                                </Text>
-                            </View>
-                        </View>
-                    )}
+                        );
+                    }}
                 />
             )}
         </View>
@@ -271,37 +291,26 @@ export default function PenugasanPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FDFBF7",
+        backgroundColor: "#F8FAFC", // Off-white modern background
     },
     pageHeader: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        borderBottomWidth: 3,
-        borderBottomColor: "#000",
-        backgroundColor: "#FFF",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        borderBottomColor: "#F1F5F9",
     },
     backButton: {
-        width: 40,
-        height: 40,
-        backgroundColor: "#FFF",
-        borderWidth: 2,
-        borderColor: "#000",
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 3,
+        padding: 6,
+        borderRadius: 8,
     },
     pageTitle: {
         fontSize: 18,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         textAlign: "center",
         flex: 1,
     },
@@ -310,243 +319,227 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
     },
     subHeaderTitle: {
-        fontSize: 14,
-        fontWeight: "700",
-        color: "#333",
+        fontSize: 13,
+        fontWeight: "600",
+        color: "#64748B",
     },
     listContainer: {
         paddingHorizontal: 20,
         paddingBottom: 24,
-        gap: 16,
+        gap: 12,
     },
     emptyText: {
         textAlign: "center",
-        color: "#777",
+        color: "#94A3B8",
         marginTop: 30,
-        fontWeight: "600",
+        fontWeight: "500",
     },
-    // Style Card Ruangan (Alur 1)
+    
+    // --- Card Ruangan (Alur 1) ---
     cardRoom: {
-        backgroundColor: "#9BF6FF",
+        backgroundColor: "#FFFFFF",
         borderRadius: 16,
         padding: 16,
-        borderWidth: 3,
-        borderColor: "#000",
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
         flexDirection: "row",
         alignItems: "center",
         gap: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.03,
+        shadowRadius: 8,
+        elevation: 2,
     },
     roomIconBox: {
         width: 44,
         height: 44,
-        backgroundColor: "#FFF",
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#000",
+        backgroundColor: "#EFF6FF", // Soft Blue
+        borderRadius: 12,
         justifyContent: "center",
         alignItems: "center",
     },
     roomName: {
-        fontSize: 16,
-        fontWeight: "900",
-        color: "#000",
+        fontSize: 15,
+        fontWeight: "bold",
+        color: "#0F172A",
     },
     roomCode: {
         fontSize: 12,
-        fontWeight: "700",
-        color: "#333",
+        fontWeight: "500",
+        color: "#64748B",
         marginTop: 2,
     },
     badgeTaskCount: {
-        backgroundColor: "#FFF",
-        paddingHorizontal: 8,
+        backgroundColor: "#F8FAFC",
+        paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
+        borderWidth: 1,
+        borderColor: "#E2E8F0",
     },
     badgeTaskText: {
         fontSize: 11,
-        fontWeight: "800",
-        color: "#000",
+        fontWeight: "600",
+        color: "#475569",
     },
-    // Style Card Tugas (Alur 2)
+
+    // --- Card Tugas (Alur 2) ---
     cardTask: {
-        backgroundColor: "#FFC6FF",
+        backgroundColor: "#FFFFFF",
         borderRadius: 16,
         padding: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.03,
+        shadowRadius: 8,
+        elevation: 2,
     },
     taskHeaderRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 8,
+        marginBottom: 10,
     },
     timeBox: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#FFF",
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 6,
-        borderWidth: 2,
-        borderColor: "#000",
         gap: 4,
     },
     timeText: {
-        fontSize: 11,
-        fontWeight: "800",
-        color: "#000",
+        fontSize: 12,
+        fontWeight: "500",
+        color: "#64748B",
     },
     statusBadge: {
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 6,
-        borderWidth: 2,
-        borderColor: "#000",
     },
     statusText: {
-        fontSize: 10,
-        fontWeight: "900",
-        color: "#000",
+        fontSize: 11,
+        fontWeight: "bold",
         textTransform: "uppercase",
+        letterSpacing: 0.5,
     },
     taskTitle: {
         fontSize: 16,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         marginBottom: 12,
     },
     taskFooterRow: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-end",
-        gap: 6,
-        backgroundColor: "#FFF",
-        paddingVertical: 8,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
+        gap: 4,
     },
     taskFooterLink: {
-        fontSize: 12,
-        fontWeight: "800",
-        color: "#000",
+        fontSize: 13,
+        fontWeight: "600",
+        color: "#3B82F6",
     },
-    // Style Button Tambah Tugas di Bawah
+
+    // --- Button Tambah Tugas di Bawah ---
     footerButtonContainer: {
         paddingHorizontal: 20,
         paddingVertical: 12,
-        backgroundColor: "#FDFBF7",
-        borderTopWidth: 2,
-        borderTopColor: "#000",
+        backgroundColor: "#F8FAFC",
+        borderTopWidth: 1,
+        borderTopColor: "#F1F5F9",
     },
     addButton: {
-        backgroundColor: "#000",
+        backgroundColor: "#3B82F6",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: 14,
         borderRadius: 12,
-        borderWidth: 2,
-        borderColor: "#000",
         gap: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 3, height: 3 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 4,
+        shadowColor: "#3B82F6",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 3,
     },
     addButtonText: {
         color: "#FFF",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "bold",
     },
-    // Style Card Siswa & Dokumen (Alur 3)
+
+    // --- Card Siswa & Dokumen (Alur 3) ---
     cardStudent: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#FFFFFF",
         borderRadius: 16,
         padding: 16,
-        borderWidth: 3,
-        borderColor: "#000",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.03,
+        shadowRadius: 8,
+        elevation: 2,
     },
     studentInfoRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
-        marginBottom: 10,
+        gap: 10,
+        marginBottom: 12,
     },
     avatarBox: {
-        width: 32,
-        height: 32,
-        backgroundColor: "#E2F0CB",
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
+        width: 36,
+        height: 36,
+        backgroundColor: "#F1F5F9",
+        borderRadius: 18,
         justifyContent: "center",
         alignItems: "center",
     },
     studentName: {
         fontSize: 15,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         flex: 1,
     },
     miniStatusBadge: {
-        paddingHorizontal: 6,
-        paddingVertical: 3,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
         borderRadius: 6,
-        borderWidth: 1.5,
-        borderColor: "#000",
     },
     miniStatusText: {
-        fontSize: 10,
-        fontWeight: "800",
-        color: "#000",
+        fontSize: 11,
+        fontWeight: "bold",
     },
     documentBox: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#F7F7F7",
-        padding: 10,
-        borderRadius: 8,
-        borderWidth: 1.5,
-        borderColor: "#000",
+        backgroundColor: "#F8FAFC",
+        padding: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: "#E2E8F0",
         gap: 8,
-        marginBottom: 8,
+        marginBottom: 10,
     },
     documentNameText: {
         fontSize: 13,
-        fontWeight: "700",
-        color: "#000",
+        fontWeight: "600",
+        color: "#334155",
         flex: 1,
     },
     submissionTimeRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: 6,
     },
     submissionTimeText: {
-        fontSize: 11,
-        fontWeight: "600",
-        color: "#555",
+        fontSize: 12,
+        fontWeight: "500",
+        color: "#64748B",
     },
 });

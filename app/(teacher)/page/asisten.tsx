@@ -24,7 +24,7 @@ type Message = {
 const initialMessages: Message[] = [
   {
     id: "1",
-    text: "Halo! Saya adalah Asisten AI Anda. Ada yang bisa saya bantu hari ini?",
+    text: "Halo! Saya adalah Asisten AI Anda. Ada yang bisa saya bantu terkait jadwal, absensi, atau informasi sekolah hari ini?",
     sender: "bot",
   },
 ];
@@ -32,15 +32,12 @@ const initialMessages: Message[] = [
 export default function ChatBotPage() {
   const insets = useSafeAreaInsets();
 
-  // State untuk input teks dan daftar obrolan
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isBotTyping, setIsBotTyping] = useState(false);
-
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
-    // Event listener yang berbeda untuk iOS dan Android agar lebih mulus
     const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
     const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
@@ -52,20 +49,17 @@ export default function ChatBotPage() {
       setKeyboardVisible(false);
     });
 
-    // Bersihkan listener saat komponen dilepas (unmount)
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
     };
   }, []);
 
-  // Reference untuk FlatList agar bisa auto-scroll ke bawah
   const flatListRef = useRef<FlatList>(null);
 
   const handleSend = () => {
     if (!inputText.trim()) return;
 
-    // 1. Simpan pesan user ke dalam list
     const userMsg: Message = {
       id: Date.now().toString(),
       text: inputText.trim(),
@@ -74,16 +68,13 @@ export default function ChatBotPage() {
 
     setMessages((prevMessages) => [...prevMessages, userMsg]);
 
-    // Simpan teks ke variabel sementara lalu ubah ke huruf kecil untuk pengecekan
     const currentInput = inputText.toLowerCase();
-    setInputText(""); // Kosongkan kolom input
+    setInputText(""); 
     setIsBotTyping(true);
 
-    // 2. Beri jeda 1 detik seolah bot sedang "mengetik", lalu tentukan balasan
     setTimeout(() => {
       let replyText = "";
 
-      // Logika if-statement untuk variasi balasan bot
       if (currentInput.includes("halo") || currentInput.includes("hai")) {
         replyText = "Halo juga! Ada yang bisa saya bantu terkait informasi sekolah hari ini?";
       }
@@ -100,14 +91,12 @@ export default function ChatBotPage() {
         replyText = "Sama-sama! Jangan ragu untuk bertanya lagi jika Anda membutuhkan bantuan lain. 😊";
       }
       else {
-        // Balasan acak jika kata kunci tidak ada yang cocok (Default Fallback)
         const randomReplies = [
           "Maaf, saya kurang menangkap maksud Anda. Bisa dijelaskan lebih spesifik?",
           "Saat ini saya masih dalam tahap belajar. Apakah Anda mau bertanya seputar absensi atau arsip?",
           "Hmm, pertanyaan yang menarik, tapi sayangnya saya belum punya jawaban untuk itu saat ini. 🙏",
           "Sistem saya belum mengenali perintah tersebut. Coba gunakan kata kunci seperti 'absen', 'kpi', atau 'arsip'."
         ];
-        // Pilih salah satu balasan secara acak
         replyText = randomReplies[Math.floor(Math.random() * randomReplies.length)];
       }
 
@@ -119,7 +108,7 @@ export default function ChatBotPage() {
 
       setMessages((prevMessages) => [...prevMessages, botMsg]);
       setIsBotTyping(false);
-    }, 1000); // 1000ms = 1 detik
+    }, 1200); 
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
@@ -134,7 +123,7 @@ export default function ChatBotPage() {
       >
         {!isUser && (
           <View style={styles.avatarBox}>
-            <MaterialCommunityIcons name="robot-outline" size={20} color="#000" />
+            <MaterialCommunityIcons name="robot-happy-outline" size={22} color="#3B82F6" />
           </View>
         )}
 
@@ -144,7 +133,9 @@ export default function ChatBotPage() {
             isUser ? styles.userBubble : styles.botBubble,
           ]}
         >
-          <Text style={styles.messageText}>{item.text}</Text>
+          <Text style={[styles.messageText, isUser && styles.userMessageText]}>
+            {item.text}
+          </Text>
         </View>
       </View>
     );
@@ -153,34 +144,29 @@ export default function ChatBotPage() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      // Gunakan "height" untuk Android dan "padding" untuk iOS
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      // Tambahkan offset agar inputan terdorong sedikit ke atas keyboard pada iOS
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
       <View
         style={[
           styles.container,
-          {
-            paddingTop: insets.top,
-            // paddingBottom: Math.max(insets.bottom, 16),
-          },
+          { paddingTop: insets.top },
         ]}
       >
-        {/* Header */}
+        {/* --- HEADER --- */}
         <View style={styles.pageHeader}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => router.back()}
             activeOpacity={0.7}
           >
-            <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+            <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
           </TouchableOpacity>
-          <Text style={styles.pageTitle}>Asisten Cerdas</Text>
+          <Text style={styles.pageTitle}>Asisten AI</Text>
           <View style={{ width: 40 }} />
         </View>
 
-        {/* Area Chat */}
+        {/* --- AREA CHAT --- */}
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -188,44 +174,54 @@ export default function ChatBotPage() {
           renderItem={renderMessage}
           contentContainerStyle={styles.chatContainer}
           showsVerticalScrollIndicator={false}
-          // Auto-scroll ke bawah saat ada pesan baru
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
 
-        {/* Indikator Typing (Opsional) */}
+        {/* --- INDIKATOR TYPING --- */}
         {isBotTyping && (
           <View style={styles.typingIndicator}>
-            <Text style={styles.typingText}>Bot sedang mengetik...</Text>
+            <View style={styles.avatarBoxSmall}>
+              <MaterialCommunityIcons name="dots-horizontal" size={20} color="#94A3B8" />
+            </View>
+            <Text style={styles.typingText}>Mengetik balasan...</Text>
           </View>
         )}
 
-        {/* Area Input Pesan */}
+        {/* --- AREA INPUT PESAN --- */}
         <View
           style={[
             styles.inputContainer,
             {
-              // Jika keyboard terbuka -> paddingBottom: 0
-              // Jika tertutup -> gunakan insets.bottom atau minimal 16
-              paddingBottom: isKeyboardVisible ? 16 : Math.max(insets.bottom, 50)
+              paddingBottom: isKeyboardVisible ? 16 : Math.max(insets.bottom, 24),
             }
           ]}
         >
-          <TextInput
-            style={styles.textInput}
-            placeholder="Ketik pesan..."
-            placeholderTextColor="#777"
-            value={inputText}
-            onChangeText={setInputText}
-            onSubmitEditing={handleSend}
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            activeOpacity={0.7}
-            onPress={handleSend}
-          >
-            <MaterialCommunityIcons name="send" size={20} color="#FFF" />
-          </TouchableOpacity>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Tanya jadwal, kpi, absensi..."
+              placeholderTextColor="#94A3B8"
+              value={inputText}
+              onChangeText={setInputText}
+              onSubmitEditing={handleSend}
+            />
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                { backgroundColor: inputText.trim() ? "#3B82F6" : "#E2E8F0" }
+              ]}
+              activeOpacity={0.7}
+              onPress={handleSend}
+              disabled={!inputText.trim()}
+            >
+              <MaterialCommunityIcons 
+                name="send" 
+                size={18} 
+                color={inputText.trim() ? "#FFFFFF" : "#94A3B8"} 
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -235,51 +231,44 @@ export default function ChatBotPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFBF7",
+    backgroundColor: "#F8FAFC", // Off-white modern background
   },
+  
+  // --- Header ---
   pageHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
     zIndex: 10,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 3,
+    padding: 8,
+    borderRadius: 12,
   },
   pageTitle: {
     fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#0F172A",
     textAlign: "center",
     flex: 1,
   },
+
+  // --- Area Chat ---
   chatContainer: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 24,
     paddingBottom: 20,
     gap: 16,
   },
   messageWrapper: {
     flexDirection: "row",
     alignItems: "flex-end",
-    marginBottom: 8,
+    marginBottom: 4,
     maxWidth: "85%",
   },
   messageWrapperUser: {
@@ -288,89 +277,106 @@ const styles = StyleSheet.create({
   messageWrapperBot: {
     alignSelf: "flex-start",
   },
+  
+  // Avatar Bot
   avatarBox: {
     width: 36,
     height: 36,
-    backgroundColor: "#9BF6FF",
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
+    backgroundColor: "#EFF6FF", // Soft Blue
+    borderRadius: 18, // Bulat sempurna
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
     marginBottom: 4,
   },
+  
+  // Chat Bubble
   messageBubble: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 16,
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
+    borderRadius: 20,
   },
   userBubble: {
-    backgroundColor: "#CAFFBF",
-    borderBottomRightRadius: 4,
+    backgroundColor: "#3B82F6", // Primary Blue
+    borderBottomRightRadius: 4, // Ekor bubble
   },
   botBubble: {
-    backgroundColor: "#FFF",
-    borderBottomLeftRadius: 4,
+    backgroundColor: "#FFFFFF",
+    borderBottomLeftRadius: 4, // Ekor bubble
+    // Soft Shadow untuk Bot
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#F1F5F9",
   },
+  
+  // Teks Pesan
   messageText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#000",
-    lineHeight: 20,
-  },
-  typingIndicator: {
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-  },
-  typingText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#666",
-    fontStyle: "italic",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: "#FFF",
-    borderTopWidth: 3,
-    borderTopColor: "#000",
-    alignItems: "center",
-    gap: 12,
-  },
-  textInput: {
-    flex: 1,
-    height: 50,
-    backgroundColor: "#F4F4F4",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 14,
-    paddingHorizontal: 16,
     fontSize: 15,
-    fontWeight: "600",
-    color: "#000",
+    color: "#334155", // Slate Gelap (untuk bot)
+    lineHeight: 22,
   },
-  sendButton: {
-    width: 50,
-    height: 50,
-    backgroundColor: "#000",
+  userMessageText: {
+    color: "#FFFFFF", // Teks Putih untuk user
+  },
+
+  // --- Indikator Typing ---
+  typingIndicator: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
+  avatarBoxSmall: {
+    width: 28,
+    height: 28,
+    backgroundColor: "#F1F5F9",
     borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
+    marginRight: 8,
+  },
+  typingText: {
+    fontSize: 13,
+    color: "#94A3B8",
+    fontStyle: "italic",
+  },
+
+  // --- Area Input ---
+  inputContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#F1F5F9",
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F8FAFC", // Warna abu-abu sangat soft
+    borderRadius: 24, // Melengkung halus seperti kapsul
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+  },
+  textInput: {
+    flex: 1,
+    minHeight: 40,
+    maxHeight: 100, // Jika teks panjang, maksimal tingginya
+    paddingHorizontal: 16,
+    fontSize: 15,
+    color: "#0F172A",
+  },
+  sendButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18, // Bulat sempurna
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
   },
 });

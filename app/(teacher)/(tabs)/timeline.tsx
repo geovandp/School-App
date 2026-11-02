@@ -20,42 +20,42 @@ type NoteItem = {
   color: string;
 };
 
-// 2. Data Dummy Catatan
+// 2. Data Dummy Catatan (Warna disesuaikan menjadi pastel yang sangat lembut untuk background)
 const initialNotes: NoteItem[] = [
   {
     id: "1",
     title: "Ide Proyek Akhir",
     content: "Membuat aplikasi absensi dengan fitur deteksi lokasi dan QR code terenkripsi.",
     date: "15 Sep 2026",
-    color: "#FFADAD", // Merah pastel
+    color: "#FEF2F2", // Red Soft
   },
   {
     id: "2",
     title: "Rapat Guru",
     content: "Bahas persiapan ujian tengah semester dan evaluasi kurikulum merdeka.",
     date: "14 Sep 2026",
-    color: "#FDFFB6", // Kuning pastel
+    color: "#FEF9C3", // Yellow Soft
   },
   {
     id: "3",
     title: "Belanja Kelas",
     content: "Spidol (3), Penghapus (1), Kertas HVS (2 rim).",
     date: "12 Sep 2026",
-    color: "#9BF6FF", // Cyan pastel
+    color: "#ECFEFF", // Cyan Soft
   },
   {
     id: "4",
     title: "Catatan: Budi",
     content: "Budi sering terlambat. Perlu diajak bicara empat mata setelah jam pelajaran selesai.",
     date: "10 Sep 2026",
-    color: "#CAFFBF", // Hijau pastel
+    color: "#F0FDF4", // Green Soft
   },
   {
     id: "5",
     title: "Jadwal Piket",
     content: "Cek jadwal piket kebersihan kelas 10-A minggu depan.",
     date: "08 Sep 2026",
-    color: "#FFC6FF", // Ungu/Pink pastel
+    color: "#FAF5FF", // Purple Soft
   },
 ];
 
@@ -64,7 +64,6 @@ export default function NotesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [notes, setNotes] = useState<NoteItem[]>(initialNotes);
 
-  // Fitur pencarian catatan
   const filteredNotes = notes.filter(
     (note) =>
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -75,7 +74,7 @@ export default function NotesPage() {
     return (
       <TouchableOpacity
         style={[styles.noteCard, { backgroundColor: item.color }]}
-        activeOpacity={0.8}
+        activeOpacity={0.7}
         onPress={() => alert(`Buka catatan: ${item.title}`)}
       >
         <Text style={styles.noteTitle} numberOfLines={2}>
@@ -108,7 +107,7 @@ export default function NotesPage() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
         </TouchableOpacity>
         <Text style={styles.pageTitle}>Catatan</Text>
         <View style={{ width: 40 }} />
@@ -116,11 +115,11 @@ export default function NotesPage() {
 
       {/* Kolom Pencarian */}
       <View style={styles.searchContainer}>
-        <MaterialCommunityIcons name="magnify" size={24} color="#555" style={styles.searchIcon} />
+        <MaterialCommunityIcons name="magnify" size={20} color="#94A3B8" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Cari catatan..."
-          placeholderTextColor="#888"
+          placeholderTextColor="#94A3B8"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -137,19 +136,19 @@ export default function NotesPage() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <MaterialCommunityIcons name="note-off-outline" size={48} color="#888" />
+            <MaterialCommunityIcons name="note-off-outline" size={48} color="#CBD5E1" />
             <Text style={styles.emptyText}>Tidak ada catatan yang ditemukan.</Text>
           </View>
         }
       />
 
-      {/* Tombol Tambah Catatan (Floating Action Button) */}
+      {/* Tombol Tambah Catatan (FAB) */}
       <TouchableOpacity 
         style={[styles.fab, { bottom: Math.max(insets.bottom + 20, 30) }]} 
         activeOpacity={0.8}
         onPress={() => alert("Fitur tambah catatan")}
       >
-        <MaterialCommunityIcons name="plus" size={32} color="#FFF" />
+        <MaterialCommunityIcons name="plus" size={28} color="#FFFFFF" />
       </TouchableOpacity>
     </View>
   );
@@ -158,8 +157,9 @@ export default function NotesPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFBF7",
+    backgroundColor: "#F8FAFC", // Off-white modern
   },
+  
   // --- Header ---
   pageHeader: {
     flexDirection: "row",
@@ -167,83 +167,86 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
     zIndex: 10,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
+    padding: 8,
+    marginLeft: -8,
   },
   pageTitle: {
     fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#0F172A",
     textAlign: "center",
     flex: 1,
   },
+
   // --- Pencarian ---
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
-    borderWidth: 3,
-    borderColor: "#000",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     marginHorizontal: 20,
     marginVertical: 16,
-    paddingHorizontal: 12,
-    boxShadow: "3px 3px 0px rgba(0, 0, 0, 1)",
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.02,
+    shadowRadius: 4,
+    elevation: 1,
   },
   searchIcon: {
     marginRight: 8,
   },
   searchInput: {
     flex: 1,
-    height: 46,
+    height: 44,
     fontSize: 14,
-    fontWeight: "700",
-    color: "#000",
+    color: "#334155",
   },
+
   // --- Grid & Card ---
   listContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 80, // Ruang ekstra agar card terbawah tidak tertutup tombol FAB
+    paddingBottom: 100, 
   },
   columnWrapper: {
     justifyContent: "space-between",
-    marginBottom: 16, // Jarak antar baris
+    marginBottom: 16,
   },
   noteCard: {
     flex: 1,
-    borderWidth: 3,
-    borderColor: "#000",
     borderRadius: 16,
-    padding: 14,
-    marginHorizontal: 6, // Jarak antar kolom
-    boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
-    minHeight: 150,
+    padding: 16,
+    marginHorizontal: 6,
+    minHeight: 160,
     justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.02)", // Border super tipis untuk memberi definisi
+    // Soft shadow
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 1,
   },
   noteTitle: {
-    fontSize: 16,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#1E293B",
     marginBottom: 8,
+    lineHeight: 20,
   },
   noteContent: {
     fontSize: 13,
-    fontWeight: "600",
-    color: "#333",
-    lineHeight: 18,
+    color: "#475569",
+    lineHeight: 20,
     flex: 1,
   },
   noteFooter: {
@@ -252,34 +255,37 @@ const styles = StyleSheet.create({
   },
   noteDate: {
     fontSize: 11,
-    fontWeight: "800",
-    color: "rgba(0,0,0,0.5)",
+    fontWeight: "500",
+    color: "#94A3B8",
   },
+
   // --- Empty State ---
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 60,
+    marginTop: 80,
   },
   emptyText: {
     marginTop: 12,
     fontSize: 14,
-    fontWeight: "700",
-    color: "#888",
+    color: "#64748B",
   },
+
   // --- Floating Action Button (FAB) ---
   fab: {
     position: "absolute",
     right: 20,
-    width: 60,
-    height: 60,
-    backgroundColor: "#000",
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: "#FFF", // Border putih agar kontras jika latar belakang gelap
+    width: 56,
+    height: 56,
+    backgroundColor: "#3B82F6", // Primary Accent Color
+    borderRadius: 28, // Lingkaran sempurna
     justifyContent: "center",
     alignItems: "center",
-    boxShadow: "4px 4px 0px rgba(0, 0, 0, 0.4)",
+    shadowColor: "#3B82F6",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
     zIndex: 20,
   },
 });

@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -7,7 +8,6 @@ const scheduleData = [
     time: "08:00 - 09:30",
     subject: "Matematika Lanjutan",
     classInfo: "Kelas XII IPA 1 • Ruang 302",
-    bgColor: "#E4D4FF", // Ungu pastel
     status: "Berlangsung",
   },
   {
@@ -15,50 +15,67 @@ const scheduleData = [
     time: "10:00 - 11:30",
     subject: "Fisika Dasar",
     classInfo: "Kelas XII IPA 2 • Lab Fisika",
-    bgColor: "#FDFFB6", // Kuning pastel
     status: "Akan Datang",
   },
   {
     id: "3",
-    time: "10:00 - 11:30",
-    subject: "Fisika Dasar",
-    classInfo: "Kelas XII IPA 2 • Lab Fisika",
-    bgColor: "#FDFFB6", // Kuning pastel
+    time: "11:30 - 13:00",
+    subject: "Istirahat & Sholat",
+    classInfo: "Area Sekolah",
     status: "Akan Datang",
   },
 ];
 
 const CARD_WIDTH = 295; // Lebar card
-const CARD_GAP = 14;   // Jarak antar card (sesuai style gap di scrollContainer)
+const CARD_GAP = 14;   // Jarak antar card
 
 export default function TeacherScheduleCard() {
+  
+  // Fungsi untuk menentukan warna badge berdasarkan status
+  const getStatusStyle = (status: string) => {
+    if (status === "Berlangsung") {
+      return { bg: "#ECFDF5", text: "#10B981" }; // Emerald / Hijau Lembut
+    }
+    return { bg: "#F8FAFC", text: "#64748B" }; // Slate / Abu-abu Lembut
+  };
+
   return (
     <View style={styles.outerWrapper}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
-        // PROPERTI SNAP DITAMBAHKAN DI SINI:
-        snapToInterval={CARD_WIDTH + CARD_GAP} // Menentukan jarak snap per kartu + gap-nya
-        decelerationRate="fast"              // Membuat animasi berhenti dengan cepat & pas
+        snapToInterval={CARD_WIDTH + CARD_GAP} 
+        decelerationRate="fast"              
         snapToAlignment="start"
       >
-        {scheduleData.map((item) => (
-          <View
-            key={item.id}
-            style={[styles.cardContainer, { backgroundColor: item.bgColor }]}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{item.status}</Text>
+        {scheduleData.map((item) => {
+          const statusStyle = getStatusStyle(item.status);
+          
+          return (
+            <View key={item.id} style={styles.cardContainer}>
+              <View style={styles.cardHeader}>
+                <View style={[styles.badge, { backgroundColor: statusStyle.bg }]}>
+                  <Text style={[styles.badgeText, { color: statusStyle.text }]}>
+                    {item.status}
+                  </Text>
+                </View>
+                
+                <View style={styles.timeWrapper}>
+                  <MaterialCommunityIcons name="clock-outline" size={14} color="#64748B" />
+                  <Text style={styles.timeText}>{item.time}</Text>
+                </View>
               </View>
-              <Text style={styles.timeText}>{item.time}</Text>
-            </View>
 
-            <Text style={styles.subjectTitle}>{item.subject}</Text>
-            <Text style={styles.classInfo}>{item.classInfo}</Text>
-          </View>
-        ))}
+              <Text style={styles.subjectTitle}>{item.subject}</Text>
+              
+              <View style={styles.classInfoWrapper}>
+                <MaterialCommunityIcons name="map-marker-radius-outline" size={16} color="#94A3B8" />
+                <Text style={styles.classInfo}>{item.classInfo}</Text>
+              </View>
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -67,59 +84,70 @@ export default function TeacherScheduleCard() {
 const styles = StyleSheet.create({
   outerWrapper: {
     width: "100%",
-    backgroundColor: "#FFF",
-    paddingTop: 10,
-    paddingBottom: 20,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    // Menghapus background putih dan border radius bawah agar menyatu mulus dengan layar utama
+    backgroundColor: "transparent", 
+    paddingTop: 5,
+    paddingBottom: 25,
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    gap: CARD_GAP, // Jarak antar card
+    gap: CARD_GAP, 
   },
   cardContainer: {
-    width: CARD_WIDTH, // Ukuran lebar card
+    width: CARD_WIDTH, 
     borderRadius: 16,
     padding: 20,
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#F1F5F9", // Border tipis abu-abu terang
+    // --- Soft Shadow ---
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   badge: {
-    backgroundColor: "#000",
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 8,
   },
   badgeText: {
-    color: "#FFF",
-    fontSize: 10,
-    fontWeight: "900",
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.3,
+  },
+  timeWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   timeText: {
     fontSize: 12,
-    fontWeight: "800",
-    color: "#333",
+    fontWeight: "600",
+    color: "#64748B",
   },
   subjectTitle: {
-    fontSize: 20,
-    fontWeight: "900",
-    color: "#000",
-    marginBottom: 6,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0F172A", // Dark Slate
+    marginBottom: 8,
+    lineHeight: 24,
+  },
+  classInfoWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
   },
   classInfo: {
     fontSize: 13,
-    fontWeight: "600",
-    color: "#333",
+    fontWeight: "500",
+    color: "#64748B",
   },
 });
