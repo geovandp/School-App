@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
     Modal,
     ScrollView,
@@ -33,11 +33,17 @@ const peersAssignedToSiti = [
     { id: "p4", name: "Rina Wijaya, S.Pd", nip: "19920810 201801 2 003", status: "Belum", completedItems: 0 },
 ];
 
+// Pembaruan Kategori Instrumen (9 Aspek / Total 64 Butir)
 const instrumentCategories = [
-    { id: "cat1", title: "Pedagogik (18 Butir)", itemsCount: 18 },
-    { id: "cat2", title: "Kepribadian (14 Butir)", itemsCount: 14 },
-    { id: "cat3", title: "Sosial (12 Butir)", itemsCount: 12 },
-    { id: "cat4", title: "Profesional (20 Butir)", itemsCount: 20 },
+    { id: "cat1", title: "Berorientasi Pelayanan", itemsCount: 8 },
+    { id: "cat2", title: "Akuntabel", itemsCount: 8 },
+    { id: "cat3", title: "Kompeten", itemsCount: 7 },
+    { id: "cat4", title: "Harmonis", itemsCount: 7 },
+    { id: "cat5", title: "Loyal", itemsCount: 7 },
+    { id: "cat6", title: "Adaptif", itemsCount: 7 },
+    { id: "cat7", title: "Kolaboratif", itemsCount: 7 },
+    { id: "cat8", title: "Kedisiplinan", itemsCount: 7 },
+    { id: "cat9", title: "Etika Profesi", itemsCount: 6 },
 ];
 
 export default function PkspDashboardPage() {
@@ -96,7 +102,7 @@ export default function PkspDashboardPage() {
                         onPress={() => setSelectedPeriod("desember")}
                     >
                         <Text style={[styles.periodTabText, selectedPeriod === "desember" && styles.periodTabTextActive]}>
-                            Sem. Des
+                            Juli. Des
                         </Text>
                     </TouchableOpacity>
 
@@ -105,7 +111,7 @@ export default function PkspDashboardPage() {
                         onPress={() => setSelectedPeriod("juni")}
                     >
                         <Text style={[styles.periodTabText, selectedPeriod === "juni" && styles.periodTabTextActive]}>
-                            Sem. Juni
+                            Jan. Juni
                         </Text>
                     </TouchableOpacity>
 
@@ -126,7 +132,7 @@ export default function PkspDashboardPage() {
                             <MaterialCommunityIcons name="trophy-award" size={28} color="#000" />
                         </View>
                         <Text style={styles.highlightValue}>{currentScore.score}</Text>
-                        <Text style={styles.highlightLabel}>Skor PKSP Saya ({selectedPeriod.toUpperCase()})</Text>
+                        <Text style={styles.highlightLabel}>Perolehan Skor ({selectedPeriod.toUpperCase()})</Text>
                         
                         <View style={styles.progressBarBg}>
                             <View style={[styles.progressBarFill, { width: `${currentScore.score}%`, backgroundColor: getPerformanceStyle(currentScore.score).color }]} />
@@ -199,7 +205,7 @@ export default function PkspDashboardPage() {
                 <View style={{ height: 40 }} />
             </ScrollView>
 
-            {/* MODAL 64 INSTRUMEN */}
+            {/* MODAL 64 INSTRUMEN BERDASARKAN 9 ASPEK */}
             <Modal
                 visible={isAssessmentModalOpen}
                 animationType="slide"
@@ -219,7 +225,7 @@ export default function PkspDashboardPage() {
                         </View>
 
                         <ScrollView showsVerticalScrollIndicator={false} style={{ marginVertical: 16 }}>
-                            <Text style={styles.modalSectionTitle}>Instrumen Penilaian (64 Butir):</Text>
+                            <Text style={styles.modalSectionTitle}>Instrumen Penilaian (9 Aspek, 64 Butir):</Text>
                             
                             {instrumentCategories.map((cat, idx) => (
                                 <TouchableOpacity key={cat.id} style={styles.categoryCard} activeOpacity={0.8}>
@@ -228,7 +234,7 @@ export default function PkspDashboardPage() {
                                     </View>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.categoryTitle}>{cat.title}</Text>
-                                        <Text style={styles.categorySub}>{cat.itemsCount} Indikator Evaluasi</Text>
+                                        <Text style={styles.categorySub}>{cat.itemsCount} Butir Indikator</Text>
                                     </View>
                                     <MaterialCommunityIcons name="square-edit-outline" size={22} color="#000" />
                                 </TouchableOpacity>

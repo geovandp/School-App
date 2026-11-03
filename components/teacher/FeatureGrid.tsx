@@ -1,4 +1,6 @@
+import { Colors } from "@/constants/Colors"; // Sesuaikan path ini dengan proyek Anda
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -7,138 +9,43 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-// 1. Import router dari expo-router
-import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type FeatureItem = {
   id: number;
   title: string;
   icon: string;
-  color: string;
-  route?: string; // Menyimpan path Expo Router
+  route?: string;
 };
 
+// Data fitur disesuaikan (tanpa warna kustom per ikon, semua pakai warna primary)
 const mainFeatures: FeatureItem[] = [
-  {
-    id: 1,
-    title: "Jadwal\nMengajar",
-    icon: "calendar",
-    color: "#9BF6FF",
-    route: "/page/jadwal_mengajar",
-  },
-  {
-    id: 2,
-    title: "Penugasan",
-    icon: "clipboard-list-outline",
-    color: "#FDFFB6",
-    route: "/page/penugasan",
-  },
-  {
-    id: 3,
-    title: "Nilai\nSiswa",
-    icon: "card-bulleted-outline",
-    color: "#FFADAD",
-    route: "/page/nilai",
-  },
-  {
-    id: 4,
-    title: "Kehadiran\nSiswa",
-    icon: "account-check-outline",
-    color: "#CAFFBF",
-    route: "/page/kehadiran_siswa",
-  },
-  {
-    id: 5,
-    title: "Kalender\nAkademik",
-    icon: "calendar-month-outline",
-    color: "#FFC6FF",
-    route: "/page/kalender_akademik",
-  },
-  {
-    id: 6,
-    title: "Arsip\nDokumen",
-    icon: "folder-multiple-outline",
-    color: "#A0E8AF",
-    route: "/page/arsip_dokumen",
-  },
-  {
-    id: 7,
-    title: "Presensi\nKehadiran",
-    icon: "qrcode-scan",
-    color: "#E4D4FF",
-    route: "/page/presensi_guru",
-  },
-  {
-    id: 8,
-    title: "Lainnya",
-    icon: "dots-grid",
-    color: "#FFD166",
-  },
+  { id: 1, title: "Jadwal\nMengajar", icon: "calendar", route: "/page/jadwal_mengajar" },
+  { id: 2, title: "Penugasan", icon: "clipboard-list-outline", route: "/page/penugasan" },
+  { id: 3, title: "Nilai\nSiswa", icon: "card-bulleted-outline", route: "/page/nilai" },
+  { id: 4, title: "Kehadiran\nSiswa", icon: "account-check-outline", route: "/page/kehadiran_siswa" },
+  { id: 5, title: "Kalender\nAkademik", icon: "calendar-month-outline", route: "/page/kalender_akademik" },
+  { id: 6, title: "Arsip\nDokumen", icon: "folder-multiple-outline", route: "/page/arsip_dokumen" },
+  { id: 7, title: "Presensi\nKehadiran", icon: "qrcode-scan", route: "/page/presensi_guru" },
 ];
 
 const otherFeatures: FeatureItem[] = [
-  {
-    id: 101,
-    title: "Arsip Dokumen",
-    icon: "folder-multiple-outline",
-    color: "#FFC6FF",
-    route: "/page/arsip_dokumen",
-  },
-  {
-    id: 102,
-    title: "Catatan Konseling",
-    icon: "account-voice",
-    color: "#9BF6FF",
-    route: "/page/konseling",
-  },
-  {
-    id: 103,
-    title: "Materi Pelajaran",
-    icon: "book-open-page-variant-outline",
-    color: "#FFD166",
-    route: "/page/materi",
-  },
-  {
-    id: 104,
-    title: "Tata\nUsaha",
-    icon: "card-account-mail-outline", // Ikon bola/kegiatan luar kelas yang merepresentasikan ekstrakurikuler
-    color: "#FDFFB6",
-    route: "/page/tata_usaha",
-  },
-  {
-    id: 105,
-    title: "Ujian",
-    icon: "math-compass", // Ikon piala untuk prestasi
-    color: "#FFADAD",
-    route: "/page/ujian",
-  },
-  {
-    id: 106,
-    title: "KPI",
-    icon: "chart-box-outline", // Ikon grafik/kinerja untuk KPI
-    color: "#E4D4FF",
-    route: "/page/KPI",
-  },
-  {
-    id: 107,
-    title: "Pengajuan\nCuti",
-    icon: "calendar-edit", // Ikon grafik/kinerja untuk KPI
-    color: "#9ddaa8",
-    route: "/page/cuti",
-  },
+  { id: 101, title: "Arsip\nDokumen", icon: "folder-multiple-outline", route: "/page/arsip_dokumen" },
+  { id: 102, title: "Catatan\nKonseling", icon: "account-voice", route: "/page/konseling" },
+  { id: 103, title: "Materi\nPelajaran", icon: "book-open-page-variant-outline", route: "/page/materi" },
+  { id: 104, title: "Tata\nUsaha", icon: "card-account-mail-outline", route: "/page/tata_usaha" },
+  { id: 105, title: "Ujian", icon: "math-compass", route: "/page/ujian" },
+  { id: 106, title: "KPI", icon: "chart-box-outline", route: "/page/KPI" },
+  { id: 107, title: "Pengajuan\nCuti", icon: "calendar-edit", route: "/page/cuti" },
 ];
 
 export default function TeacherFeatureGrid() {
   const [modalVisible, setModalVisible] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const handleFeaturePress = (item: FeatureItem) => {
-    if (item.id === 8) {
-      setModalVisible(true);
-      return;
-    }
-
     if (modalVisible) {
       setModalVisible(false);
     }
@@ -146,69 +53,110 @@ export default function TeacherFeatureGrid() {
     if (item.route) {
       router.push(item.route as any);
     } else {
-      Alert.alert("Info", `Halaman "${item.title.replace("\n", " ")}" belum tersedia.`);
+      Alert.alert(
+        "Info",
+        `Halaman "${item.title.replace("\n", " ")}" belum tersedia.`
+      );
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Menu Utama</Text>
+      <Text style={styles.title}>Menu Utama</Text>
 
+      {/* === GRID BERANDA UTAMA === */}
       <View style={styles.grid}>
         {mainFeatures.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[styles.featureCard, { backgroundColor: item.color }]}
+            style={styles.item}
             activeOpacity={0.7}
             onPress={() => handleFeaturePress(item)}
           >
             <View style={styles.iconBox}>
-              <MaterialCommunityIcons name={item.icon as any} size={22} color="#000" />
+              <MaterialCommunityIcons
+                name={item.icon as any}
+                size={30}
+                color={Colors.primary}
+              />
             </View>
-            <Text style={styles.featureTitle} numberOfLines={2}>
+            <Text style={styles.itemText} numberOfLines={2}>
               {item.title}
             </Text>
           </TouchableOpacity>
         ))}
+
+        {/* TOMBOL "LAINNYA" */}
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.7}
+          onPress={() => setModalVisible(true)}
+        >
+          <View style={styles.iconBox}>
+            <MaterialCommunityIcons
+              name="view-grid-plus-outline"
+              size={30}
+              color={Colors.primary}
+            />
+          </View>
+          <Text style={styles.itemText} numberOfLines={2}>
+            Lainnya
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Modal Muncul dari Bawah */}
+      {/* === MODAL (POPUP) SEMUA FITUR === */}
       <Modal
-        animationType="slide" // Diubah dari "fade" menjadi "slide"
-        transparent={true}
+        animationType="slide"
+        transparent={false}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Menu Lainnya</Text>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <MaterialCommunityIcons name="close" size={20} color="#000" />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={styles.modalGrid}>
-                {otherFeatures.map((item) => (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={[styles.modalItemCard, { backgroundColor: item.color }]}
-                    activeOpacity={0.7}
-                    onPress={() => handleFeaturePress(item)}
-                  >
-                    <View style={styles.iconBox}>
-                      <MaterialCommunityIcons name={item.icon as any} size={22} color="#000" />
-                    </View>
-                    <Text style={styles.modalItemTitle}>{item.title}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
+        <View
+          style={[
+            styles.modalContainer,
+            { paddingTop: insets.top, paddingBottom: insets.bottom },
+          ]}
+        >
+          {/* Header Modal */}
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Menu Lainnya</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <MaterialCommunityIcons
+                name="close"
+                size={28}
+                color={Colors.textMain || "#333"} // Fallback color
+              />
+            </TouchableOpacity>
           </View>
+
+          {/* Isi Semua Fitur */}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={[styles.grid, styles.modalGrid]}>
+              {otherFeatures.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.item}
+                  activeOpacity={0.7}
+                  onPress={() => handleFeaturePress(item)}
+                >
+                  <View style={styles.iconBox}>
+                    <MaterialCommunityIcons
+                      name={item.icon as any}
+                      size={30}
+                      color={Colors.primary}
+                    />
+                  </View>
+                  <Text style={styles.itemText} numberOfLines={2}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </View>
       </Modal>
     </View>
@@ -216,65 +164,73 @@ export default function TeacherFeatureGrid() {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: 20, marginBottom: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: "900", color: "#000", marginBottom: 12 },
-  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 10 },
-  featureCard: {
-    width: "23%",
-    minHeight: 88,
-    paddingVertical: 10,
-    paddingHorizontal: 4,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 2.5, height: 2.5 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 3,
-    alignItems: "center",
-    justifyContent: "space-between",
+  container: {
+    marginTop: 30, // Disesuaikan dengan referensi
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
-  iconBox: { backgroundColor: "#FFF", padding: 7, borderRadius: 10, borderWidth: 1.5, borderColor: "#000" },
-  featureTitle: { fontSize: 10, fontWeight: "800", color: "#000", textAlign: "center", lineHeight: 12 },
-
-  // Modal Styling yang diubah agar menempel di bawah
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end", // Posisi menempel ke bawah layar
-    alignItems: "center"
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.textMain || "#333", // Fallback color
+    marginBottom: 15,
   },
-  modalContent: {
-    width: "100%",
-    maxHeight: "75%",
-    backgroundColor: "#FDFBF7",
-    borderTopLeftRadius: 24, // Membuat sudut atas melengkung
-    borderTopRightRadius: 24,
-    borderWidth: 3,
-    borderBottomWidth: 0,
-    borderColor: "#000",
-    padding: 20
-  },
-  modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16, borderBottomWidth: 2, borderBottomColor: "#000", paddingBottom: 10 },
-  modalTitle: { fontSize: 18, fontWeight: "900", color: "#000" },
-  closeButton: { backgroundColor: "#FFADAD", width: 32, height: 32, borderRadius: 8, borderWidth: 2, borderColor: "#000", justifyContent: "center", alignItems: "center" },
-
-  modalGrid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingBottom: 20 },
-  modalItemCard: {
-    width: "48%",
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: "#000",
+  grid: {
     flexDirection: "row",
+    flexWrap: "wrap",
+    // justifyContent: "space-between" dihapus agar perataannya mirip dengan referensi asli (rata kiri per row)
+  },
+  item: {
+    width: "25%",
     alignItems: "center",
-    gap: 12,
+    marginBottom: 20,
+  },
+  iconBox: {
+    width: 60,
+    height: 60,
+    backgroundColor: Colors.white || "#FFF", // Fallback color
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border || "#E2E8F0", // Fallback color
+    marginBottom: 8,
     shadowColor: "#000",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     elevation: 2,
   },
-  modalItemTitle: { fontSize: 13, fontWeight: "800", color: "#000", flex: 1 },
+  itemText: {
+    fontSize: 11,
+    color: "#333333",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#FAFAFA",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border || "#E2E8F0", // Fallback color
+    backgroundColor: Colors.white || "#FFF", // Fallback color
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.textMain || "#333", // Fallback color
+  },
+  closeButton: {
+    padding: 5,
+  },
+  modalGrid: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
 });

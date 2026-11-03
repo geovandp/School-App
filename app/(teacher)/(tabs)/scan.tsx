@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors"; // Sesuaikan dengan file warna Anda
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
@@ -8,31 +9,24 @@ import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "rea
 export default function ScanScreen() {
   const router = useRouter();
 
-  // State Izin Kamera
   const [permission, requestPermission] = useCameraPermissions();
-
-  // State Presensi
   const [scanned, setScanned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // State Waktu dan Lokasi
   const [currentTime, setCurrentTime] = useState(new Date());
   const [locationText, setLocationText] = useState("Mendeteksi lokasi...");
   const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
 
-  // Effect untuk Jam Real-time
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-    return () => clearInterval(timer); // Cleanup saat unmount
+    return () => clearInterval(timer); 
   }, []);
 
-  // Effect untuk Deteksi Lokasi Real-time (DIperbaiki)
-  // Effect untuk Deteksi Lokasi Real-time
   useEffect(() => {
-    let isMounted = true; // Penanda agar state tidak update saat komponen mati
+    let isMounted = true; 
 
     const fetchLocation = async () => {
       try {
@@ -77,7 +71,6 @@ export default function ScanScreen() {
       }
     };
 
-    // Gunakan setTimeout biasa tanpa InteractionManager
     const timeout = setTimeout(() => {
       if (isMounted) {
         fetchLocation();
@@ -90,7 +83,6 @@ export default function ScanScreen() {
     };
   }, []);
 
-  // Format tanggal dan jam
   const formattedTime = currentTime.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
   const formattedDate = currentTime.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
@@ -110,12 +102,12 @@ export default function ScanScreen() {
   };
 
   if (!permission) {
-    return <View style={styles.centerContainer}><ActivityIndicator size="large" color="#000" /></View>;
+    return <View style={styles.centerContainer}><ActivityIndicator size="large" color={Colors.primary} /></View>;
   }
 
   if (!permission.granted) {
     return (
-      <View style={styles.centerContainer}>
+      <View style={styles.permissionContainer}>
         <Text style={styles.permissionText}>Kami butuh izin untuk mengakses kamera.</Text>
         <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
           <Text style={styles.permissionButtonText}>Izinkan Kamera</Text>
@@ -128,7 +120,7 @@ export default function ScanScreen() {
     <View style={styles.container}>
       <View style={styles.headerOverlay}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Scan Presensi</Text>
       </View>
@@ -141,6 +133,7 @@ export default function ScanScreen() {
         //   barcodeTypes: ["qr"],
         // }}
       />
+      
       <View style={styles.overlay}>
         <View style={styles.unfocusedContainer} />
 
@@ -148,6 +141,7 @@ export default function ScanScreen() {
           <View style={styles.unfocusedContainer} />
 
           <View style={styles.focusedContainer}>
+            {/* Sudut area pindai gaya modern (putih tipis) */}
             <View style={[styles.corner, styles.topLeft]} />
             <View style={[styles.corner, styles.topRight]} />
             <View style={[styles.corner, styles.bottomLeft]} />
@@ -155,14 +149,14 @@ export default function ScanScreen() {
 
             {isLoading && (
               <View style={styles.popupOverlay}>
-                <ActivityIndicator size="large" color="#000" />
+                <ActivityIndicator size="large" color={Colors.primary} />
                 <Text style={styles.popupText}>Memproses...</Text>
               </View>
             )}
 
             {successMessage && (
               <View style={styles.popupOverlaySuccess}>
-                <MaterialCommunityIcons name="check-decagram" size={32} color="#000" />
+                <MaterialCommunityIcons name="check-decagram-outline" size={36} color="#10B981" />
                 <Text style={styles.successText}>{successMessage}</Text>
               </View>
             )}
@@ -177,14 +171,16 @@ export default function ScanScreen() {
               <Text style={styles.dateText}>{formattedDate}</Text>
               <Text style={styles.timeText}>{formattedTime}</Text>
             </View>
+            
             <View style={styles.locationBadge}>
               {locationText === "Mendeteksi lokasi..." ? (
-                <ActivityIndicator size="small" color="#E63946" />
+                <ActivityIndicator size="small" color={Colors.primary} />
               ) : (
-                <MaterialCommunityIcons name="map-marker-radius" size={16} color="#E63946" />
+                <MaterialCommunityIcons name="map-marker-radius-outline" size={18} color={Colors.primary} />
               )}
               <Text style={styles.locationText} numberOfLines={1}>{locationText}</Text>
             </View>
+            
             {coordinates && (
               <View style={styles.coordinatesRow}>
                 <Text style={styles.coordinatesText}>Lat: {coordinates.latitude.toFixed(6)}</Text>
@@ -200,32 +196,71 @@ export default function ScanScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000" },
-  centerContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FDFBF7", padding: 20 },
+  centerContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8FAFC", padding: 20 },
+  
+  // -- Izin Kamera --
+  permissionContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8FAFC", padding: 20 },
+  permissionText: { fontSize: 16, fontWeight: "600", color: "#334155", textAlign: "center", marginBottom: 20 },
+  permissionButton: { backgroundColor: Colors.primary, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 },
+  permissionButtonText: { fontWeight: "bold", fontSize: 15, color: "#FFF" },
+  
+  // -- Header Atas --
   headerOverlay: { position: "absolute", top: 50, left: 20, right: 20, zIndex: 10, flexDirection: "row", alignItems: "center" },
-  backButton: { width: 44, height: 44, backgroundColor: "#FFF", borderWidth: 2, borderColor: "#000", borderRadius: 12, justifyContent: "center", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 2, height: 2 }, shadowOpacity: 1, shadowRadius: 0, elevation: 3 },
-  headerTitle: { marginLeft: 16, fontSize: 18, fontWeight: "900", color: "#FFF", textShadowColor: "rgba(0, 0, 0, 0.75)", textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 },
-  permissionText: { fontSize: 16, fontWeight: "700", textAlign: "center", marginBottom: 20 },
-  permissionButton: { backgroundColor: "#CAFFBF", paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8, borderWidth: 2, borderColor: "#000" },
-  permissionButtonText: { fontWeight: "900", fontSize: 16 },
+  backButton: { 
+    width: 44, 
+    height: 44, 
+    backgroundColor: "rgba(255, 255, 255, 0.9)", 
+    borderRadius: 22, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.1, 
+    shadowRadius: 4, 
+    elevation: 3 
+  },
+  headerTitle: { marginLeft: 16, fontSize: 18, fontWeight: "bold", color: "#FFF", textShadowColor: "rgba(0, 0, 0, 0.5)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
+  
+  // -- Area Scanner --
   overlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 },
-  unfocusedContainer: { flex: 1, justifyContent: "flex-end", paddingBottom: 20},
+  unfocusedContainer: { flex: 1, backgroundColor: "rgba(0,0,0,0.6)", justifyContent: "flex-end", paddingBottom: 20 },
   middleContainer: { flexDirection: "row", height: 250 },
   focusedContainer: { width: 250, justifyContent: "center", alignItems: "center", position: "relative" },
-  corner: {},
+  
+  // Bingkai Kamera Tipis Putih
+  corner: { position: "absolute", width: 40, height: 40, borderColor: "#FFF", borderWidth: 3 },
   topLeft: { top: 0, left: 0, borderBottomWidth: 0, borderRightWidth: 0 },
   topRight: { top: 0, right: 0, borderBottomWidth: 0, borderLeftWidth: 0 },
   bottomLeft: { bottom: 0, left: 0, borderTopWidth: 0, borderRightWidth: 0 },
   bottomRight: { bottom: 0, right: 0, borderTopWidth: 0, borderLeftWidth: 0 },
-  popupOverlay: { backgroundColor: "#FDFFB6", padding: 16, borderRadius: 12, borderWidth: 2, borderColor: "#000", alignItems: "center" },
-  popupOverlaySuccess: { backgroundColor: "#CAFFBF", padding: 16, borderRadius: 12, borderWidth: 2, borderColor: "#000", alignItems: "center" },
-  popupText: { marginTop: 8, fontSize: 14, fontWeight: "800", color: "#000" },
-  successText: { marginTop: 8, fontSize: 16, fontWeight: "900", color: "#000" },
-  bottomInfoCard: { backgroundColor: "#FFF", marginHorizontal: 20, marginBottom: 40, padding: 16, borderRadius: 16, borderWidth: 3, borderColor: "#000", shadowColor: "#000", shadowOffset: { width: 4, height: 4 }, shadowOpacity: 1, shadowRadius: 0, elevation: 6, alignItems: "center" },
-  dateTimeHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: 10, paddingBottom: 10, borderBottomWidth: 2, borderBottomColor: "#E0E0E0" },
-  dateText: { fontSize: 14, fontWeight: "800", color: "#000" },
-  timeText: { fontSize: 16, fontWeight: "900", color: "#4361EE" },
-  locationBadge: { flexDirection: "row", alignItems: "center", backgroundColor: "#F0F0F0", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, borderWidth: 1.5, borderColor: "#000", gap: 6, maxWidth: "100%" },
-  locationText: { fontSize: 13, fontWeight: "800", color: "#000", flexShrink: 1 },
-  coordinatesRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 8 },
-  coordinatesText: { fontSize: 12, fontWeight: "700", color: "#333" },
+  
+  // -- Popup Modern --
+  popupOverlay: { backgroundColor: "#FFFFFF", padding: 16, borderRadius: 16, alignItems: "center", width: "80%" },
+  popupOverlaySuccess: { backgroundColor: "#ECFDF5", padding: 16, borderRadius: 16, alignItems: "center", width: "80%" },
+  popupText: { marginTop: 8, fontSize: 14, fontWeight: "600", color: "#334155" },
+  successText: { marginTop: 8, fontSize: 15, fontWeight: "bold", color: "#10B981", textAlign: "center" },
+  
+  // -- Info Card Bawah --
+  bottomInfoCard: { 
+    backgroundColor: "#FFFFFF", 
+    marginHorizontal: 20, 
+    marginBottom: 40, 
+    padding: 20, 
+    borderRadius: 20, 
+    shadowColor: "#0F172A", 
+    shadowOffset: { width: 0, height: 10 }, 
+    shadowOpacity: 0.1, 
+    shadowRadius: 15, 
+    elevation: 8, 
+    alignItems: "center" 
+  },
+  dateTimeHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: 12, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: "#F1F5F9" },
+  dateText: { fontSize: 14, fontWeight: "600", color: "#334155" },
+  timeText: { fontSize: 18, fontWeight: "bold", color: Colors.primary }, // Gunakan warna aksen
+  
+  locationBadge: { flexDirection: "row", alignItems: "center", backgroundColor: "#F8FAFC", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, gap: 8, maxWidth: "100%" },
+  locationText: { fontSize: 13, fontWeight: "600", color: "#475569", flexShrink: 1 },
+  
+  coordinatesRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 16, marginTop: 12 },
+  coordinatesText: { fontSize: 12, fontWeight: "500", color: "#94A3B8" },
 });

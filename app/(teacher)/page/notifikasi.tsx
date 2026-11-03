@@ -2,11 +2,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -60,16 +60,16 @@ export default function NotificationPage() {
   const insets = useSafeAreaInsets();
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
 
-  // Fungsi untuk mendapatkan ikon berdasarkan tipe notifikasi
+  // Konfigurasi Gaya Ikon berdasarkan Tipe Notifikasi (Clean UI)
   const getIconData = (type: string) => {
     switch (type) {
       case "success":
-        return { name: "check-circle-outline", color: "#A0E8AF" };
+        return { name: "check-decagram-outline", color: "#10B981", bg: "#ECFDF5" }; // Emerald
       case "warning":
-        return { name: "alert-outline", color: "#FFADAD" };
+        return { name: "alert-circle-outline", color: "#F59E0B", bg: "#FEF3C7" }; // Amber
       case "info":
       default:
-        return { name: "information-outline", color: "#9BF6FF" };
+        return { name: "information-outline", color: "#3B82F6", bg: "#EFF6FF" }; // Blue
     }
   };
 
@@ -91,65 +91,59 @@ export default function NotificationPage() {
     return (
       <TouchableOpacity
         style={[
-          styles.card,
-          !item.isRead ? styles.cardUnread : styles.cardRead,
+          styles.notificationCard,
+          !item.isRead && styles.notificationCardUnread,
         ]}
-        activeOpacity={0.8}
+        activeOpacity={0.7}
         onPress={() => markAsRead(item.id)}
       >
-        <View style={[styles.iconBox, { backgroundColor: iconData.color }]}>
-          <MaterialCommunityIcons name={iconData.name as any} size={28} color="#000" />
+        {/* Ikon Kategori dengan latar soft */}
+        <View style={[styles.iconBox, { backgroundColor: iconData.bg }]}>
+          <MaterialCommunityIcons name={iconData.name as any} size={24} color={iconData.color} />
         </View>
 
-        <View style={styles.textBox}>
-          <View style={styles.titleRow}>
-            <Text style={styles.notifTitle} numberOfLines={1}>
-              {item.title}
-            </Text>
-            {/* Titik indikator belum dibaca */}
-            {!item.isRead && <View style={styles.unreadDot} />}
-          </View>
-          <Text style={styles.notifMessage}>{item.message}</Text>
-          <Text style={styles.notifTime}>{item.time}</Text>
+        {/* Konten Teks */}
+        <View style={styles.contentBox}>
+          <Text style={[styles.title, !item.isRead && styles.titleUnread]} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={[styles.message, !item.isRead && styles.messageUnread]} numberOfLines={2}>
+            {item.message}
+          </Text>
+          <Text style={styles.timeText}>{item.time}</Text>
         </View>
+
+        {/* Titik Penanda Belum Dibaca (Primary Color Accent) */}
+        {!item.isRead && <View style={styles.unreadDot} />}
       </TouchableOpacity>
     );
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          paddingTop: insets.top,
-          paddingBottom: Math.max(insets.bottom, 16),
-        },
-      ]}
-    >
-      {/* Header Halaman */}
-      <View style={styles.pageHeader}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.pageTitle}>Notifikasi</Text>
-        <View style={{ width: 40 }} />
+    <View style={[styles.mainWrapper, { paddingTop: insets.top }]}>
+      
+      {/* --- HEADER --- */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons name="arrow-left" size={28} color="#1E293B" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Notifikasi</Text>
+        </View>
+
+        {/* Tombol "Tandai semua dibaca" */}
+        {notifications.some((n) => !n.isRead) && (
+          <TouchableOpacity onPress={markAllAsRead} style={styles.markAllButton}>
+            <MaterialCommunityIcons name="check-all" size={18} color="#3B82F6" />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* Sub Header: Tombol Tandai Semua Dibaca */}
-      <View style={styles.subHeader}>
-        <Text style={styles.subHeaderText}>
-          Belum dibaca: {notifications.filter((n) => !n.isRead).length}
-        </Text>
-        <TouchableOpacity onPress={markAllAsRead} activeOpacity={0.7}>
-          <Text style={styles.markReadText}>Tandai semua dibaca</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* List Notifikasi */}
+      {/* --- LIST NOTIFIKASI --- */}
       <FlatList
         data={notifications}
         keyExtractor={(item) => item.id}
@@ -157,7 +151,13 @@ export default function NotificationPage() {
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Tidak ada notifikasi saat ini.</Text>
+          <View style={styles.emptyState}>
+            <MaterialCommunityIcons name="bell-sleep-outline" size={60} color="#CBD5E1" />
+            <Text style={styles.emptyTitle}>Belum Ada Notifikasi</Text>
+            <Text style={styles.emptySubtitle}>
+              Pemberitahuan jadwal mengajar, info sistem, dan absensi akan muncul di sini.
+            </Text>
+          </View>
         }
       />
     </View>
@@ -165,140 +165,126 @@ export default function NotificationPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainWrapper: {
     flex: 1,
-    backgroundColor: "#FDFBF7",
+    backgroundColor: "#F8FAFC", // Off-white modern background
   },
+  
   // --- Header Styles ---
-  pageHeader: {
+  header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 3,
+  headerLeft: { 
+    flexDirection: "row", 
+    alignItems: "center" 
   },
-  pageTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
-    textAlign: "center",
-    flex: 1,
+  backButton: { 
+    padding: 5, 
+    marginRight: 10 
   },
-  // --- Sub Header Styles ---
-  subHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+  headerTitle: { 
+    fontSize: 20, 
+    fontWeight: "bold", 
+    color: "#1E293B" 
   },
-  subHeaderText: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: "#000",
+  markAllButton: { 
+    padding: 8, 
+    backgroundColor: "#EFF6FF", 
+    borderRadius: 8 
   },
-  markReadText: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#555",
-    textDecorationLine: "underline",
-  },
+
   // --- List & Card Styles ---
   listContainer: {
+    paddingTop: 10,
+    paddingBottom: 40,
+  },
+  notificationCard: {
+    flexDirection: "row",
+    paddingVertical: 16,
     paddingHorizontal: 20,
-    paddingBottom: 24,
-    gap: 16,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
+    alignItems: "center",
   },
-  card: {
-    flexDirection: "row",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
+  notificationCardUnread: {
+    backgroundColor: "#F4F8FC", // Warna latar sedikit biru terang/abu untuk yang belum dibaca
   },
-  cardUnread: {
-    backgroundColor: "#FDFFB6", // Warna pastel kuning untuk belum dibaca
-  },
-  cardRead: {
-    backgroundColor: "#FFF", // Putih untuk sudah dibaca
-    opacity: 0.8, // Sedikit redup
-    shadowOffset: { width: 2, height: 2 }, // Bayangan lebih kecil
-  },
+  
+  // Ikon Lingkaran (Soft Badge)
   iconBox: {
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
-    justifyContent: "center",
+    width: 48,
+    height: 48,
+    borderRadius: 24, // Bulat penuh
     alignItems: "center",
-    marginRight: 12,
+    justifyContent: "center",
+    marginRight: 15,
   },
-  textBox: {
+  
+  // Teks Konten
+  contentBox: {
     flex: 1,
-    justifyContent: "center",
+    paddingRight: 10,
   },
-  titleRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  title: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#334155",
     marginBottom: 4,
   },
-  notifTitle: {
-    fontSize: 15,
-    fontWeight: "900",
-    color: "#000",
-    flex: 1,
+  titleUnread: {
+    fontWeight: "bold",
+    color: "#0F172A", // Lebih gelap jika belum dibaca
   },
+  message: {
+    fontSize: 13,
+    color: "#64748B",
+    lineHeight: 18,
+    marginBottom: 6,
+  },
+  messageUnread: {
+    color: "#334155",
+  },
+  timeText: {
+    fontSize: 11,
+    color: "#94A3B8",
+    fontWeight: "500",
+  },
+  
+  // Indikator Titik Biru Kecil
   unreadDot: {
     width: 10,
     height: 10,
-    backgroundColor: "#FF595E", // Merah untuk indikator belum dibaca
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#000",
-    marginLeft: 8,
+    backgroundColor: "#3B82F6", // Primary Accent Color
+    marginLeft: 5,
   },
-  notifMessage: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#333",
-    lineHeight: 18,
+
+  // --- Empty State ---
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 60,
+    paddingHorizontal: 30,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1E293B",
+    marginTop: 15,
     marginBottom: 8,
   },
-  notifTime: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#888",
-  },
-  emptyText: {
-    textAlign: "center",
+  emptySubtitle: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#666",
-    marginTop: 40,
+    color: "#64748B",
+    textAlign: "center",
+    lineHeight: 22,
   },
 });

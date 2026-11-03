@@ -104,7 +104,7 @@ export default function AttendancePage() {
                                 <View style={styles.statsRow}>
                                     <StatBox title="TAM" value={0} valueColor="#E76F51" />
                                     <StatBox title="TAP" value={0} valueColor="#E76F51" />
-                                    <StatBox title="TAMP" value={0} valueColor="#E76F51" />
+                                    <StatBox title="TAPT" value={0} valueColor="#E76F51" />
                                 </View>
                                 <View style={styles.statsRow}>
                                     <StatBox title="SAKIT" value={0} valueColor="#2A9D8F" />

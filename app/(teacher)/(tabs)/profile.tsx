@@ -32,15 +32,12 @@ const initialMessages: Message[] = [
 export default function ChatBotPage() {
   const insets = useSafeAreaInsets();
 
-  // State untuk input teks dan daftar obrolan
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isBotTyping, setIsBotTyping] = useState(false);
-
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
-    // Event listener yang berbeda untuk iOS dan Android agar lebih mulus
     const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
     const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
@@ -52,20 +49,17 @@ export default function ChatBotPage() {
       setKeyboardVisible(false);
     });
 
-    // Bersihkan listener saat komponen dilepas (unmount)
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
     };
   }, []);
 
-  // Reference untuk FlatList agar bisa auto-scroll ke bawah
   const flatListRef = useRef<FlatList>(null);
 
   const handleSend = () => {
     if (!inputText.trim()) return;
 
-    // 1. Simpan pesan user ke dalam list
     const userMsg: Message = {
       id: Date.now().toString(),
       text: inputText.trim(),
@@ -74,16 +68,13 @@ export default function ChatBotPage() {
 
     setMessages((prevMessages) => [...prevMessages, userMsg]);
 
-    // Simpan teks ke variabel sementara lalu ubah ke huruf kecil untuk pengecekan
     const currentInput = inputText.toLowerCase();
-    setInputText(""); // Kosongkan kolom input
+    setInputText(""); 
     setIsBotTyping(true);
 
-    // 2. Beri jeda 1 detik seolah bot sedang "mengetik", lalu tentukan balasan
     setTimeout(() => {
       let replyText = "";
 
-      // Logika if-statement untuk variasi balasan bot
       if (currentInput.includes("halo") || currentInput.includes("hai")) {
         replyText = "Halo juga! Ada yang bisa saya bantu terkait informasi sekolah hari ini?";
       }
@@ -100,14 +91,12 @@ export default function ChatBotPage() {
         replyText = "Sama-sama! Jangan ragu untuk bertanya lagi jika Anda membutuhkan bantuan lain. 😊";
       }
       else {
-        // Balasan acak jika kata kunci tidak ada yang cocok (Default Fallback)
         const randomReplies = [
           "Maaf, saya kurang menangkap maksud Anda. Bisa dijelaskan lebih spesifik?",
           "Saat ini saya masih dalam tahap belajar. Apakah Anda mau bertanya seputar absensi atau arsip?",
           "Hmm, pertanyaan yang menarik, tapi sayangnya saya belum punya jawaban untuk itu saat ini. 🙏",
           "Sistem saya belum mengenali perintah tersebut. Coba gunakan kata kunci seperti 'absen', 'kpi', atau 'arsip'."
         ];
-        // Pilih salah satu balasan secara acak
         replyText = randomReplies[Math.floor(Math.random() * randomReplies.length)];
       }
 
@@ -119,7 +108,7 @@ export default function ChatBotPage() {
 
       setMessages((prevMessages) => [...prevMessages, botMsg]);
       setIsBotTyping(false);
-    }, 1000); // 1000ms = 1 detik
+    }, 1000); 
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
@@ -134,7 +123,7 @@ export default function ChatBotPage() {
       >
         {!isUser && (
           <View style={styles.avatarBox}>
-            <MaterialCommunityIcons name="robot-outline" size={20} color="#000" />
+            <MaterialCommunityIcons name="robot-outline" size={18} color="#3B82F6" />
           </View>
         )}
 
@@ -144,7 +133,9 @@ export default function ChatBotPage() {
             isUser ? styles.userBubble : styles.botBubble,
           ]}
         >
-          <Text style={styles.messageText}>{item.text}</Text>
+          <Text style={[styles.messageText, isUser && styles.userMessageText]}>
+            {item.text}
+          </Text>
         </View>
       </View>
     );
@@ -153,18 +144,13 @@ export default function ChatBotPage() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      // Gunakan "height" untuk Android dan "padding" untuk iOS
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      // Tambahkan offset agar inputan terdorong sedikit ke atas keyboard pada iOS
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
       <View
         style={[
           styles.container,
-          {
-            paddingTop: insets.top,
-            // paddingBottom: Math.max(insets.bottom, 16),
-          },
+          { paddingTop: insets.top },
         ]}
       >
         {/* Header */}
@@ -174,7 +160,7 @@ export default function ChatBotPage() {
             onPress={() => router.back()}
             activeOpacity={0.7}
           >
-            <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+            <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
           </TouchableOpacity>
           <Text style={styles.pageTitle}>Asisten Cerdas</Text>
           <View style={{ width: 40 }} />
@@ -188,12 +174,11 @@ export default function ChatBotPage() {
           renderItem={renderMessage}
           contentContainerStyle={styles.chatContainer}
           showsVerticalScrollIndicator={false}
-          // Auto-scroll ke bawah saat ada pesan baru
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
 
-        {/* Indikator Typing (Opsional) */}
+        {/* Indikator Typing */}
         {isBotTyping && (
           <View style={styles.typingIndicator}>
             <Text style={styles.typingText}>Bot sedang mengetik...</Text>
@@ -205,16 +190,14 @@ export default function ChatBotPage() {
           style={[
             styles.inputContainer,
             {
-              // Jika keyboard terbuka -> paddingBottom: 0
-              // Jika tertutup -> gunakan insets.bottom atau minimal 16
-              paddingBottom: isKeyboardVisible ? 16 : Math.max(insets.bottom, 50)
+              paddingBottom: isKeyboardVisible ? 16 : Math.max(insets.bottom, 16),
             }
           ]}
         >
           <TextInput
             style={styles.textInput}
             placeholder="Ketik pesan..."
-            placeholderTextColor="#777"
+            placeholderTextColor="#94A3B8"
             value={inputText}
             onChangeText={setInputText}
             onSubmitEditing={handleSend}
@@ -224,7 +207,7 @@ export default function ChatBotPage() {
             activeOpacity={0.7}
             onPress={handleSend}
           >
-            <MaterialCommunityIcons name="send" size={20} color="#FFF" />
+            <MaterialCommunityIcons name="send" size={18} color="#FFF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -235,38 +218,27 @@ export default function ChatBotPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFBF7",
+    backgroundColor: "#F8FAFC", // Off-white modern background
   },
   pageHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
     zIndex: 10,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 3,
+    padding: 6,
+    borderRadius: 8,
   },
   pageTitle: {
     fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#0F172A",
     textAlign: "center",
     flex: 1,
   },
@@ -289,42 +261,43 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   avatarBox: {
-    width: 36,
-    height: 36,
-    backgroundColor: "#9BF6FF",
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#000",
+    width: 32,
+    height: 32,
+    backgroundColor: "#EFF6FF",
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 10,
+    marginRight: 8,
     marginBottom: 4,
   },
   messageBubble: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 16,
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
   },
   userBubble: {
-    backgroundColor: "#CAFFBF",
+    backgroundColor: "#3B82F6", // Primary Blue modern
     borderBottomRightRadius: 4,
   },
   botBubble: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#FFFFFF",
     borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: "#F1F5F9",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 2,
   },
   messageText: {
     fontSize: 14,
-    fontWeight: "700",
-    color: "#000",
+    fontWeight: "500",
+    color: "#334155",
     lineHeight: 20,
+  },
+  userMessageText: {
+    color: "#FFFFFF",
   },
   typingIndicator: {
     paddingHorizontal: 20,
@@ -332,45 +305,38 @@ const styles = StyleSheet.create({
   },
   typingText: {
     fontSize: 12,
-    fontWeight: "600",
-    color: "#666",
+    fontWeight: "500",
+    color: "#94A3B8",
     fontStyle: "italic",
   },
   inputContainer: {
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: "#FFF",
-    borderTopWidth: 3,
-    borderTopColor: "#000",
+    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#F1F5F9",
     alignItems: "center",
     gap: 12,
   },
   textInput: {
     flex: 1,
-    height: 50,
-    backgroundColor: "#F4F4F4",
-    borderWidth: 3,
-    borderColor: "#000",
-    borderRadius: 14,
+    height: 44,
+    backgroundColor: "#F8FAFC",
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    borderRadius: 22,
     paddingHorizontal: 16,
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#000",
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#0F172A",
   },
   sendButton: {
-    width: 50,
-    height: 50,
-    backgroundColor: "#000",
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    backgroundColor: "#3B82F6",
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 3,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
   },
 });

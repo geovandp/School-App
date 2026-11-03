@@ -8,7 +8,7 @@ export default function HeaderProfile() {
 
   return (
     <LinearGradient
-      colors={[Colors.primary, "#FFFFFF"]} // Gradasi dari Hijau (Primary) ke Putih
+      colors={[Colors.primary, "#0F172A"]}
       locations={[0.5, 1]}
       style={[styles.container, { paddingTop: insets.top + 20 }]}
     >

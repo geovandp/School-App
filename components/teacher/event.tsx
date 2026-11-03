@@ -1,21 +1,18 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
-// Ambil ukuran lebar layar HP
 const { width } = Dimensions.get("window");
-// Atur lebar kartu (85% dari layar) agar konten muat dengan baik
 const CARD_WIDTH = width * 0.85;
 const SPACING = 16;
 
-// Data dummy yang sudah disesuaikan dengan struktur baru
 const schoolEvents = [
   {
     id: "1",
@@ -24,7 +21,6 @@ const schoolEvents = [
     date: "16 Sep 2026",
     title: "PROGRAM MBG 2026",
     fullDetail: "Program Makan Bergizi Gratis (MBG) untuk seluruh siswa guna meningkatkan konsentrasi dan kesehatan.",
-    color: "#FDFFB6",
   },
   {
     id: "2",
@@ -33,7 +29,6 @@ const schoolEvents = [
     date: "20 Sep 2026",
     title: "PORSENI Tingkat Daerah",
     fullDetail: "Pekan Olahraga dan Seni antar kelas. Siapkan perwakilan kelasmu untuk berbagai lomba menarik!",
-    color: "#9BF6FF",
   },
   {
     id: "3",
@@ -42,52 +37,50 @@ const schoolEvents = [
     date: "15 Okt 2026",
     title: "HUT Sekolah Ke-45",
     fullDetail: "Perayaan puncak ulang tahun sekolah dengan berbagai bazar, penampilan band, dan pameran karya siswa.",
-    color: "#FFC6FF",
   },
 ];
 
 export default function SchoolEventCarousel() {
   return (
     <View style={styles.bannerSection}>
-      <Text style={styles.sectionTitle}>School Event</Text>
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.sectionTitle}>School Event</Text>
+        <TouchableOpacity activeOpacity={0.7}>
+          <Text style={styles.seeAllText}>Lihat semua</Text>
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={schoolEvents}
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        // Pengaturan Snap (Magnet)
         snapToInterval={CARD_WIDTH + SPACING}
         snapToAlignment="start"
         decelerationRate="fast"
         contentContainerStyle={{
           paddingHorizontal: 20,
-          paddingBottom: 10,
+          paddingBottom: 20, // Menambah ruang bawah untuk shadow
           gap: SPACING,
         }}
         renderItem={({ item }) => (
           <TouchableOpacity
             activeOpacity={0.9}
-            style={[
-              styles.bannerContainer,
-              { width: CARD_WIDTH, backgroundColor: item.color },
-            ]}
+            style={[styles.bannerContainer, { width: CARD_WIDTH }]}
             onPress={() => alert(`Buka event: ${item.title}`)}
           >
-            {/* 
-              Saya mengganti `selectedInfo` menjadi `item` karena kita
-              mengambil datanya dari list (schoolEvents).
-            */}
             <View style={styles.cardContent}>
               <Image source={{ uri: item.image }} style={styles.modalImage} />
 
               <View style={styles.textContainer}>
                 <View style={styles.modalMetaRow}>
+                  {/* Soft Badge untuk Kategori */}
                   <View style={styles.modalCategoryBadge}>
                     <Text style={styles.categoryText}>{item.category}</Text>
                   </View>
+                  
                   <View style={styles.dateRow}>
-                    <MaterialCommunityIcons name="calendar-outline" size={14} color="#666" />
+                    <MaterialCommunityIcons name="calendar-month-outline" size={14} color="#64748B" />
                     <Text style={styles.dateText}>{item.date}</Text>
                   </View>
                 </View>
@@ -109,38 +102,52 @@ export default function SchoolEventCarousel() {
 
 const styles = StyleSheet.create({
   bannerSection: {
-    marginTop: 13,
-    marginBottom: 30,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  sectionHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
-    marginBottom: 12,
-    paddingHorizontal: 20,
+    fontWeight: "bold",
+    color: "#0F172A", // Dark Slate
   },
-  // --- Gaya Pembungkus Kartu ---
+  seeAllText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#3B82F6", // Primary Blue (Warna Aksen Aplikasi)
+  },
+  
+  // --- Gaya Pembungkus Kartu (Clean UI) ---
   bannerContainer: {
-    borderWidth: 3,
-    borderColor: "#000",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
-    boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
-    // Memastikan isi kartu tidak meluber keluar dari border radius
+    borderWidth: 1,
+    borderColor: "#F1F5F9",
     overflow: "hidden", 
+    // Soft Shadow
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
   },
   cardContent: {
     width: "100%",
   },
-  // --- Gaya dari struktur kode Anda ---
   modalImage: {
     width: "100%",
-    height: 140, // Tinggi gambar diatur agar proporsional
-    borderBottomWidth: 3, // Garis pemisah antara gambar dan teks
-    borderColor: "#000",
-    backgroundColor: "#E4E4E4", // Warna dasar sebelum gambar ter-load
+    height: 140, 
+    resizeMode: "cover",
+    backgroundColor: "#E2E8F0", 
   },
   textContainer: {
-    padding: 16, // Jarak teks dari tepi layar
+    padding: 16,
   },
   modalMetaRow: {
     flexDirection: "row",
@@ -148,45 +155,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  
+  // Soft Badge
   modalCategoryBadge: {
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 8,
-    paddingHorizontal: 8,
+    backgroundColor: "#F1F5F9", // Slate-100
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
+    borderRadius: 6,
   },
   categoryText: {
-    fontSize: 11,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#475569", // Slate-600
     textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
+  
   dateRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.5)",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
     gap: 4,
   },
   dateText: {
     fontSize: 11,
-    fontWeight: "700",
-    color: "#555",
+    fontWeight: "600",
+    color: "#64748B",
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#0F172A",
     marginBottom: 6,
   },
   modalFullDetail: {
     fontSize: 13,
-    fontWeight: "600",
-    color: "#444",
-    lineHeight: 18,
+    fontWeight: "400",
+    color: "#475569",
+    lineHeight: 20,
   },
 });

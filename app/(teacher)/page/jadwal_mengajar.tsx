@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import {
     Alert,
@@ -19,7 +18,6 @@ type ScheduleItem = {
     className: string;
     room: string;
     status: "Selesai" | "Sedang Berjalan" | "Belum Mulai";
-    statusColor: string;
     image: string;
     fullDetail: string;
 };
@@ -32,7 +30,6 @@ const scheduleData: ScheduleItem[] = [
         className: "Kelas X IPA 1",
         room: "Ruang 101",
         status: "Selesai",
-        statusColor: "#FFF",
         image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
         fullDetail: "Pembelajaran membahas struktur dan unsur intrinsik dalam teks hikayat Melayu klasik. Siswa aktif berdiskusi dan mencatat pokok-pokok cerita.",
     },
@@ -43,7 +40,6 @@ const scheduleData: ScheduleItem[] = [
         className: "Kelas X IPS 2",
         room: "Ruang 204",
         status: "Sedang Berjalan",
-        statusColor: "#CAFFBF",
         image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
         fullDetail: "Sesi praktik langsung penulisan puisi bebas dengan memperhatikan unsur imaji, diksi, dan rima. Guru membimbing siswa secara bergantian.",
     },
@@ -54,7 +50,6 @@ const scheduleData: ScheduleItem[] = [
         className: "Kelas XI IPA 3",
         room: "Ruang 302",
         status: "Belum Mulai",
-        statusColor: "#FDFFB6",
         image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
         fullDetail: "Persiapan pementasan drama pendek dan analisis penokohan naskah drama modern karya penulis ternama Indonesia.",
     },
@@ -62,7 +57,6 @@ const scheduleData: ScheduleItem[] = [
 
 export default function TeachingSchedulePage() {
     const insets = useSafeAreaInsets();
-    // const navigation = useNavigation<any>();
     const router = useRouter();
 
     const handleActionButton = (item: ScheduleItem) => {
@@ -78,50 +72,67 @@ export default function TeachingSchedulePage() {
         }
     };
 
-    const renderItem = ({ item }: { item: ScheduleItem }) => (
-        <View style={styles.card}>
-            {/* Foto / Banner Jadwal */}
-            <View style={styles.imageContainer}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} />
-                <View style={[styles.statusBadgeOverlay, { backgroundColor: item.statusColor }]}>
-                    <Text style={styles.statusText}>{item.status}</Text>
+    // Fungsi helper untuk badge status dengan warna soft
+    const getStatusStyle = (status: string) => {
+        switch (status) {
+            case "Selesai":
+                return { bg: "#F1F5F9", text: "#64748B" }; // Slate
+            case "Sedang Berjalan":
+                return { bg: "#ECFDF5", text: "#10B981" }; // Emerald
+            case "Belum Mulai":
+            default:
+                return { bg: "#EFF6FF", text: "#3B82F6" }; // Blue Soft
+        }
+    };
+
+    const renderItem = ({ item }: { item: ScheduleItem }) => {
+        const statusStyle = getStatusStyle(item.status);
+
+        return (
+            <View style={styles.card}>
+                {/* Foto / Banner Jadwal */}
+                <View style={styles.imageContainer}>
+                    <Image source={{ uri: item.image }} style={styles.cardImage} />
+                    <View style={[styles.statusBadgeOverlay, { backgroundColor: statusStyle.bg }]}>
+                        <Text style={[styles.statusText, { color: statusStyle.text }]}>{item.status}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.cardContent}>
+                    {/* Meta Row (Kategori/Ruang & Waktu) */}
+                    <View style={styles.modalMetaRow}>
+                        <View style={styles.modalCategoryBadge}>
+                            <Text style={styles.categoryText}>{item.className} • {item.room}</Text>
+                        </View>
+                        <View style={styles.dateRow}>
+                            <MaterialCommunityIcons name="clock-outline" size={14} color="#64748B" />
+                            <Text style={styles.dateText}>{item.time}</Text>
+                        </View>
+                    </View>
+
+                    {/* Judul & Detail */}
+                    <Text style={styles.modalTitle}>{item.subject}</Text>
+                    <Text style={styles.modalFullDetail}>{item.fullDetail}</Text>
+
+                    {/* Tombol Aksi */}
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        activeOpacity={0.8}
+                        onPress={() => handleActionButton(item)}
+                    >
+                        <Text style={styles.actionButtonText}>
+                            {item.status === "Selesai" ? "Lihat Materi" : "Mulai Kelas"}
+                        </Text>
+                        <MaterialCommunityIcons
+                            name={item.status === "Selesai" ? "text-box-search-outline" : "arrow-right"}
+                            size={18}
+                            color="#FFF"
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
-
-            <View style={styles.cardContent}>
-                {/* Meta Row (Kategori/Ruang & Waktu) */}
-                <View style={styles.modalMetaRow}>
-                    <View style={styles.modalCategoryBadge}>
-                        <Text style={styles.categoryText}>{item.className} • {item.room}</Text>
-                    </View>
-                    <View style={styles.dateRow}>
-                        <MaterialCommunityIcons name="clock-outline" size={14} color="#666" />
-                        <Text style={styles.dateText}>{item.time}</Text>
-                    </View>
-                </View>
-
-                {/* Judul & Detail */}
-                <Text style={styles.modalTitle}>{item.subject}</Text>
-                <Text style={styles.modalFullDetail}>{item.fullDetail}</Text>
-
-                {/* Tombol Aksi */}
-                <TouchableOpacity
-                    style={styles.actionButton}
-                    activeOpacity={0.8}
-                    onPress={() => handleActionButton(item)}
-                >
-                    <Text style={styles.actionButtonText}>
-                        {item.status === "Selesai" ? "Lihat Materi" : "Mulai Kelas"}
-                    </Text>
-                    <MaterialCommunityIcons
-                        name={item.status === "Selesai" ? "text-box-search-outline" : "arrow-right-bold"}
-                        size={18}
-                        color="#FFF"
-                    />
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+        );
+    };
 
     return (
         <View 
@@ -140,7 +151,7 @@ export default function TeachingSchedulePage() {
                     onPress={() => router.back()}
                     activeOpacity={0.7}
                 >
-                    <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+                    <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
                 </TouchableOpacity>
                 <Text style={styles.pageTitle}>Jadwal Mengajar</Text>
                 <View style={{ width: 40 }} />
@@ -165,7 +176,7 @@ export default function TeachingSchedulePage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FDFBF7",
+        backgroundColor: "#F8FAFC", // Off-white modern
     },
     pageHeader: {
         flexDirection: "row",
@@ -173,29 +184,18 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingVertical: 15,
-        borderBottomWidth: 3,
-        borderBottomColor: "#000",
-        backgroundColor: "#FFF",
+        borderBottomWidth: 1,
+        borderBottomColor: "#F1F5F9",
+        backgroundColor: "#FFFFFF",
     },
     backButton: {
-        width: 40,
-        height: 40,
-        backgroundColor: "#FFF",
-        borderWidth: 2,
-        borderColor: "#000",
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 3,
+        padding: 6,
+        borderRadius: 8,
     },
     pageTitle: {
         fontSize: 18,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         textAlign: "center",
         flex: 1,
     },
@@ -204,14 +204,14 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
     },
     dateTextHeader: {
-        fontSize: 18,
-        fontWeight: "800",
-        color: "#000",
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#334155",
     },
     subtitleText: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#555",
+        fontSize: 13,
+        fontWeight: "500",
+        color: "#64748B",
         marginTop: 4,
     },
     listContainer: {
@@ -220,27 +220,27 @@ const styles = StyleSheet.create({
         gap: 16,
     },
     card: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#FFFFFF",
         borderRadius: 16,
-        borderWidth: 3,
-        borderColor: "#000",
+        borderWidth: 1,
+        borderColor: "#F1F5F9",
         overflow: "hidden",
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 6,
+        // Soft Shadow
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 3,
     },
     imageContainer: {
-        height: 150,
+        height: 140,
         width: "100%",
-        borderBottomWidth: 3,
-        borderBottomColor: "#000",
-        backgroundColor: "#EEE",
+        backgroundColor: "#E2E8F0",
     },
     cardImage: {
         width: "100%",
         height: "100%",
+        resizeMode: "cover",
     },
     statusBadgeOverlay: {
         position: "absolute",
@@ -249,14 +249,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 8,
-        borderWidth: 2,
-        borderColor: "#000",
     },
     statusText: {
-        fontSize: 10,
-        fontWeight: "900",
-        color: "#000",
+        fontSize: 11,
+        fontWeight: "bold",
         textTransform: "uppercase",
+        letterSpacing: 0.5,
     },
     cardContent: {
         padding: 16,
@@ -268,18 +266,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     modalCategoryBadge: {
-        backgroundColor: "#9BF6FF",
-        paddingHorizontal: 8,
+        backgroundColor: "#EFF6FF", // Soft Blue
+        paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 6,
-        borderWidth: 1.5,
-        borderColor: "#000",
     },
     categoryText: {
-        fontSize: 10,
-        fontWeight: "900",
-        color: "#000",
+        fontSize: 11,
+        fontWeight: "bold",
+        color: "#3B82F6",
         textTransform: "uppercase",
+        letterSpacing: 0.5,
     },
     dateRow: {
         flexDirection: "row",
@@ -288,36 +285,39 @@ const styles = StyleSheet.create({
     },
     dateText: {
         fontSize: 12,
-        fontWeight: "700",
-        color: "#555",
+        fontWeight: "500",
+        color: "#64748B",
     },
     modalTitle: {
         fontSize: 16,
-        fontWeight: "900",
-        color: "#000",
+        fontWeight: "bold",
+        color: "#0F172A",
         marginBottom: 8,
     },
     modalFullDetail: {
         fontSize: 13,
-        fontWeight: "600",
-        color: "#444",
-        lineHeight: 18,
+        fontWeight: "400",
+        color: "#475569",
+        lineHeight: 20,
         marginBottom: 16,
     },
     actionButton: {
-        backgroundColor: "#000",
+        backgroundColor: "#3B82F6", // Primary Accent Blue
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: 12,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#000",
+        borderRadius: 12,
         gap: 8,
+        shadowColor: "#3B82F6",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 3,
     },
     actionButtonText: {
         color: "#FFF",
         fontSize: 14,
-        fontWeight: "800",
+        fontWeight: "bold",
     },
 });

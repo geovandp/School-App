@@ -18,10 +18,9 @@ type MateriItem = {
   waktu: string;
   judulMateri: string;
   status: "Selesai" | "Belum Diajarkan";
-  color: string;
 };
 
-// 2. Data Dummy Materi Minggu Ini
+// 2. Data Dummy Materi Minggu Ini (Warna spesifik dihilangkan dari data, diatur di UI)
 const dummyMateri: MateriItem[] = [
   {
     id: "1",
@@ -31,7 +30,6 @@ const dummyMateri: MateriItem[] = [
     waktu: "08:00 - 09:30",
     judulMateri: "Turunan Fungsi Aljabar",
     status: "Selesai",
-    color: "#CAFFBF", // Hijau pastel
   },
   {
     id: "2",
@@ -41,7 +39,6 @@ const dummyMateri: MateriItem[] = [
     waktu: "10:00 - 11:30",
     judulMateri: "Hukum Newton I, II, dan III",
     status: "Belum Diajarkan",
-    color: "#FDFFB6", // Kuning pastel
   },
   {
     id: "3",
@@ -51,7 +48,6 @@ const dummyMateri: MateriItem[] = [
     waktu: "07:15 - 08:45",
     judulMateri: "Sistem Persamaan Linear Dua Variabel",
     status: "Belum Diajarkan",
-    color: "#9BF6FF", // Cyan pastel
   },
   {
     id: "4",
@@ -61,7 +57,6 @@ const dummyMateri: MateriItem[] = [
     waktu: "13:00 - 14:30",
     judulMateri: "Gerak Parabola dan Melingkar",
     status: "Belum Diajarkan",
-    color: "#FFC6FF", // Pink/Ungu pastel
   },
 ];
 
@@ -72,14 +67,14 @@ export default function MateriMingguIniPage() {
     const isSelesai = item.status === "Selesai";
 
     return (
-      <View style={[styles.card, { backgroundColor: item.color }]}>
+      <View style={styles.card}>
         {/* Bagian Atas Card: Kelas dan Waktu */}
         <View style={styles.cardHeader}>
           <View style={styles.badgeKelas}>
             <Text style={styles.badgeKelasText}>Kelas {item.kelas}</Text>
           </View>
           <View style={styles.waktuContainer}>
-            <MaterialCommunityIcons name="calendar-clock-outline" size={14} color="#555" />
+            <MaterialCommunityIcons name="calendar-month-outline" size={14} color="#64748B" />
             <Text style={styles.waktuText}>
               {item.hari} • {item.waktu}
             </Text>
@@ -94,14 +89,14 @@ export default function MateriMingguIniPage() {
         <View style={styles.cardFooter}>
           <View style={styles.statusContainer}>
             <MaterialCommunityIcons
-              name={isSelesai ? "check-circle" : "clock-outline"}
+              name={isSelesai ? "check-decagram" : "clock-outline"}
               size={18}
-              color={isSelesai ? "#3B8312" : "#D97706"}
+              color={isSelesai ? "#10B981" : "#F59E0B"} // Emerald vs Amber
             />
             <Text
               style={[
                 styles.statusText,
-                { color: isSelesai ? "#3B8312" : "#D97706" },
+                { color: isSelesai ? "#10B981" : "#F59E0B" },
               ]}
             >
               {item.status}
@@ -109,7 +104,7 @@ export default function MateriMingguIniPage() {
           </View>
           
           <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-            <MaterialCommunityIcons name="book-open-page-variant" size={16} color="#000" />
+            <MaterialCommunityIcons name="book-open-page-variant-outline" size={16} color="#3B82F6" />
             <Text style={styles.actionButtonText}>Modul</Text>
           </TouchableOpacity>
         </View>
@@ -134,7 +129,7 @@ export default function MateriMingguIniPage() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#1E293B" />
         </TouchableOpacity>
         <Text style={styles.pageTitle}>Materi Minggu Ini</Text>
         <View style={{ width: 40 }} />
@@ -163,8 +158,9 @@ export default function MateriMingguIniPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFBF7",
+    backgroundColor: "#F8FAFC", // Off-white modern
   },
+  
   // --- Header ---
   pageHeader: {
     flexDirection: "row",
@@ -172,29 +168,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    borderBottomWidth: 3,
-    borderBottomColor: "#000",
-    backgroundColor: "#FFF",
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
     zIndex: 10,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)", // Menggunakan boxShadow terbaru
+    padding: 8,
+    marginLeft: -8,
   },
   pageTitle: {
     fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#0F172A",
     textAlign: "center",
     flex: 1,
   },
+  
   // --- Sub Header ---
   subHeader: {
     flexDirection: "row",
@@ -204,21 +194,22 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   subHeaderText: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#334155",
   },
   summaryBadge: {
-    backgroundColor: "#000",
+    backgroundColor: "#EFF6FF", // Blue Soft
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
   },
   summaryBadgeText: {
-    color: "#FFF",
-    fontSize: 13,
-    fontWeight: "700",
+    color: "#3B82F6",
+    fontSize: 12,
+    fontWeight: "bold",
   },
+  
   // --- List & Card ---
   listContainer: {
     paddingHorizontal: 20,
@@ -226,66 +217,67 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   card: {
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
-    borderWidth: 3,
-    borderColor: "#000",
+    borderWidth: 1,
+    borderColor: "#F1F5F9",
     padding: 16,
-    boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)", // Menggunakan boxShadow terbaru
+    // Soft Shadow
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center", // Ubah ke center agar rata
     marginBottom: 12,
   },
   badgeKelas: {
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
+    backgroundColor: "#F1F5F9", // Slate-100
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
   },
   badgeKelasText: {
-    fontSize: 12,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#475569",
+    letterSpacing: 0.5,
   },
   waktuContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.6)",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
     gap: 4,
   },
   waktuText: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: "#444",
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#64748B",
   },
   mapelText: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: "#333",
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#3B82F6", // Primary Blue
     marginBottom: 4,
   },
   judulText: {
-    fontSize: 20,
-    fontWeight: "900",
-    color: "#000",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0F172A",
     lineHeight: 26,
     marginBottom: 16,
   },
+  
   // --- Card Footer ---
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderTopWidth: 2,
-    borderTopColor: "rgba(0,0,0,0.1)",
+    borderTopWidth: 1,
+    borderTopColor: "#F1F5F9",
     paddingTop: 12,
   },
   statusContainer: {
@@ -295,23 +287,20 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 13,
-    fontWeight: "800",
+    fontWeight: "bold",
   },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
-    borderWidth: 2,
-    borderColor: "#000",
+    backgroundColor: "#EFF6FF", // Blue Soft
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 6,
     gap: 6,
-    boxShadow: "2px 2px 0px rgba(0, 0, 0, 1)",
   },
   actionButtonText: {
     fontSize: 12,
-    fontWeight: "800",
-    color: "#000",
+    fontWeight: "bold",
+    color: "#3B82F6",
   },
 });
