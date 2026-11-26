@@ -66,10 +66,10 @@ const ALL_FEATURES = [
   },
   {
     id: 8,
-    title: "Kalender\nAkademik",
-    icon: "calendar-month-outline",
+    title: "Izin / Sakit",
+    icon: "clipboard-account-outline",
     color: Colors.primary,
-    route: "kalender-akademik",
+    route: "izin-sakit/izin",
   },
   {
     id: 9,
@@ -105,6 +105,13 @@ const ALL_FEATURES = [
     icon: "shield-alert-outline",
     color: Colors.primary,
     route: "/pelaporan",
+  },
+  {
+    id: 14,
+    title: "Kalender\nAkademik",
+    icon: "calendar-month-outline",
+    color: Colors.primary,
+    route: "kalender-akademik",
   },
 ];
 

@@ -197,7 +197,7 @@ export default function PoinScreen() {
       >
         {/* --- SUMMARY CARD DENGAN TEMA APLIKASI (HIJAU) --- */}
         <LinearGradient
-          colors={["#3B8312", "#2A630D"]} // Menggunakan gradien hijau yang sama persis dengan Absensi & Nilai
+          colors={["#184575", "#396BA0"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.summaryCard}

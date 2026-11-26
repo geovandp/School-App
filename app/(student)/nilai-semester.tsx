@@ -81,11 +81,19 @@ export default function NilaiScreen() {
   };
 
   return (
-    <View style={[styles.mainWrapper, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      
+    <View
+      style={[
+        styles.mainWrapper,
+        { paddingTop: insets.top, paddingBottom: insets.bottom },
+      ]}
+    >
       {/* --- HEADER --- */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+          activeOpacity={0.7}
+        >
           <MaterialCommunityIcons name="arrow-left" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <View>
@@ -101,32 +109,54 @@ export default function NilaiScreen() {
           {CLASSES.map((cls) => (
             <TouchableOpacity
               key={cls}
-              style={[styles.classPill, selectedClass === cls && styles.classPillActive]}
+              style={[
+                styles.classPill,
+                selectedClass === cls && styles.classPillActive,
+              ]}
               onPress={() => setSelectedClass(cls)}
               activeOpacity={0.7}
             >
-              <Text style={[styles.classPillText, selectedClass === cls && styles.classPillTextActive]}>
+              <Text
+                style={[
+                  styles.classPillText,
+                  selectedClass === cls && styles.classPillTextActive,
+                ]}
+              >
                 Kelas {cls}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={[styles.filterLabel, { marginTop: 5 }]}>Periode Semester</Text>
+        <Text style={[styles.filterLabel, { marginTop: 5 }]}>
+          Periode Semester
+        </Text>
         <View style={styles.semesterRow}>
           {SEMESTERS.map((sem) => (
             <TouchableOpacity
               key={sem.id}
-              style={[styles.semesterTab, selectedSemester === sem.id && styles.semesterTabActive]}
+              style={[
+                styles.semesterTab,
+                selectedSemester === sem.id && styles.semesterTabActive,
+              ]}
               onPress={() => setSelectedSemester(sem.id)}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons 
-                name={sem.id === "1" ? "book-open-page-variant-outline" : "book-check-outline"} 
-                size={16} 
-                color={selectedSemester === sem.id ? Colors.primary : "#94A3B8"} 
+              <MaterialCommunityIcons
+                name={
+                  sem.id === "1"
+                    ? "book-open-page-variant-outline"
+                    : "book-check-outline"
+                }
+                size={16}
+                color={selectedSemester === sem.id ? Colors.primary : "#94A3B8"}
               />
-              <Text style={[styles.semesterTabText, selectedSemester === sem.id && styles.semesterTabTextActive]}>
+              <Text
+                style={[
+                  styles.semesterTabText,
+                  selectedSemester === sem.id && styles.semesterTabTextActive,
+                ]}
+              >
                 {sem.label}
               </Text>
             </TouchableOpacity>
@@ -134,12 +164,14 @@ export default function NilaiScreen() {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
-        
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
+      >
         {/* --- KARTU RATA-RATA BERGRADASI --- */}
         {currentGrades.length > 0 && (
           <LinearGradient
-            colors={['#3B8312', '#2A630D']}
+            colors={["#184575", "#396BA0"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.summaryCard}
@@ -147,10 +179,12 @@ export default function NilaiScreen() {
             <View style={styles.summaryInfo}>
               <Text style={styles.summaryLabel}>Rerata Nilai</Text>
               <View style={styles.remarkBadge}>
-                <Text style={styles.remarkText}>{getAverageRemark(Number(averageScore))}</Text>
+                <Text style={styles.remarkText}>
+                  {getAverageRemark(Number(averageScore))}
+                </Text>
               </View>
             </View>
-            
+
             <View style={styles.summaryScoreBox}>
               <Text style={styles.summaryScore}>{averageScore}</Text>
             </View>
@@ -168,13 +202,28 @@ export default function NilaiScreen() {
                   <View style={styles.subjectInfo}>
                     <Text style={styles.subjectTitle}>{item.subject}</Text>
                     <View style={styles.scoreRow}>
-                      <Text style={styles.subjectScore}> Nilai: {item.score}</Text>
+                      <Text style={styles.subjectScore}>
+                        {" "}
+                        Nilai: {item.score}
+                      </Text>
                     </View>
                   </View>
-                  
+
                   {/* Kotak Huruf Dinamis */}
-                  <View style={[styles.gradeLetterBox, { backgroundColor: gradeStyle.bg, borderColor: gradeStyle.text }]}>
-                    <Text style={[styles.gradeLetter, { color: gradeStyle.text }]}>{item.letter}</Text>
+                  <View
+                    style={[
+                      styles.gradeLetterBox,
+                      {
+                        backgroundColor: gradeStyle.bg,
+                        borderColor: gradeStyle.text,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[styles.gradeLetter, { color: gradeStyle.text }]}
+                    >
+                      {item.letter}
+                    </Text>
                   </View>
                 </View>
               );
@@ -183,11 +232,16 @@ export default function NilaiScreen() {
         ) : (
           <View style={styles.emptyContainer}>
             <View style={styles.emptyIconCircle}>
-              <MaterialCommunityIcons name="text-box-remove-outline" size={50} color={Colors.primary} />
+              <MaterialCommunityIcons
+                name="text-box-remove-outline"
+                size={50}
+                color={Colors.primary}
+              />
             </View>
             <Text style={styles.emptyTitle}>Belum Ada Nilai</Text>
             <Text style={styles.emptySubtitle}>
-              Data nilai untuk Kelas {selectedClass} Semester {selectedSemester} belum dipublikasikan oleh guru.
+              Data nilai untuk Kelas {selectedClass} Semester {selectedSemester}{" "}
+              belum dipublikasikan oleh guru.
             </Text>
           </View>
         )}

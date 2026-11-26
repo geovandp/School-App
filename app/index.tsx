@@ -7,13 +7,13 @@ import {
   View,
   Animated,
   Dimensions,
+  Linking,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
 export default function HomeScreen() {
-  // Animasi Values untuk efek masuk yang halus (Fade In & Slide Up)
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -31,6 +31,26 @@ export default function HomeScreen() {
       }),
     ]).start();
   }, [fadeAnim, slideAnim]);
+
+  // Fungsi untuk membuka WhatsApp Helpdesk IT Sekolah
+  const handleOpenWhatsApp = () => {
+    const phoneNumber = "6281234567890";
+    const message =
+      "Halo Helpdesk IT Sekolah, saya membutuhkan bantuan terkait aplikasi ujian Simirda.";
+    const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          return Linking.openURL(
+            `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+          );
+        }
+      })
+      .catch((err) => console.error("Gagal membuka WhatsApp:", err));
+  };
 
   return (
     <View style={styles.container}>
@@ -52,10 +72,9 @@ export default function HomeScreen() {
 
         <Text style={styles.title}>SMAN Sederajat</Text>
         <Text style={styles.subtitle}>
-          Pilih peran Anda untuk masuk ke sistem ujian aman
+          Pilih peran anda untuk masuk ke dalam sistem
         </Text>
 
-        {/* Tombol 1: Ke Halaman Siswa */}
         <TouchableOpacity
           style={[styles.button, styles.studentButton]}
           onPress={() => router.push("/(student)/(tabs)")}
@@ -67,7 +86,7 @@ export default function HomeScreen() {
               size={22}
               color="#FFFFFF"
             />
-            <Text style={styles.buttonText}>Masuk sebagai Siswa</Text>
+            <Text style={styles.buttonText}>Masuk sebagai Murid</Text>
           </View>
           <MaterialCommunityIcons
             name="chevron-right"
@@ -76,7 +95,6 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
 
-        {/* Tombol 2: Ke Halaman Guru */}
         <TouchableOpacity
           style={[styles.button, styles.teacherButton]}
           onPress={() => router.push("/(teacher)/(tabs)")}
@@ -98,10 +116,12 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Bagian Bawah: Branding By Simirda */}
+      {/* Bagian Bawah: Footer Link WhatsApp & Branding */}
       <Animated.View style={[styles.footerContainer, { opacity: fadeAnim }]}>
-        <Text style={styles.footerText}>Secure Exam System</Text>
-        <Text style={styles.footerBrand}>By Simirda</Text>
+        <TouchableOpacity onPress={handleOpenWhatsApp} activeOpacity={0.7}>
+          <Text style={styles.footerLinkText}>Hubungi Helpdesk IT Sekolah</Text>
+        </TouchableOpacity>
+        <Text style={styles.footerBrand}>Simirda by Nexora</Text>
       </Animated.View>
     </View>
   );
@@ -171,10 +191,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   studentButton: {
-    backgroundColor: "#2563EB", // Biru Modern Professional
+    backgroundColor: "#2563EB",
   },
   teacherButton: {
-    backgroundColor: "#059669", // Hijau Emerald Professional
+    backgroundColor: "#059669",
   },
   buttonContent: {
     flexDirection: "row",
@@ -190,14 +210,15 @@ const styles = StyleSheet.create({
   footerContainer: {
     alignItems: "center",
     marginBottom: 10,
+    gap: 4,
   },
-  footerText: {
-    fontSize: 11,
-    color: "#94A3B8",
-    fontWeight: "500",
+  footerLinkText: {
+    fontSize: 12,
+    color: "#484C53",
+    fontWeight: "700",
     marginBottom: 2,
-    textTransform: "uppercase",
-    letterSpacing: 1,
+    textDecorationLine: "underline",
+    letterSpacing: 0.5,
   },
   footerBrand: {
     fontSize: 13,
